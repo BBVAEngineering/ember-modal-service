@@ -1,27 +1,60 @@
-# ember-modal
+# ember-modal-service
 
-This README outlines the details of collaborating on this Ember addon.
+An [ember-cli addon](http://www.ember-cli.com/) to manage modals as promises.
 
-## Installation
+## Install in ember-cli application
 
-* `git clone <repository-url>` this repository
-* `cd ember-modal`
-* `npm install`
-* `bower install`
+In your application's directory:
 
-## Running
+    ember install ember-modal-service
 
-* `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
+## Usage
 
-## Running Tests
+```javascript
+// Inject the service
+modal: Ember.inject.service(),
 
-* `npm test` (Runs `ember try:each` to test your addon against multiple Ember versions)
-* `ember test`
-* `ember test --server`
+...
 
-## Building
+// To open a modal use the method `open` with the modal name and the options for the modal.
+this.get('modal').open('foo', { bar: 'bar' });
 
-* `ember build`
+// The returning value of the modal is a promise that is resolved or rejected when the modal is closed.
+this.get('modal').open('foo').then(() => {
+    // modal closed
+});
+```
 
-For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
+```javascript
+// In order to register a new modal, you need to register the modal object in the application container.
+// app/components/modal-foo.js
+import ModalComponent from 'ember-modal-service/components/modal';
+export default ModalComponent.extend();
+```
+
+All the modals are shown in the modal container.
+
+```html
+{{! templates/application.hbs }}
+{{modal-container}}
+```
+
+You can close all modals by using the `close` method.
+
+```javascript
+this.get('modal').close();
+```
+
+Or just some of them.
+
+```javascript
+this.get('modal').close((modal) => {
+  return modal.name === 'foo';
+});
+
+this.get('modal').close('name', 'foo');
+```
+
+## Contribute
+
+If you want to contribute to this addon, please read the [CONTRIBUTING.md](CONTRIBUTING.md).
