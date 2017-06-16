@@ -113,7 +113,7 @@ export default Component.extend({
 	 * @private
 	 */
 	_hasBeenSettled: on('init', function() {
-		this.get('model.promise').always(() => {
+		this.get('model.promise').finally(() => {
 			this._close();
 		});
 	}),
@@ -138,10 +138,8 @@ export default Component.extend({
 	 *
 	 * @method resolve
 	 */
-	resolve() {
-		const deferred = this.get('model.deferred');
-
-		deferred.resolveWith(this, arguments);
+	resolve(data, label = `Modal: resolved '${this.get('model.fullname')}'`) {
+		this.get('model.deferred').resolve(data, label);
 	},
 
 	/**
@@ -149,10 +147,8 @@ export default Component.extend({
 	 *
 	 * @method reject
 	 */
-	reject() {
-		const deferred = this.get('model.deferred');
-
-		deferred.rejectWith(this, arguments);
+	reject(data, label = `Modal: rejected '${this.get('model.fullname')}'`) {
+		this.get('model.deferred').reject(data, label);
 	},
 
 	/**
