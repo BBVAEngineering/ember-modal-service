@@ -6,10 +6,11 @@ import wait from 'dummy/tests/helpers/wait';
 
 const {
 	A,
-	run
+	run,
+	RSVP: { defer }
 } = Ember;
 
-let component, deferred;
+let component, deferred, stub;
 
 const WAIT_TIME = 250;
 
@@ -19,19 +20,24 @@ moduleForComponent('modal', 'Unit | Component | modal', {
 	needs: ['service:modal', 'model:modal'],
 
 	beforeEach() {
-		deferred = $.Deferred();
+		stub = sinon.stub(Ember.Test.adapter, 'exception');
+		deferred = defer();
 
 		component = this.subject({
 			target: null,
 			model: Ember.Object.create({
 				fullname: 'modal-foo',
 				deferred,
-				promise: deferred.promise()
+				promise: deferred.promise
 			}),
 			modal: {
 				content: A()
 			}
 		});
+	},
+
+	afterEach() {
+		stub.restore();
 	}
 });
 

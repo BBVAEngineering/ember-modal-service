@@ -4,14 +4,17 @@ import { moduleForComponent, test } from 'ember-qunit';
 import ModalComponent from 'ember-modal-service/components/modal';
 import wait from 'dummy/tests/helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
+import sinon from 'sinon';
 
 const { run } = Ember;
 
-let service;
+let service, stub;
 
 moduleForComponent('modal-container', 'Integration | Service | modal', {
 	integration: true,
 	beforeEach() {
+		stub = sinon.stub(Ember.Test.adapter, 'exception');
+
 		// Registry dummy modal.
 		this.registry.register('component:modal-foo', ModalComponent.extend({
 			id: 'foo',
@@ -26,6 +29,7 @@ moduleForComponent('modal-container', 'Integration | Service | modal', {
 	},
 	afterEach() {
 		this.registry.unregister('component:modal-foo');
+		stub.restore();
 	}
 });
 
