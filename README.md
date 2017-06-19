@@ -55,10 +55,10 @@ this.get('modal').close((modal) => {
 this.get('modal').close('name', 'foo');
 ```
 
-Base modal component provides `resolveModal` & `rejectModal` actions so you can implement basic closing behaviour directly on the template. You can pass any arguments you want the modal to be resolved / rejected with
+Base modal component provides `resolve` & `reject` actions so you can implement basic closing behaviour directly on the template. You can pass any arguments you want the modal to be resolved / rejected with
 
 ```html
-<button {{action "rejectModal" "foo" "bar"}}>Close modal</button>
+<button {{action "reject" "foo" "bar"}}>Close modal</button>
 ```
 
 ## Contribute

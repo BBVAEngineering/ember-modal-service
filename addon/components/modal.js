@@ -201,9 +201,9 @@ export default Component.extend({
 		 * Action to resolve the underlying modal promise directly from the,
 		 * template, using the passed arguments as resolution values
 		 *
-		 * @method resolveModal
+		 * @method resolve
 		 */
-		resolveModal() {
+		resolve() {
 			this.resolve(...arguments);
 		},
 
@@ -211,9 +211,9 @@ export default Component.extend({
 		 * Action to reject the underlying modal promise directly from the,
 		 * template, using the passed arguments as rejection values
 		 *
-		 * @method resolveModal
+		 * @method reject
 		 */
-		rejectModal() {
+		reject() {
 			this.reject(...arguments);
 		}
 	}
