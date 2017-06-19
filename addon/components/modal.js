@@ -193,6 +193,28 @@ export default Component.extend({
 	 */
 	_remove() {
 		this.get('modal.content').removeObject(this.get('model'));
-	}
+	},
 
+	actions: {
+
+		/**
+		 * Action to resolve the underlying modal promise directly from the,
+		 * template, using the passed arguments as resolution values
+		 *
+		 * @method resolveModal
+		 */
+		resolveModal() {
+			this.resolve(...arguments);
+		},
+
+		/**
+		 * Action to reject the underlying modal promise directly from the,
+		 * template, using the passed arguments as rejection values
+		 *
+		 * @method resolveModal
+		 */
+		rejectModal() {
+			this.reject(...arguments);
+		}
+	}
 });
