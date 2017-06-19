@@ -10,7 +10,7 @@ const {
 	RSVP: { defer }
 } = Ember;
 
-let component, deferred, stub;
+let component, deferred;
 
 const WAIT_TIME = 250;
 
@@ -20,7 +20,6 @@ moduleForComponent('modal', 'Unit | Component | modal', {
 	needs: ['service:modal', 'model:modal'],
 
 	beforeEach() {
-		stub = sinon.stub(Ember.Test.adapter, 'exception');
 		deferred = defer();
 
 		component = this.subject({
@@ -34,10 +33,6 @@ moduleForComponent('modal', 'Unit | Component | modal', {
 				content: A()
 			}
 		});
-	},
-
-	afterEach() {
-		stub.restore();
 	}
 });
 

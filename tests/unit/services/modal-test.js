@@ -7,9 +7,9 @@ const {
 	isEmpty,
 	run
 } = Ember;
-const PENDING = undefined;
 const RESOLVED = 1;
 const REJECTED = 2;
+let PENDING;
 
 let service;
 
