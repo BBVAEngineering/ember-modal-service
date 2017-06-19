@@ -113,7 +113,8 @@ export default Component.extend({
 	 * @private
 	 */
 	_hasBeenSettled: on('init', function() {
-		this.get('model.promise').finally(() => {
+		// Prevent triggering Ember.onerror on promise resolution.
+		this.get('model.promise').catch(() => {}).finally(() => {
 			this._close();
 		});
 	}),
