@@ -114,9 +114,9 @@ export default Component.extend({
 	 */
 	_hasBeenSettled: on('init', function() {
 		// Prevent triggering Ember.onerror on promise resolution.
-		this.get('model.promise').catch(() => {}).finally(() => {
-			this._close();
-		});
+		this.get('model.promise')
+			.catch(() => {}, 'Modal: empty catch to prevent exception')
+			.finally(() => this._close(), `Modal: closing modal`);
 	}),
 
 	/**

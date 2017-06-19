@@ -70,7 +70,7 @@ export default Ember.Object.extend({
 	init() {
 		this._super(...arguments);
 
-		this.set('deferred', defer(`Modal: opening '${this.get('fullname')}'`));
+		this.set('deferred', defer(`Modal: open '${this.get('fullname')}'`));
 	}
 
 });
