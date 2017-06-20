@@ -198,7 +198,7 @@ export default Component.extend({
 	actions: {
 
 		/**
-		 * Action to resolve the underlying modal promise directly from the,
+		 * Action to resolve the underlying modal promise directly from the
 		 * template, using the passed arguments as resolution values
 		 *
 		 * @method resolve
@@ -208,7 +208,7 @@ export default Component.extend({
 		},
 
 		/**
-		 * Action to reject the underlying modal promise directly from the,
+		 * Action to reject the underlying modal promise directly from the
 		 * template, using the passed arguments as rejection values
 		 *
 		 * @method reject
