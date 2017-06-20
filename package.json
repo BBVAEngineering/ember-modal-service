@@ -1,6 +1,6 @@
 {
   "name": "ember-modal-service",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "The default blueprint for ember-cli addons.",
   "keywords": [
     "ember-addon"
@@ -9,20 +9,20 @@
   "author": "BBVAEngineering",
   "contributors": [
     {
-      "name" : "beatrizdemiguelperez",
-      "url" : "https://github.com/beatrizdemiguelperez/"
+      "name": "beatrizdemiguelperez",
+      "url": "https://github.com/beatrizdemiguelperez/"
     },
     {
-      "name" : "adrigzr",
-      "url" : "https://github.com/adrigzr/"
+      "name": "adrigzr",
+      "url": "https://github.com/adrigzr/"
     },
     {
-      "name" : "shokmaster",
-      "url" : "https://github.com/shokmaster/"
+      "name": "shokmaster",
+      "url": "https://github.com/shokmaster/"
     },
     {
-      "name" : "josex2r",
-      "url" : "https://github.com/josex2r/"
+      "name": "josex2r",
+      "url": "https://github.com/josex2r/"
     }
   ],
   "directories": {
