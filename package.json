@@ -5,7 +5,7 @@
   "keywords": [
     "ember-addon"
   ],
-  "license": "UNLICENSED",
+  "license": "MIT",
   "author": "BBVAEngineering",
   "directories": {
     "test": "tests"
