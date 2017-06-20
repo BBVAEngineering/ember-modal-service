@@ -7,6 +7,9 @@ const {
 	isEmpty,
 	run
 } = Ember;
+const RESOLVED = 1;
+const REJECTED = 2;
+let PENDING;
 
 let service;
 
@@ -51,11 +54,11 @@ test('it creates only a new modal of same type', (assert) => {
 
 	service.close();
 
-	assert.equal(service.get('content').objectAt(0).get('deferred').state(), 'rejected');
+	assert.equal(service.get('content').objectAt(0).get('promise._state'), REJECTED);
 });
 
 test('it clears all pending modals', (assert) => {
-	const modals = [ModalModel.create(), ModalModel.create(), ModalModel.create()];
+	const modals = [ModalModel.create({ name: '0' }), ModalModel.create({ name: '1' }), ModalModel.create({ name: '2' })];
 
 	service.get('content').addObjects(modals);
 
@@ -63,9 +66,9 @@ test('it clears all pending modals', (assert) => {
 
 	service.close();
 
-	assert.equal(service.get('content').objectAt(0).get('deferred').state(), 'resolved');
-	assert.equal(service.get('content').objectAt(1).get('deferred').state(), 'rejected');
-	assert.equal(service.get('content').objectAt(2).get('deferred').state(), 'rejected');
+	assert.equal(service.get('content').objectAt(0).get('promise._state'), RESOLVED);
+	assert.equal(service.get('content').objectAt(1).get('promise._state'), REJECTED);
+	assert.equal(service.get('content').objectAt(2).get('promise._state'), REJECTED);
 });
 
 test('it clears modals by callback when callback is passed', (assert) => {
@@ -77,8 +80,8 @@ test('it clears modals by callback when callback is passed', (assert) => {
 
 	service.close(callback);
 
-	assert.equal(service.get('content').findBy('name', 'foo').get('deferred').state(), 'pending');
-	assert.equal(service.get('content').findBy('name', 'bar').get('deferred').state(), 'rejected');
+	assert.equal(service.get('content').findBy('name', 'foo').get('promise._state'), PENDING);
+	assert.equal(service.get('content').findBy('name', 'bar').get('promise._state'), REJECTED);
 });
 
 test('it clears modals by key-value when key-value is passed', (assert) => {
@@ -88,6 +91,6 @@ test('it clears modals by key-value when key-value is passed', (assert) => {
 
 	service.close('name', 'bar');
 
-	assert.equal(service.get('content').findBy('name', 'foo').get('deferred').state(), 'pending');
-	assert.equal(service.get('content').findBy('name', 'bar').get('deferred').state(), 'rejected');
+	assert.equal(service.get('content').findBy('name', 'foo').get('promise._state'), PENDING);
+	assert.equal(service.get('content').findBy('name', 'bar').get('promise._state'), REJECTED);
 });

@@ -113,9 +113,10 @@ export default Component.extend({
 	 * @private
 	 */
 	_hasBeenSettled: on('init', function() {
-		this.get('model.promise').always(() => {
-			this._close();
-		});
+		// Prevent triggering Ember.onerror on promise resolution.
+		this.get('model.promise')
+			.catch(() => {}, 'Modal: empty catch to prevent exception')
+			.finally(() => this._close(), `Modal: closing modal`);
 	}),
 
 	/**
@@ -138,10 +139,8 @@ export default Component.extend({
 	 *
 	 * @method resolve
 	 */
-	resolve() {
-		const deferred = this.get('model.deferred');
-
-		deferred.resolveWith(this, arguments);
+	resolve(data, label = `Modal: resolved '${this.get('model.fullname')}'`) {
+		this.get('model.deferred').resolve(data, label);
 	},
 
 	/**
@@ -149,10 +148,8 @@ export default Component.extend({
 	 *
 	 * @method reject
 	 */
-	reject() {
-		const deferred = this.get('model.deferred');
-
-		deferred.rejectWith(this, arguments);
+	reject(data, label = `Modal: rejected '${this.get('model.fullname')}'`) {
+		this.get('model.deferred').reject(data, label);
 	},
 
 	/**
