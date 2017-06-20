@@ -6,7 +6,8 @@ import wait from 'dummy/tests/helpers/wait';
 
 const {
 	A,
-	run
+	run,
+	RSVP: { defer }
 } = Ember;
 
 let component, deferred;
@@ -19,14 +20,14 @@ moduleForComponent('modal', 'Unit | Component | modal', {
 	needs: ['service:modal', 'model:modal'],
 
 	beforeEach() {
-		deferred = $.Deferred();
+		deferred = defer();
 
 		component = this.subject({
 			target: null,
 			model: Ember.Object.create({
 				fullname: 'modal-foo',
 				deferred,
-				promise: deferred.promise()
+				promise: deferred.promise
 			}),
 			modal: {
 				content: A()

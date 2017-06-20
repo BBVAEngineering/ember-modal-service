@@ -1,10 +1,10 @@
-import $ from 'jquery';
 import Ember from 'ember';
 
 const {
 	computed,
 	isBlank,
-	String: { dasherize }
+	String: { dasherize },
+	RSVP: { defer }
 } = Ember;
 
 /**
@@ -44,9 +44,7 @@ export default Ember.Object.extend({
 	 * @property promise
 	 * @type Promise
 	 */
-	promise: computed('deferred', function() {
-		return this.get('deferred').promise();
-	}),
+	promise: computed.reads('deferred.promise'),
 
 	/**
 	 * Full name for building controllers and views.
@@ -72,9 +70,7 @@ export default Ember.Object.extend({
 	init() {
 		this._super(...arguments);
 
-		const deferred = $.Deferred();
-
-		this.set('deferred', deferred);
+		this.set('deferred', defer(`Modal: open '${this.get('fullname')}'`));
 	}
 
 });

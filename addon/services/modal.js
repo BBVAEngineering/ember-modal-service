@@ -4,7 +4,8 @@ import ModalModel from 'ember-modal-service/models/modal';
 const {
 	A,
 	isEmpty,
-	Service
+	Service,
+	get
 } = Ember;
 
 /**
@@ -90,15 +91,12 @@ export default Service.extend({
 	 * @return Promise
 	 */
 	open(name, options = {}) {
-		const modal = ModalModel.create();
+		const modal = ModalModel.create({ name, options });
 
 		// If the modal is already opened, reject it
 		if (this.isOpened(name)) {
-			return modal.get('deferred').reject();
+			return modal.get('deferred').reject(null, `Modal: '${this.get('model.fullname')}' is already opened`);
 		}
-
-		// Set modal properties.
-		modal.setProperties({ name, options });
 
 		// Add new modal.
 		this.get('content').addObject(modal);
@@ -123,8 +121,8 @@ export default Service.extend({
 		filter.forEach((modal) => {
 			const deferred = modal.get('deferred');
 
-			if (deferred.state() === 'pending') {
-				deferred.reject();
+			if (isEmpty(get(deferred, 'promise._state'))) {
+				deferred.reject(null, `Modal: closing '${this.get('model.fullname')}'`);
 			}
 		});
 	},
