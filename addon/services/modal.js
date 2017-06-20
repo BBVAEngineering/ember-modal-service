@@ -95,11 +95,11 @@ export default Service.extend({
 
 		// If the modal is already opened, reject it
 		if (this.isOpened(name)) {
-			return modal.get('deferred').reject(null, `Modal: '${this.get('model.fullname')}' is already opened`);
+			modal.get('deferred').reject(null, `Modal: '${this.get('model.fullname')}' is already opened`);
+		} else {
+			// Add new modal.
+			this.get('content').addObject(modal);
 		}
-
-		// Add new modal.
-		this.get('content').addObject(modal);
 
 		return modal.get('promise');
 	},
