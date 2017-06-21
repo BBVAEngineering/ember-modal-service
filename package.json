@@ -37,10 +37,6 @@
     "start": "ember server",
     "test": "ember try:each"
   },
-  "contributors": [{
-    "name": "shokmaster",
-    "email": "shokmaster@gmail.com"
-  }],
   "dependencies": {
     "ember-cli-babel": "5.1.10",
     "ember-cli-htmlbars": "1.1.1"
