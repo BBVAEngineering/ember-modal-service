@@ -30,13 +30,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://shokmaster@github.com/BBVAEngineering/ember-modal-service.git"
+    "url": "git+https://github.com/BBVAEngineering/ember-modal-service.git"
   },
   "scripts": {
     "build": "ember build",
     "start": "ember server",
     "test": "ember try:each"
   },
+  "contributors": [{
+    "name": "shokmaster",
+    "email": "shokmaster@gmail.com"
+  }],
   "dependencies": {
     "ember-cli-babel": "5.1.10",
     "ember-cli-htmlbars": "1.1.1"
