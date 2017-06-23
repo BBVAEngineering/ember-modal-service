@@ -1,11 +1,11 @@
 import Ember from 'ember';
-import ModalModel from 'ember-modal-service/models/modal';
 
 const {
 	A,
 	isEmpty,
 	Service,
-	get
+	get,
+	getOwner
 } = Ember;
 
 /**
@@ -91,6 +91,7 @@ export default Service.extend({
 	 * @return Promise
 	 */
 	open(name, options = {}) {
+		const ModalModel = getOwner(this).factoryFor('model:modal');
 		const modal = ModalModel.create({ name, options });
 
 		// If the modal is already opened, reject it
