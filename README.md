@@ -2,6 +2,10 @@
 
 An [ember-cli addon](http://www.ember-cli.com/) to manage modals as promises.
 
+## Information
+
+[![NPM](https://nodei.co/npm/ember-modal-service.png?downloads=true&downloadRank=true)](https://nodei.co/npm/ember-modal-service/)
+
 ## Install in ember-cli application
 
 In your application's directory:
