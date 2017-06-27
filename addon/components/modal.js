@@ -1,13 +1,13 @@
 /* eslint-disable quote-props, no-magic-numbers */
 import Ember from 'ember';
+import { hasTransitions, onTransitionEnd } from 'ember-modal-service/utils/css-transitions';
 
 const {
 	Component,
 	computed,
 	inject: { service },
-	observer,
 	on,
-	run: { later },
+	run,
 	String: { camelize }
 } = Ember;
 
@@ -66,7 +66,9 @@ export default Component.extend({
 	 * @property data-id
 	 * @type {String}
 	 */
-	'data-id': null,
+	'data-id': computed('model.fullname', function() {
+		return camelize(this.get('model.fullname'));
+	}),
 
 	/**
 	 * Modal is visible/hidden. This property is read from CSS.
@@ -79,32 +81,97 @@ export default Component.extend({
 	}),
 
 	/**
-	 * Animation appearance delay.
+	 * On did insert element, set element as visible and set data-id.
 	 *
-	 * @property animationDelay
-	 * @type Number
+	 * @event onInsertElement
 	 */
-	animationDelay: 25,
+	onInsertElement: on('didInsertElement', function() {
+		run.scheduleOnce('afterRender', this._open.bind(this));
+	}),
 
 	/**
-	 * On did insert element, scroll to top and set element as visible.
+	 * Resolve current promise and close modal.
 	 *
-	 * @method didInsertElement
+	 * @method resolve
 	 */
-	didInsertElement() {
-		this._super();
-
-		const animationDelay = this.get('animationDelay');
-
-		later(() => {
-			if (!this.isDestroyed) {
-				this.set('visible', true);
-			}
-		}, animationDelay);
-
-		this.set('data-id', camelize(this.get('model.fullname')));
+	resolve(data, label = `Modal '${this.get('model.fullname')}': fulfillment`) {
+		this.get('model.deferred').resolve(data, label);
 	},
 
+	/**
+	 * Reject current promise and close modal.
+	 *
+	 * @method reject
+	 */
+	reject(data, label = `Modal '${this.get('model.fullname')}': rejection`) {
+		this.get('model.deferred').reject(data, label);
+	},
+
+	/**
+	 * Action to know when modal is fully opened.
+	 *
+	 * @method didOpen
+	 */
+	didOpen() {},
+
+	/**
+	 * Turn on visibility and send didOpen event.
+	 *
+	 * @method _open
+	 * @private
+	 */
+	_open() {
+		if (this.isDestroyed) {
+			return;
+		}
+		const element = this.$().get(0);
+
+		this.set('visible', true);
+
+		if (hasTransitions(element)) {
+			onTransitionEnd(element, this.didOpen.bind(this), 'all', true);
+		} else {
+			this.didOpen();
+		}
+	},
+
+	/**
+	 * Set modal as not visible and remove modal from array later.
+	 *
+	 * @method _close
+	 * @private
+	 */
+	_close() {
+		if (this.isDestroyed) {
+			return;
+		}
+
+		const element = this.$().get(0);
+
+		// Close modal.
+		this.set('visible', false);
+
+		// Remove modal from array when transition ends.
+		if (hasTransitions(element)) {
+			onTransitionEnd(element, this._remove.bind(this), 'all', true);
+		} else {
+			this._remove();
+		}
+	},
+
+	/**
+	 * Remove itself from service.
+	 *
+	 * @method _remove
+	 * @private
+	 */
+	_remove() {
+		if (this.isDestroyed) {
+			return;
+		}
+
+		this.get('modal.content').removeObject(this.get('model'));
+	},
 
 	/**
 	 * When the promise has been settled, close the view.
@@ -116,81 +183,8 @@ export default Component.extend({
 		// Prevent triggering Ember.onerror on promise resolution.
 		this.get('model.promise')
 			.catch(() => {}, 'Modal: empty catch to prevent exception')
-			.finally(() => this._close(), `Modal: closing modal`);
+			.finally(this._close.bind(this), 'Modal: closing modal');
 	}),
-
-	/**
-	 * Observes the visible property to toggle actions.
-	 *
-	 * @method visibleDidChange
-	 */
-	visibleDidChange: observer('visible', function() {
-		const visible = this.get('visible');
-
-		if (visible) {
-			this.didOpen();
-		} else {
-			this.willClose();
-		}
-	}),
-
-	/**
-	 * Resolve current promise and close modal.
-	 *
-	 * @method resolve
-	 */
-	resolve(data, label = `Modal: resolved '${this.get('model.fullname')}'`) {
-		this.get('model.deferred').resolve(data, label);
-	},
-
-	/**
-	 * Reject current promise and close modal.
-	 *
-	 * @method reject
-	 */
-	reject(data, label = `Modal: rejected '${this.get('model.fullname')}'`) {
-		this.get('model.deferred').reject(data, label);
-	},
-
-	/**
-	 * Open action.
-	 *
-	 * @method open
-	 * @return Boolean
-	 */
-	didOpen() {},
-
-	/**
-	 * Close action.
-	 *
-	 * @method close
-	 * @return Boolean
-	 */
-	willClose() {},
-
-	/**
-	 * Set modal as not visible and remove modal from array later.
-	 *
-	 * @method _close
-	 * @private
-	 */
-	_close() {
-		// Close modal.
-		this.set('visible', false);
-
-		// Remove modal from array.
-		later(this, this._remove, ANIMATION_DELAY);
-	},
-
-	/**
-	 * Remove itself from service.
-	 *
-	 * @method _remove
-	 * @private
-	 */
-	_remove() {
-		this.get('modal.content').removeObject(this.get('model'));
-	},
 
 	actions: {
 
@@ -213,5 +207,6 @@ export default Component.extend({
 		reject() {
 			this.reject(...arguments);
 		}
+
 	}
 });

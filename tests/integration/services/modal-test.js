@@ -2,7 +2,6 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import ModalComponent from 'ember-modal-service/components/modal';
-import wait from 'dummy/tests/helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 
 const { run } = Ember;
@@ -15,7 +14,8 @@ moduleForComponent('modal-container', 'Integration | Service | modal', {
 		// Registry dummy modal.
 		this.registry.register('component:modal-foo', ModalComponent.extend({
 			id: 'foo',
-			attributeBindings: ['id']
+			attributeBindings: ['id'],
+			classNames: ['animated']
 		}));
 
 		// Get instance of service.
@@ -33,8 +33,10 @@ function find(query) {
 	return Ember.$(query);
 }
 
-test('it renders, resolves and closes new modal', (assert) => {
+test('it renders, resolves and closes new modal with transitions', (assert) => {
 	assert.expect(4);
+
+	const done = assert.async();
 
 	let $element;
 
@@ -44,27 +46,31 @@ test('it renders, resolves and closes new modal', (assert) => {
 		});
 	});
 
-	wait(250);
-
 	$element = find('#foo[data-modal-show="true"]');
 
 	assert.equal($element.length, 1, 'Modal is displayed');
 
-	run(service.get('content.0.deferred'), 'resolve', 'foo');
+	setTimeout(() => {
+		run(service.get('content.0.deferred'), 'resolve', 'foo');
 
-	$element = find('#foo:not([data-modal-show="true"])');
+		$element = find('#foo:not([data-modal-show="true"])');
 
-	assert.equal($element.length, 1, 'Modal is hidden');
+		assert.equal($element.length, 1, 'Modal is hidden');
+	}, 300);
 
-	wait(400);
+	setTimeout(() => {
+		$element = find('#foo');
 
-	$element = find('#foo');
+		assert.equal($element.length, 0, 'Modal is removed from DOM');
 
-	assert.equal($element.length, 0, 'Modal is removed from DOM');
+		done();
+	}, 600);
 });
 
-test('it renders, rejects and closes new modal', (assert) => {
+test('it renders, rejects and closes new modal with transitions', (assert) => {
 	assert.expect(4);
+
+	const done = assert.async();
 
 	let $element;
 
@@ -74,27 +80,31 @@ test('it renders, rejects and closes new modal', (assert) => {
 		});
 	});
 
-	wait(250);
-
 	$element = find('#foo[data-modal-show="true"]');
 
 	assert.equal($element.length, 1, 'Modal is displayed');
 
-	run(service.get('content.0.deferred'), 'reject', 'foo');
+	setTimeout(() => {
+		run(service.get('content.0.deferred'), 'reject', 'foo');
 
-	$element = find('#foo:not([data-modal-show="true"])');
+		$element = find('#foo:not([data-modal-show="true"])');
 
-	assert.equal($element.length, 1, 'Modal is hidden');
+		assert.equal($element.length, 1, 'Modal is hidden');
+	}, 300);
 
-	wait(400);
+	setTimeout(() => {
+		$element = find('#foo');
 
-	$element = find('#foo');
+		assert.equal($element.length, 0, 'Modal is removed from DOM');
 
-	assert.equal($element.length, 0, 'Modal is removed from DOM');
+		done();
+	}, 600);
 });
 
-test('it renders, rejects and closes new modal from service', (assert) => {
+test('it renders, rejects and closes new modal from service with transitions', (assert) => {
 	assert.expect(4);
+
+	const done = assert.async();
 
 	let $element;
 
@@ -104,21 +114,23 @@ test('it renders, rejects and closes new modal from service', (assert) => {
 		});
 	});
 
-	wait(250);
-
 	$element = find('#foo[data-modal-show="true"]');
 
 	assert.equal($element.length, 1, 'Modal is displayed');
 
-	run(service, 'close', 'name', 'foo');
+	setTimeout(() => {
+		run(service, 'close', 'name', 'foo');
 
-	$element = find('#foo:not([data-modal-show="true"])');
+		$element = find('#foo:not([data-modal-show="true"])');
 
-	assert.equal($element.length, 1, 'Modal is hidden');
+		assert.equal($element.length, 1, 'Modal is hidden');
+	}, 300);
 
-	wait(400);
+	setTimeout(() => {
+		$element = find('#foo');
 
-	$element = find('#foo');
+		assert.equal($element.length, 0, 'Modal is removed from DOM');
 
-	assert.equal($element.length, 0, 'Modal is removed from DOM');
+		done();
+	}, 600);
 });

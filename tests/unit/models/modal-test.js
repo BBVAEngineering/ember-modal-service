@@ -1,7 +1,5 @@
-import Ember from 'ember';
 import { moduleFor, test } from 'ember-qunit';
 
-const { run } = Ember;
 const name = 'foo';
 
 let model;
