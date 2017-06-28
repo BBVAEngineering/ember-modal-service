@@ -12,8 +12,6 @@ const {
 	RSVP
 } = Ember;
 
-export const ANIMATION_DELAY = 400;
-
 /**
  * Component to wrap modal objects.
  *
