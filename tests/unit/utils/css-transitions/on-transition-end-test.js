@@ -33,6 +33,29 @@ test('it waits for any element transition', (assert) => {
 	}, 600);
 });
 
+test('it waits for any element transition several times', (assert) => {
+	const done = assert.async();
+	const element = createElement();
+	const fn = spy();
+
+	element.style.transition = 'all .2s linear 0s';
+
+	onTransitionEnd(element, fn);
+
+	setAnimationStyle(element, 'opacity', '0.5');
+
+	setTimeout(() => {
+		assert.ok(fn.calledOnce, 'fn is called once');
+
+		setAnimationStyle(element, 'background-color', 'green');
+	}, 300);
+
+	setTimeout(() => {
+		assert.ok(fn.calledTwice, 'fn is called twice');
+		done();
+	}, 600);
+});
+
 test('it calls function with transition event', (assert) => {
 	const done = assert.async();
 	const element = createElement();

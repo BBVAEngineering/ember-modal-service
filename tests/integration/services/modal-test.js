@@ -11,11 +11,17 @@ let service;
 moduleForComponent('modal-container', 'Integration | Service | modal', {
 	integration: true,
 	beforeEach() {
-		// Registry dummy modal.
+		// Registry dummy animated modal.
 		this.registry.register('component:modal-foo', ModalComponent.extend({
 			id: 'foo',
 			attributeBindings: ['id'],
 			classNames: ['animated']
+		}));
+
+		// Registry dummy modal.
+		this.registry.register('component:modal-bar', ModalComponent.extend({
+			id: 'bar',
+			attributeBindings: ['id']
 		}));
 
 		// Get instance of service.
@@ -32,6 +38,26 @@ moduleForComponent('modal-container', 'Integration | Service | modal', {
 function find(query) {
 	return Ember.$(query);
 }
+
+test('it renders, resolves and closes new modal', (assert) => {
+	let $element;
+
+	run(() => {
+		service.open('bar').then((bar) => {
+			assert.equal(bar, 'bar');
+		});
+	});
+
+	$element = find('#bar[data-modal-show="true"]');
+
+	assert.equal($element.length, 1, 'Modal is displayed');
+
+	run(service.get('content.0.deferred'), 'resolve', 'bar');
+
+	$element = find('#bar');
+
+	assert.equal($element.length, 0, 'Modal is removed from DOM');
+});
 
 test('it renders, resolves and closes new modal with transitions', (assert) => {
 	assert.expect(4);
@@ -67,6 +93,26 @@ test('it renders, resolves and closes new modal with transitions', (assert) => {
 	}, 600);
 });
 
+test('it renders, rejects and closes new modal', (assert) => {
+	let $element;
+
+	run(() => {
+		service.open('bar').then(null, (bar) => {
+			assert.equal(bar, 'bar');
+		});
+	});
+
+	$element = find('#bar[data-modal-show="true"]');
+
+	assert.equal($element.length, 1, 'Modal is displayed');
+
+	run(service.get('content.0.deferred'), 'reject', 'bar');
+
+	$element = find('#bar');
+
+	assert.equal($element.length, 0, 'Modal is removed from DOM');
+});
+
 test('it renders, rejects and closes new modal with transitions', (assert) => {
 	assert.expect(4);
 
@@ -99,6 +145,26 @@ test('it renders, rejects and closes new modal with transitions', (assert) => {
 
 		done();
 	}, 600);
+});
+
+test('it renders, rejects and closes new modal from service', (assert) => {
+	let $element;
+
+	run(() => {
+		service.open('bar').then(null, () => {
+			assert.ok(true);
+		});
+	});
+
+	$element = find('#bar[data-modal-show="true"]');
+
+	assert.equal($element.length, 1, 'Modal is displayed');
+
+	run(service, 'close', 'name', 'bar');
+
+	$element = find('#bar');
+
+	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
 test('it renders, rejects and closes new modal from service with transitions', (assert) => {

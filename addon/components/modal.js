@@ -8,7 +8,8 @@ const {
 	inject: { service },
 	on,
 	run,
-	String: { camelize }
+	String: { camelize },
+	RSVP
 } = Ember;
 
 export const ANIMATION_DELAY = 400;
@@ -83,9 +84,9 @@ export default Component.extend({
 	/**
 	 * On did insert element, set element as visible and set data-id.
 	 *
-	 * @event onInsertElement
+	 * @event onDidInsertElement
 	 */
-	onInsertElement: on('didInsertElement', function() {
+	onDidInsertElement: on('didInsertElement', function() {
 		run.scheduleOnce('afterRender', this._open.bind(this));
 	}),
 
@@ -94,7 +95,7 @@ export default Component.extend({
 	 *
 	 * @method resolve
 	 */
-	resolve(data, label = `Modal '${this.get('model.fullname')}': fulfillment`) {
+	resolve(data, label = `Component '${this.get('model.fullname')}': fulfillment`) {
 		this.get('model.deferred').resolve(data, label);
 	},
 
@@ -103,7 +104,7 @@ export default Component.extend({
 	 *
 	 * @method reject
 	 */
-	reject(data, label = `Modal '${this.get('model.fullname')}': rejection`) {
+	reject(data, label = `Component '${this.get('model.fullname')}': rejection`) {
 		this.get('model.deferred').reject(data, label);
 	},
 
@@ -181,9 +182,17 @@ export default Component.extend({
 	 */
 	_hasBeenSettled: on('init', function() {
 		// Prevent triggering Ember.onerror on promise resolution.
-		this.get('model.promise')
-			.catch(() => {}, 'Modal: empty catch to prevent exception')
-			.finally(this._close.bind(this), 'Modal: closing modal');
+		this.get('model.promise').catch((e) => {
+			if (e instanceof Error) {
+				return RSVP.reject(e, `Component '${this.get('model.fullname')}': bubble error`);
+			}
+
+			// Ignore rejections due to not being real errors here.
+			return e;
+		}, `Component '${this.get('model.fullname')}': catch real errors or ignore`).finally(
+			this._close.bind(this),
+			`Component '${this.get('model.fullname')}': close modal`
+		);
 	}),
 
 	actions: {

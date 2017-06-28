@@ -1,8 +1,6 @@
 import Ember from 'ember';
 
 const { run } = Ember;
-
-const div = document.createElement('div');
 const eventNames = {
 	transition:       'transitionend',
 	MozTransition:    'transitionend',
@@ -11,7 +9,15 @@ const eventNames = {
 	msTransition:     'MSTransitionEnd'
 };
 
+/**
+ * Find transition-end event name on current browser.
+ *
+ * @method findTransitionEventName
+ * @return Boolean
+ * @private
+ */
 function findTransitionEventName() {
+	const div = document.createElement('div');
 	const key = Object.keys(eventNames).find((eventName) => eventName in div.style);
 
 	return eventNames[key];
@@ -19,6 +25,15 @@ function findTransitionEventName() {
 
 const transitionEndEventName = findTransitionEventName();
 
+/**
+ * Subscribes a callback to a transition-end event by transition property on a given element.
+ *
+ * @method onTransitionEnd
+ * @param {Element} element
+ * @param {Function} callback
+ * @param {String} transitionProperty
+ * @param {Boolean} once
+ */
 export default function onTransitionEnd(element, callback, transitionProperty = 'all', once = false) {
 	const fn = (e) => {
 		const { propertyName, type } = e;
