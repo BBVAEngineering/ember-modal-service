@@ -16,7 +16,9 @@ let service;
 moduleFor('service:modal', 'Unit | Service | modal', {
 	beforeEach() {
 		service = this.subject();
-	}
+	},
+
+	needs: ['model:modal']
 });
 
 test('it has an empty array on init', (assert) => {
