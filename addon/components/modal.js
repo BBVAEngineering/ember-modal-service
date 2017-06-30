@@ -1,17 +1,16 @@
 /* eslint-disable quote-props, no-magic-numbers */
 import Ember from 'ember';
+import { hasTransitions, onTransitionEnd } from 'ember-modal-service/utils/css-transitions';
 
 const {
 	Component,
 	computed,
 	inject: { service },
-	observer,
 	on,
-	run: { later },
-	String: { camelize }
+	run,
+	String: { camelize },
+	RSVP
 } = Ember;
-
-export const ANIMATION_DELAY = 400;
 
 /**
  * Component to wrap modal objects.
@@ -66,7 +65,9 @@ export default Component.extend({
 	 * @property data-id
 	 * @type {String}
 	 */
-	'data-id': null,
+	'data-id': computed('model.fullname', function() {
+		return camelize(this.get('model.fullname'));
+	}),
 
 	/**
 	 * Modal is visible/hidden. This property is read from CSS.
@@ -79,59 +80,12 @@ export default Component.extend({
 	}),
 
 	/**
-	 * Animation appearance delay.
+	 * On did insert element, set element as visible and set data-id.
 	 *
-	 * @property animationDelay
-	 * @type Number
+	 * @event onDidInsertElement
 	 */
-	animationDelay: 25,
-
-	/**
-	 * On did insert element, scroll to top and set element as visible.
-	 *
-	 * @method didInsertElement
-	 */
-	didInsertElement() {
-		this._super();
-
-		const animationDelay = this.get('animationDelay');
-
-		later(() => {
-			if (!this.isDestroyed) {
-				this.set('visible', true);
-			}
-		}, animationDelay);
-
-		this.set('data-id', camelize(this.get('model.fullname')));
-	},
-
-
-	/**
-	 * When the promise has been settled, close the view.
-	 *
-	 * @method hasBeenSettled
-	 * @private
-	 */
-	_hasBeenSettled: on('init', function() {
-		// Prevent triggering Ember.onerror on promise resolution.
-		this.get('model.promise')
-			.catch(() => {}, 'Modal: empty catch to prevent exception')
-			.finally(() => this._close(), 'Modal: closing modal');
-	}),
-
-	/**
-	 * Observes the visible property to toggle actions.
-	 *
-	 * @method visibleDidChange
-	 */
-	visibleDidChange: observer('visible', function() {
-		const visible = this.get('visible');
-
-		if (visible) {
-			this.didOpen();
-		} else {
-			this.willClose();
-		}
+	onDidInsertElement: on('didInsertElement', function() {
+		run.scheduleOnce('afterRender', this._open.bind(this));
 	}),
 
 	/**
@@ -139,7 +93,7 @@ export default Component.extend({
 	 *
 	 * @method resolve
 	 */
-	resolve(data, label = `Modal: resolved '${this.get('model.fullname')}'`) {
+	resolve(data, label = `Component '${this.get('model.fullname')}': fulfillment`) {
 		this.get('model.deferred').resolve(data, label);
 	},
 
@@ -148,25 +102,37 @@ export default Component.extend({
 	 *
 	 * @method reject
 	 */
-	reject(data, label = `Modal: rejected '${this.get('model.fullname')}'`) {
+	reject(data, label = `Component '${this.get('model.fullname')}': rejection`) {
 		this.get('model.deferred').reject(data, label);
 	},
 
 	/**
-	 * Open action.
+	 * Action to know when modal is fully opened.
 	 *
-	 * @method open
-	 * @return Boolean
+	 * @method didOpen
 	 */
 	didOpen() {},
 
 	/**
-	 * Close action.
+	 * Turn on visibility and send didOpen event.
 	 *
-	 * @method close
-	 * @return Boolean
+	 * @method _open
+	 * @private
 	 */
-	willClose() {},
+	_open() {
+		if (this.isDestroyed) {
+			return;
+		}
+		const element = this.$().get(0);
+
+		this.set('visible', true);
+
+		if (hasTransitions(element)) {
+			onTransitionEnd(element, this.didOpen.bind(this), 'all', true);
+		} else {
+			this.didOpen();
+		}
+	},
 
 	/**
 	 * Set modal as not visible and remove modal from array later.
@@ -175,11 +141,21 @@ export default Component.extend({
 	 * @private
 	 */
 	_close() {
+		if (this.isDestroyed) {
+			return;
+		}
+
+		const element = this.$().get(0);
+
 		// Close modal.
 		this.set('visible', false);
 
-		// Remove modal from array.
-		later(this, this._remove, ANIMATION_DELAY);
+		// Remove modal from array when transition ends.
+		if (hasTransitions(element)) {
+			onTransitionEnd(element, this._remove.bind(this), 'all', true);
+		} else {
+			this._remove();
+		}
 	},
 
 	/**
@@ -189,8 +165,33 @@ export default Component.extend({
 	 * @private
 	 */
 	_remove() {
+		if (this.isDestroyed) {
+			return;
+		}
+
 		this.get('modal.content').removeObject(this.get('model'));
 	},
+
+	/**
+	 * When the promise has been settled, close the view.
+	 *
+	 * @method hasBeenSettled
+	 * @private
+	 */
+	_hasBeenSettled: on('init', function() {
+		// Prevent triggering Ember.onerror on promise resolution.
+		this.get('model.promise').catch((e) => {
+			if (e instanceof Error) {
+				return RSVP.reject(e, `Component '${this.get('model.fullname')}': bubble error`);
+			}
+
+			// Ignore rejections due to not being real errors here.
+			return e;
+		}, `Component '${this.get('model.fullname')}': catch real errors or ignore`).finally(
+			this._close.bind(this),
+			`Component '${this.get('model.fullname')}': close modal`
+		);
+	}),
 
 	actions: {
 
@@ -213,5 +214,6 @@ export default Component.extend({
 		reject() {
 			this.reject(...arguments);
 		}
+
 	}
 });

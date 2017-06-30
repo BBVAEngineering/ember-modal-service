@@ -1,21 +1,18 @@
+/* eslint no-magic-numbers:0 */
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import sinon from 'sinon';
-import wait from 'dummy/tests/helpers/wait';
 
 const {
 	A,
 	run,
 	RSVP: { defer }
 } = Ember;
+const { spy } = sinon;
 
 let component, deferred;
 
-const WAIT_TIME = 250;
-
 moduleForComponent('modal', 'Unit | Component | modal', {
-	unit: true,
-
 	needs: ['service:modal', 'model:modal'],
 
 	beforeEach() {
@@ -35,48 +32,82 @@ moduleForComponent('modal', 'Unit | Component | modal', {
 	}
 });
 
-test('it hides and removes modal when promise is resolved', (assert) => {
+test('it hides and removes modal when promise is resolved', function(assert) {
+	this.render();
+
+	assert.equal(component.get('visible'), true);
+
 	run(() => {
-		component.set('visible', true);
 		deferred.resolve();
 	});
 
 	assert.equal(component.get('visible'), false);
 
-	wait(WAIT_TIME);
-
 	assert.notOk(component.get('modal.content').includes(component.get('model')));
 });
 
-test('it hides and removes modal when promise is rejected', (assert) => {
-	run(() => {
-		component.set('visible', true);
+test('it hides and removes modal when promise is rejected', function(assert) {
+	this.render();
 
+	assert.equal(component.get('visible'), true);
+
+	run(() => {
 		deferred.reject();
 	});
 
 	assert.equal(component.get('visible'), false);
 
-	wait(WAIT_TIME);
-
 	assert.notOk(component.get('modal.content').includes(component.get('model')));
 });
 
-test('it sends actions when visible changes', (assert) => {
-	sinon.spy(component, 'didOpen');
-	sinon.spy(component, 'willClose');
+test('it sends didOpen when it is rendered', function(assert) {
+	spy(component, 'didOpen');
 
-	run(component, 'set', 'visible', true);
+	this.render();
 
 	assert.ok(component.didOpen.calledOnce);
-
-	run(component, 'set', 'visible', false);
-
-	assert.ok(component.willClose.calledOnce);
 });
 
-test('it resolves promise with arguments', (assert) => {
+test('it sends didOpen when it is rendered and has transitions', function(assert) {
+	const done = assert.async();
+
+	spy(component, 'didOpen');
+
+	run(component, 'set', 'classNames', ['animated']);
+
+	this.render();
+
+	assert.ok(component.didOpen.notCalled);
+
+	setTimeout(() => {
+		assert.ok(component.didOpen.calledOnce);
+		done();
+	}, 300);
+});
+
+test('it waits for transitions before being removed', function(assert) {
+	const done = assert.async();
+
+	run(component, 'set', 'classNames', ['animated']);
+
+	this.render();
+
+	run(() => {
+		deferred.resolve();
+	});
+
+	assert.equal(component.get('visible'), false);
+
+	setTimeout(() => {
+		assert.notOk(component.get('modal.content').includes(component.get('model')));
+		done();
+	}, 600);
+});
+
+test('it resolves promise with arguments', function(assert) {
 	assert.expect(1);
+
+	this.render();
 
 	component.get('model.promise').then((foo) => {
 		assert.equal(foo, 'foo');
@@ -85,8 +116,10 @@ test('it resolves promise with arguments', (assert) => {
 	component.resolve('foo');
 });
 
-test('it rejects promise with arguments', (assert) => {
+test('it rejects promise with arguments', function(assert) {
 	assert.expect(1);
+
+	this.render();
 
 	component.get('model.promise').then(null, (foo) => {
 		assert.equal(foo, 'foo');
@@ -112,3 +145,4 @@ test('it defines the appropriate `data-id` on the component wrapper', function(a
 
 	assert.equal(component.$().attr('data-id'), 'modalFoo');
 });
+

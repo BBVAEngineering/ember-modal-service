@@ -1,0 +1,11 @@
+.animated {
+	transition: opacity .2s
+}
+
+.animated[data-modal-show="false"] {
+	opacity: 0;
+}
+
+.animated[data-modal-show="true"] {
+	opacity: 1;
+}
