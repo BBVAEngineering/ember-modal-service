@@ -12,6 +12,7 @@ cache:
 
 env:
   # we recommend testing LTS's and latest stable release (bonus points to beta/canary)
+  - EMBER_TRY_SCENARIO=ember-lts-2.4
   - EMBER_TRY_SCENARIO=ember-lts-2.8
   - EMBER_TRY_SCENARIO=ember-release
   - EMBER_TRY_SCENARIO=ember-beta
@@ -25,7 +26,7 @@ matrix:
 
 before_install:
   - npm config set spin false
-  - npm install -g bower phantomjs-prebuilt
+  - npm install -g bower phantomjs-prebuilt chromedriver
   - bower --version
   - phantomjs --version
   - yarn --version

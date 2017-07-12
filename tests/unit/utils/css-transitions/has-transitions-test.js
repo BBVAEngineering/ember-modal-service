@@ -37,3 +37,11 @@ test('it returns false when element has no transitions', (assert) => {
 
 	assert.notOk(hasTransitions(element), 'element has no transitions');
 });
+
+test('it returns false when element has no durations', (assert) => {
+	const element = createElement();
+
+	element.style.transition = 'transform 0s linear 0s, -webkit-transform 0s linear 0s';
+
+	assert.notOk(hasTransitions(element), 'element has no transitions');
+});
