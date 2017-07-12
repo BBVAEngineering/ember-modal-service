@@ -1,16 +1,11 @@
 ---
 language: node_js
 node_js: 6
-dist: trusty
 
 sudo: false
 
 addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
+  chrome: stable
 
 cache:
   directories:
