@@ -1,11 +1,13 @@
 ---
 language: node_js
-node_js: 6
+dist: trusty
+node_js:
+  - "6"
 
 sudo: false
 
 addons:
-  chrome: stable
+  google-chrome: stable
 
 cache:
   directories:
@@ -33,6 +35,7 @@ before_install:
   - bower --version
   - phantomjs --version
   - yarn --version
+  - google-chrome --version
 
 install:
   - yarn install
