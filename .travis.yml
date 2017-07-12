@@ -1,17 +1,23 @@
 ---
 language: node_js
+dist: trusty
 node_js:
   - "6"
 
 sudo: false
 
+addons:
+  chrome: stable
+
 cache:
   directories:
     - $HOME/.yarn-cache
-    - $HOME/.cache # includes bowers cache
+    - $HOME/.cache  # includes bowers cache
 
 env:
-  # we recommend testing LTS's and latest stable release (bonus points to beta/canary)
+  # we recommend testing LTS's and latest
+  #  stable release (bonus points to beta/canary)
+  - EMBER_TRY_SCENARIO=ember-lts-2.4
   - EMBER_TRY_SCENARIO=ember-lts-2.8
   - EMBER_TRY_SCENARIO=ember-release
   - EMBER_TRY_SCENARIO=ember-beta
@@ -24,11 +30,14 @@ matrix:
     - env: EMBER_TRY_SCENARIO=ember-canary
 
 before_install:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
   - npm config set spin false
   - npm install -g bower phantomjs-prebuilt
   - bower --version
   - phantomjs --version
   - yarn --version
+  - google-chrome --version
 
 install:
   - yarn install
