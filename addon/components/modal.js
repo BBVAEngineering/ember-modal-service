@@ -7,9 +7,9 @@ const {
 	computed,
 	inject: { service },
 	on,
-	run,
 	String: { camelize },
-	RSVP
+	RSVP,
+	run
 } = Ember;
 
 /**
@@ -18,6 +18,14 @@ const {
  * @extends Ember.Component
  */
 export default Component.extend({
+
+	/**
+	 * Modal service inject.
+	 *
+	 * @property modal
+	 * @type Object
+	 */
+	scheduler: service('scheduler'),
 
 	/**
 	 * Modal service inject.
@@ -85,7 +93,9 @@ export default Component.extend({
 	 * @event onDidInsertElement
 	 */
 	onDidInsertElement: on('didInsertElement', function() {
-		run.scheduleOnce('afterRender', this._open.bind(this));
+		const scheduler = this.get('scheduler');
+
+		run.next(scheduler.scheduleOnce.bind(scheduler, this, '_open'));
 	}),
 
 	/**
@@ -123,12 +133,14 @@ export default Component.extend({
 		if (this.isDestroyed) {
 			return;
 		}
+
+		const scheduler = this.get('scheduler');
 		const element = this.$().get(0);
 
 		this.set('visible', true);
 
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, this.didOpen.bind(this), 'all', true);
+			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, 'didOpen'), 'all', true);
 		} else {
 			this.didOpen();
 		}
@@ -145,6 +157,7 @@ export default Component.extend({
 			return;
 		}
 
+		const scheduler = this.get('scheduler');
 		const element = this.$().get(0);
 
 		// Close modal.
@@ -152,7 +165,7 @@ export default Component.extend({
 
 		// Remove modal from array when transition ends.
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, this._remove.bind(this), 'all', true);
+			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_remove'), 'all', true);
 		} else {
 			this._remove();
 		}

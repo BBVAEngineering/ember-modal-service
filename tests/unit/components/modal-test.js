@@ -2,6 +2,7 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import sinon from 'sinon';
+import waitFor from 'ember-task-scheduler/utils/wait-for';
 
 const {
 	A,
@@ -10,10 +11,10 @@ const {
 } = Ember;
 const { spy } = sinon;
 
-let component, deferred;
+let component, deferred, service;
 
 moduleForComponent('modal', 'Unit | Component | modal', {
-	needs: ['service:modal', 'model:modal'],
+	needs: ['service:modal', 'service:scheduler', 'model:modal'],
 
 	beforeEach() {
 		deferred = defer();
@@ -29,11 +30,19 @@ moduleForComponent('modal', 'Unit | Component | modal', {
 				content: A()
 			}
 		});
+
+		service = this.container.lookup('service:scheduler');
 	}
 });
 
-test('it hides and removes modal when promise is resolved', function(assert) {
+function waitForScheduler() {
+	return waitFor(() => !service.hasPendingTasks() && !run.hasScheduledTimers(), 0);
+}
+
+test('it hides and removes modal when promise is resolved', async function(assert) {
 	this.render();
+
+	await waitForScheduler();
 
 	assert.equal(component.get('visible'), true);
 
@@ -46,8 +55,10 @@ test('it hides and removes modal when promise is resolved', function(assert) {
 	assert.notOk(component.get('modal.content').includes(component.get('model')));
 });
 
-test('it hides and removes modal when promise is rejected', function(assert) {
+test('it hides and removes modal when promise is rejected', async function(assert) {
 	this.render();
+
+	await waitForScheduler();
 
 	assert.equal(component.get('visible'), true);
 
@@ -60,15 +71,17 @@ test('it hides and removes modal when promise is rejected', function(assert) {
 	assert.notOk(component.get('modal.content').includes(component.get('model')));
 });
 
-test('it sends didOpen when it is rendered', function(assert) {
+test('it sends didOpen when it is rendered', async function(assert) {
 	spy(component, 'didOpen');
 
 	this.render();
 
+	await waitForScheduler();
+
 	assert.ok(component.didOpen.calledOnce);
 });
 
-test('it sends didOpen when it is rendered and has transitions', function(assert) {
+test('it sends didOpen when it is rendered and has transitions', async function(assert) {
 	const done = assert.async();
 
 	spy(component, 'didOpen');
@@ -76,6 +89,8 @@ test('it sends didOpen when it is rendered and has transitions', function(assert
 	run(component, 'set', 'classNames', ['animated']);
 
 	this.render();
+
+	await waitForScheduler();
 
 	assert.ok(component.didOpen.notCalled);
 
@@ -85,12 +100,14 @@ test('it sends didOpen when it is rendered and has transitions', function(assert
 	}, 300);
 });
 
-test('it waits for transitions before being removed', function(assert) {
+test('it waits for transitions before being removed', async function(assert) {
 	const done = assert.async();
 
 	run(component, 'set', 'classNames', ['animated']);
 
 	this.render();
+
+	await waitForScheduler();
 
 	run(() => {
 		deferred.resolve();
@@ -104,10 +121,12 @@ test('it waits for transitions before being removed', function(assert) {
 	}, 600);
 });
 
-test('it resolves promise with arguments', function(assert) {
+test('it resolves promise with arguments', async function(assert) {
 	assert.expect(1);
 
 	this.render();
+
+	await waitForScheduler();
 
 	component.get('model.promise').then((foo) => {
 		assert.equal(foo, 'foo');
@@ -116,10 +135,12 @@ test('it resolves promise with arguments', function(assert) {
 	component.resolve('foo');
 });
 
-test('it rejects promise with arguments', function(assert) {
+test('it rejects promise with arguments', async function(assert) {
 	assert.expect(1);
 
 	this.render();
+
+	await waitForScheduler();
 
 	component.get('model.promise').then(null, (foo) => {
 		assert.equal(foo, 'foo');
@@ -128,8 +149,10 @@ test('it rejects promise with arguments', function(assert) {
 	component.reject('foo');
 });
 
-test('it binds visible class from component', function(assert) {
+test('it binds visible class from component', async function(assert) {
 	this.render();
+
+	await waitForScheduler();
 
 	run(component, 'set', 'visible', false);
 
@@ -140,8 +163,10 @@ test('it binds visible class from component', function(assert) {
 	assert.ok(component.$().attr('data-modal-show') === 'true');
 });
 
-test('it defines the appropriate `data-id` on the component wrapper', function(assert) {
+test('it defines the appropriate `data-id` on the component wrapper', async function(assert) {
 	this.render();
+
+	await waitForScheduler();
 
 	assert.equal(component.$().attr('data-id'), 'modalFoo');
 });
