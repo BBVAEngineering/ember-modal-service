@@ -3,10 +3,11 @@ import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import ModalComponent from 'ember-modal-service/components/modal';
 import hbs from 'htmlbars-inline-precompile';
+import waitFor from 'ember-task-scheduler/utils/wait-for';
 
-const { run } = Ember;
+const { run, RSVP } = Ember;
 
-let service;
+let service, scheduler;
 
 moduleForComponent('modal-container', 'Integration | Service | modal', {
 	integration: true,
@@ -26,6 +27,7 @@ moduleForComponent('modal-container', 'Integration | Service | modal', {
 
 		// Get instance of service.
 		service = this.container.lookup('service:modal');
+		scheduler = this.container.lookup('service:scheduler');
 
 		// Render controller.
 		this.render(hbs `{{modal-container}}`);
@@ -39,7 +41,17 @@ function find(query) {
 	return Ember.$(query);
 }
 
-test('it renders, resolves and closes new modal', (assert) => {
+function waitForScheduler() {
+	return waitFor(() => !scheduler.hasPendingTasks() && !run.hasScheduledTimers(), 0);
+}
+
+function waitForTimeout(timeout) {
+	return new RSVP.Promise((resolve) => {
+		setTimeout(resolve, timeout);
+	});
+}
+
+test('it renders, resolves and closes new modal', async (assert) => {
 	let $element;
 
 	run(() => {
@@ -47,6 +59,8 @@ test('it renders, resolves and closes new modal', (assert) => {
 			assert.equal(bar, 'bar');
 		});
 	});
+
+	await waitForScheduler();
 
 	$element = find('#bar[data-modal-show="true"]');
 
@@ -59,10 +73,8 @@ test('it renders, resolves and closes new modal', (assert) => {
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, resolves and closes new modal with transitions', (assert) => {
+test('it renders, resolves and closes new modal with transitions', async (assert) => {
 	assert.expect(4);
-
-	const done = assert.async();
 
 	let $element;
 
@@ -72,28 +84,28 @@ test('it renders, resolves and closes new modal with transitions', (assert) => {
 		});
 	});
 
+	await waitForScheduler();
+
 	$element = find('#foo[data-modal-show="true"]');
 
 	assert.equal($element.length, 1, 'Modal is displayed');
 
-	setTimeout(() => {
-		run(service.get('content.0.deferred'), 'resolve', 'foo');
+	await waitForTimeout(300);
 
-		$element = find('#foo:not([data-modal-show="true"])');
+	run(service.get('content.0.deferred'), 'resolve', 'foo');
 
-		assert.equal($element.length, 1, 'Modal is hidden');
-	}, 300);
+	$element = find('#foo:not([data-modal-show="true"])');
 
-	setTimeout(() => {
-		$element = find('#foo');
+	assert.equal($element.length, 1, 'Modal is hidden');
 
-		assert.equal($element.length, 0, 'Modal is removed from DOM');
+	await waitForTimeout(300);
 
-		done();
-	}, 600);
+	$element = find('#foo');
+
+	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal', (assert) => {
+test('it renders, rejects and closes new modal', async (assert) => {
 	let $element;
 
 	run(() => {
@@ -101,6 +113,8 @@ test('it renders, rejects and closes new modal', (assert) => {
 			assert.equal(bar, 'bar');
 		});
 	});
+
+	await waitForScheduler();
 
 	$element = find('#bar[data-modal-show="true"]');
 
@@ -113,10 +127,8 @@ test('it renders, rejects and closes new modal', (assert) => {
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal with transitions', (assert) => {
+test('it renders, rejects and closes new modal with transitions', async (assert) => {
 	assert.expect(4);
-
-	const done = assert.async();
 
 	let $element;
 
@@ -126,28 +138,28 @@ test('it renders, rejects and closes new modal with transitions', (assert) => {
 		});
 	});
 
+	await waitForScheduler();
+
 	$element = find('#foo[data-modal-show="true"]');
 
 	assert.equal($element.length, 1, 'Modal is displayed');
 
-	setTimeout(() => {
-		run(service.get('content.0.deferred'), 'reject', 'foo');
+	await waitForTimeout(300);
 
-		$element = find('#foo:not([data-modal-show="true"])');
+	run(service.get('content.0.deferred'), 'reject', 'foo');
 
-		assert.equal($element.length, 1, 'Modal is hidden');
-	}, 300);
+	$element = find('#foo:not([data-modal-show="true"])');
 
-	setTimeout(() => {
-		$element = find('#foo');
+	assert.equal($element.length, 1, 'Modal is hidden');
 
-		assert.equal($element.length, 0, 'Modal is removed from DOM');
+	await waitForTimeout(300);
 
-		done();
-	}, 600);
+	$element = find('#foo');
+
+	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal from service', (assert) => {
+test('it renders, rejects and closes new modal from service', async (assert) => {
 	let $element;
 
 	run(() => {
@@ -155,6 +167,8 @@ test('it renders, rejects and closes new modal from service', (assert) => {
 			assert.ok(true);
 		});
 	});
+
+	await waitForScheduler();
 
 	$element = find('#bar[data-modal-show="true"]');
 
@@ -167,10 +181,8 @@ test('it renders, rejects and closes new modal from service', (assert) => {
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal from service with transitions', (assert) => {
+test('it renders, rejects and closes new modal from service with transitions', async (assert) => {
 	assert.expect(4);
-
-	const done = assert.async();
 
 	let $element;
 
@@ -180,23 +192,23 @@ test('it renders, rejects and closes new modal from service with transitions', (
 		});
 	});
 
+	await waitForScheduler();
+
 	$element = find('#foo[data-modal-show="true"]');
 
 	assert.equal($element.length, 1, 'Modal is displayed');
 
-	setTimeout(() => {
-		run(service, 'close', 'name', 'foo');
+	await waitForTimeout(300);
 
-		$element = find('#foo:not([data-modal-show="true"])');
+	run(service, 'close', 'name', 'foo');
 
-		assert.equal($element.length, 1, 'Modal is hidden');
-	}, 300);
+	$element = find('#foo:not([data-modal-show="true"])');
 
-	setTimeout(() => {
-		$element = find('#foo');
+	assert.equal($element.length, 1, 'Modal is hidden');
 
-		assert.equal($element.length, 0, 'Modal is removed from DOM');
+	await waitForTimeout(300);
 
-		done();
-	}, 600);
+	$element = find('#foo');
+
+	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
