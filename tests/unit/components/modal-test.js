@@ -11,7 +11,7 @@ const {
 } = Ember;
 const { spy } = sinon;
 
-let component, deferred, service;
+let component, deferred;
 
 moduleForComponent('modal', 'Unit | Component | modal', {
 	needs: ['service:modal', 'service:scheduler', 'model:modal'],
@@ -30,59 +30,53 @@ moduleForComponent('modal', 'Unit | Component | modal', {
 				content: A()
 			}
 		});
-
-		service = this.container.lookup('service:scheduler');
 	}
 });
 
-function waitForScheduler() {
-	return waitFor(() => !service.hasPendingTasks() && !run.hasScheduledTimers(), 0);
-}
-
 test('it hides and removes modal when promise is resolved', async function(assert) {
+	assert.expect(1);
+
 	this.render();
 
-	await waitForScheduler();
-
-	assert.equal(component.get('visible'), true);
+	await waitFor(() => component.get('visible'));
 
 	run(() => {
 		deferred.resolve();
 	});
 
-	assert.equal(component.get('visible'), false);
+	await waitFor(() => !component.get('visible'));
 
 	assert.notOk(component.get('modal.content').includes(component.get('model')));
 });
 
 test('it hides and removes modal when promise is rejected', async function(assert) {
+	assert.expect(1);
+
 	this.render();
 
-	await waitForScheduler();
-
-	assert.equal(component.get('visible'), true);
+	await waitFor(() => component.get('visible'));
 
 	run(() => {
 		deferred.reject();
 	});
 
-	assert.equal(component.get('visible'), false);
+	await waitFor(() => !component.get('visible'));
 
 	assert.notOk(component.get('modal.content').includes(component.get('model')));
 });
 
 test('it sends didOpen when it is rendered', async function(assert) {
+	assert.expect(0);
+
 	spy(component, 'didOpen');
 
 	this.render();
 
-	await waitForScheduler();
-
-	assert.ok(component.didOpen.calledOnce);
+	await waitFor(() => component.didOpen.calledOnce);
 });
 
 test('it sends didOpen when it is rendered and has transitions', async function(assert) {
-	const done = assert.async();
+	assert.expect(0);
 
 	spy(component, 'didOpen');
 
@@ -90,24 +84,17 @@ test('it sends didOpen when it is rendered and has transitions', async function(
 
 	this.render();
 
-	await waitForScheduler();
+	await waitFor(() => component.didOpen.notCalled);
 
-	assert.ok(component.didOpen.notCalled);
-
-	setTimeout(() => {
-		assert.ok(component.didOpen.calledOnce);
-		done();
-	}, 300);
+	await waitFor(() => component.didOpen.calledOnce);
 });
 
 test('it waits for transitions before being removed', async function(assert) {
-	const done = assert.async();
+	assert.expect(1);
 
 	run(component, 'set', 'classNames', ['animated']);
 
 	this.render();
-
-	await waitForScheduler();
 
 	run(() => {
 		deferred.resolve();
@@ -115,18 +102,13 @@ test('it waits for transitions before being removed', async function(assert) {
 
 	assert.equal(component.get('visible'), false);
 
-	setTimeout(() => {
-		assert.notOk(component.get('modal.content').includes(component.get('model')));
-		done();
-	}, 600);
+	await waitFor(() => !component.get('modal.content').includes(component.get('model')));
 });
 
 test('it resolves promise with arguments', async function(assert) {
 	assert.expect(1);
 
 	this.render();
-
-	await waitForScheduler();
 
 	component.get('model.promise').then((foo) => {
 		assert.equal(foo, 'foo');
@@ -140,8 +122,6 @@ test('it rejects promise with arguments', async function(assert) {
 
 	this.render();
 
-	await waitForScheduler();
-
 	component.get('model.promise').then(null, (foo) => {
 		assert.equal(foo, 'foo');
 	});
@@ -151,8 +131,6 @@ test('it rejects promise with arguments', async function(assert) {
 
 test('it binds visible class from component', async function(assert) {
 	this.render();
-
-	await waitForScheduler();
 
 	run(component, 'set', 'visible', false);
 
@@ -165,8 +143,6 @@ test('it binds visible class from component', async function(assert) {
 
 test('it defines the appropriate `data-id` on the component wrapper', async function(assert) {
 	this.render();
-
-	await waitForScheduler();
 
 	assert.equal(component.$().attr('data-id'), 'modalFoo');
 });

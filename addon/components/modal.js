@@ -88,6 +88,18 @@ export default Component.extend({
 	}),
 
 	/**
+	 * Has transitions property.
+	 *
+	 * @property hasTransitions
+	 * @type Boolean
+	 */
+	hasTransitions: computed(function() {
+		const element = this.$().get(0);
+
+		return hasTransitions(element);
+	}),
+
+	/**
 	 * On did insert element, set element as visible and set data-id.
 	 *
 	 * @event onDidInsertElement
@@ -139,7 +151,7 @@ export default Component.extend({
 
 		this.set('visible', true);
 
-		if (hasTransitions(element)) {
+		if (this.get('hasTransitions')) {
 			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, 'didOpen'), 'all', true);
 		} else {
 			this.didOpen();
@@ -161,13 +173,13 @@ export default Component.extend({
 		const element = this.$().get(0);
 
 		// Close modal.
-		this.set('visible', false);
+		scheduler.scheduleOnce(this, 'set', 'visible', false);
 
 		// Remove modal from array when transition ends.
-		if (hasTransitions(element)) {
+		if (this.get('hasTransitions')) {
 			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_remove'), 'all', true);
 		} else {
-			this._remove();
+			scheduler.scheduleOnce(this, '_remove');
 		}
 	},
 
@@ -192,6 +204,8 @@ export default Component.extend({
 	 * @private
 	 */
 	_hasBeenSettled: on('init', function() {
+		const scheduler = this.get('scheduler');
+
 		// Prevent triggering Ember.onerror on promise resolution.
 		this.get('model.promise').catch((e) => {
 			if (e instanceof Error) {
@@ -201,7 +215,7 @@ export default Component.extend({
 			// Ignore rejections due to not being real errors here.
 			return e;
 		}, `Component '${this.get('model.fullname')}': catch real errors or ignore`).finally(
-			this._close.bind(this),
+			scheduler.scheduleOnce.bind(scheduler, this, '_close'),
 			`Component '${this.get('model.fullname')}': close modal`
 		);
 	}),
