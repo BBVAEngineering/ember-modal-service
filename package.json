@@ -40,7 +40,8 @@
   "dependencies": {
     "ember-cli-babel": "5.1.10",
     "ember-cli-htmlbars": "1.1.1",
-    "ember-factory-for-polyfill": "1.1.2"
+    "ember-factory-for-polyfill": "1.1.2",
+    "ember-task-scheduler": "^1.0.2"
   },
   "devDependencies": {
     "babel-eslint": "7.2.3",
@@ -60,7 +61,6 @@
     "ember-resolver": "2.0.3",
     "ember-sinon": "0.5.1",
     "ember-source": "2.12.1",
-    "ember-task-scheduler": "^1.0.2",
     "eslint": "3.6.0",
     "eslint-config-bbva": "2.0.0",
     "loader.js": "4.2.3"
