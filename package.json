@@ -40,7 +40,7 @@
   "dependencies": {
     "ember-cli-babel": "5.1.10",
     "ember-cli-htmlbars": "1.1.1",
-    "ember-factory-for-polyfill": "1.1.2",
+    "ember-factory-for-polyfill": "^1.1.2",
     "ember-task-scheduler": "^1.0.2"
   },
   "devDependencies": {
