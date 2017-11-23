@@ -3,11 +3,12 @@ import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import sinon from 'sinon';
 import waitFor from 'ember-task-scheduler/utils/wait-for';
+import { onTransitionEnd } from 'ember-modal-service/utils/css-transitions';
 
 const {
 	A,
 	run,
-	RSVP: { defer }
+	RSVP
 } = Ember;
 const { spy } = sinon;
 
@@ -17,7 +18,7 @@ moduleForComponent('modal', 'Unit | Component | modal', {
 	needs: ['service:modal', 'service:scheduler', 'model:modal'],
 
 	beforeEach() {
-		deferred = defer();
+		deferred = RSVP.defer();
 
 		component = this.subject({
 			target: null,
@@ -34,6 +35,18 @@ moduleForComponent('modal', 'Unit | Component | modal', {
 		service = this.container.lookup('service:scheduler');
 	}
 });
+
+function waitForTransitionEnd(element) {
+	return new RSVP.Promise((resolve) => {
+		onTransitionEnd(element, resolve);
+	});
+}
+
+function waitForTimeout(timeout) {
+	return new RSVP.Promise((resolve) => {
+		setTimeout(resolve, timeout);
+	});
+}
 
 function waitForScheduler() {
 	return waitFor(() => !service.hasPendingTasks() && !run.hasScheduledTimers(), 0);
@@ -82,8 +95,6 @@ test('it sends didOpen when it is rendered', async function(assert) {
 });
 
 test('it sends didOpen when it is rendered and has transitions', async function(assert) {
-	const done = assert.async();
-
 	spy(component, 'didOpen');
 
 	run(component, 'set', 'classNames', ['animated']);
@@ -94,15 +105,28 @@ test('it sends didOpen when it is rendered and has transitions', async function(
 
 	assert.ok(component.didOpen.notCalled);
 
-	setTimeout(() => {
-		assert.ok(component.didOpen.calledOnce);
-		done();
-	}, 300);
+	await waitForTimeout(300);
+
+	assert.ok(component.didOpen.calledOnce);
+});
+
+test('it does not sends didOpen when it is destroyed', async function(assert) {
+	spy(component, 'didOpen');
+
+	run(component, 'set', 'classNames', ['animated']);
+
+	this.render();
+
+	await waitForTransitionEnd(component.element);
+
+	run(component, 'destroy');
+
+	await waitForScheduler();
+
+	assert.ok(component.didOpen.notCalled);
 });
 
 test('it waits for transitions before being removed', async function(assert) {
-	const done = assert.async();
-
 	run(component, 'set', 'classNames', ['animated']);
 
 	this.render();
@@ -115,10 +139,9 @@ test('it waits for transitions before being removed', async function(assert) {
 
 	assert.equal(component.get('visible'), false);
 
-	setTimeout(() => {
-		assert.notOk(component.get('modal.content').includes(component.get('model')));
-		done();
-	}, 600);
+	await waitForTimeout(300);
+
+	assert.notOk(component.get('modal.content').includes(component.get('model')));
 });
 
 test('it resolves promise with arguments', async function(assert) {
