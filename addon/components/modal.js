@@ -124,6 +124,19 @@ export default Component.extend({
 	didOpen() {},
 
 	/**
+	 * Safe call to didOpen method.
+	 *
+	 * @method _safeDidOpen
+	 */
+	_safeDidOpen() {
+		if (this.isDestroyed) {
+			return;
+		}
+
+		this.didOpen();
+	},
+
+	/**
 	 * Turn on visibility and send didOpen event.
 	 *
 	 * @method _open
@@ -135,12 +148,12 @@ export default Component.extend({
 		}
 
 		const scheduler = this.get('scheduler');
-		const element = this.$().get(0);
+		const element = this.element;
 
 		this.set('visible', true);
 
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, 'didOpen'), 'all', true);
+			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_safeDidOpen'), 'all', true);
 		} else {
 			this.didOpen();
 		}
