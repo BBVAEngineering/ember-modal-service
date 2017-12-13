@@ -228,7 +228,7 @@ export default Component.extend({
 		 * @method resolve
 		 */
 		resolve() {
-			this.resolve(...arguments);
+			this.resolve(Array.prototype.slice.apply(args));
 		},
 
 		/**
@@ -238,7 +238,7 @@ export default Component.extend({
 		 * @method reject
 		 */
 		reject() {
-			this.reject(...arguments);
+			this.reject(Array.prototype.slice.apply(args));
 		}
 
 	}
