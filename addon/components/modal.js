@@ -227,8 +227,8 @@ export default Component.extend({
 		 *
 		 * @method resolve
 		 */
-		resolve() {
-			this.resolve(...arguments);
+		resolve(...args) {
+			this.resolve(args.length > 1 ? args : args[0]);
 		},
 
 		/**
@@ -237,8 +237,8 @@ export default Component.extend({
 		 *
 		 * @method reject
 		 */
-		reject() {
-			this.reject(...arguments);
+		reject(...args) {
+			this.reject(args.length > 1 ? args : args[0]);
 		}
 
 	}
