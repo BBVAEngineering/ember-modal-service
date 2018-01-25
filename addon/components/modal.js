@@ -49,15 +49,15 @@ export default Component.extend({
 	 * @property attributeBindings
 	 * @type Array
 	 */
-	attributeBindings: ['data-modal-show', 'role', 'data-id'],
+	attributeBindings: ['data-modal-show', 'data-id'],
 
 	/**
 	 * HTML role.
 	 *
-	 * @property role
+	 * @property ariaRole
 	 * @type String
 	 */
-	role: 'dialog',
+	ariaRole: 'dialog',
 
 	/**
 	 * Modal is visible/hidden.
