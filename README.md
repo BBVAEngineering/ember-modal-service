@@ -1,7 +1,7 @@
 # ember-modal-service
 
-[![Build Status](https://travis-ci.org/BBVAEngineering/ember-modal-service.svg?branch=master)](https://travis-ci.org/BBVAEngineering/ember-modal-service) 
-[![GitHub version](https://badge.fury.io/gh/BBVAEngineering%2Fember-modal-service.svg)](https://badge.fury.io/gh/BBVAEngineering%2Fember-modal-service) 
+[![Build Status](https://travis-ci.org/BBVAEngineering/ember-modal-service.svg?branch=master)](https://travis-ci.org/BBVAEngineering/ember-modal-service)
+[![GitHub version](https://badge.fury.io/gh/BBVAEngineering%2Fember-modal-service.svg)](https://badge.fury.io/gh/BBVAEngineering%2Fember-modal-service)
 [![npm version](https://badge.fury.io/js/ember-modal-service.svg)](https://badge.fury.io/js/ember-modal-service)
 [![Dependency Status](https://david-dm.org/BBVAEngineering/ember-modal-service.svg)](https://david-dm.org/BBVAEngineering/ember-modal-service)
 
