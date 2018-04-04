@@ -39,6 +39,10 @@ before_install:
   - yarn --version
   - google-chrome --version
 
+before_script:
+    - sudo chown root /opt/google/chrome/chrome-sandbox
+    - sudo chmod 4755 /opt/google/chrome/chrome-sandbox
+
 install:
   - yarn install
   - bower install

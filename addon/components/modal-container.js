@@ -17,14 +17,6 @@ export default Component.extend({
 	layout,
 
 	/**
-	 * Class names.
-	 *
-	 * @property classNames
-	 * @type Array
-	 */
-	classNames: ['oh'],
-
-	/**
 	 * Binded CSS classes.
 	 *
 	 * @property classNameBindings
