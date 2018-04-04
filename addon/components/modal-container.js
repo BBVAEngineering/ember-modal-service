@@ -22,7 +22,7 @@ export default Component.extend({
 	 * @property classNameBindings
 	 * @type Array
 	 */
-	classNameBindings: ['full-height'],
+	classNameBindings: ['fullHeight'],
 
 	/**
 	 * Show set 100% height.
