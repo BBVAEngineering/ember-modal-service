@@ -2,5 +2,5 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-modal-service'
+	name: 'ember-modal-service'
 };
