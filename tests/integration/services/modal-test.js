@@ -1,11 +1,11 @@
 /* eslint-disable no-magic-numbers */
-import { run } from '@ember/runloop';
-import RSVP from 'rsvp';
 import $ from 'jquery';
-import { moduleForComponent, test } from 'ember-qunit';
-import ModalComponent from 'ember-modal-service/components/modal';
 import hbs from 'htmlbars-inline-precompile';
+import ModalComponent from 'ember-modal-service/components/modal';
+import RSVP from 'rsvp';
 import waitFor from 'ember-task-scheduler/utils/wait-for';
+import { moduleForComponent, test } from 'ember-qunit';
+import { run } from '@ember/runloop';
 
 let service, scheduler;
 

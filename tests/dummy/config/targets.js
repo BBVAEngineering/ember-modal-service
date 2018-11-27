@@ -1,3 +1,5 @@
+/* eslint-disable quote-props, no-process-env */
+
 'use strict';
 
 const browsers = [

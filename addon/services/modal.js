@@ -1,12 +1,8 @@
-import Ember from 'ember';
-
-const {
-	A,
-	isEmpty,
-	Service,
-	get,
-	getOwner
-} = Ember;
+import Service from '@ember/service';
+import { A } from '@ember/array';
+import { get } from '@ember/object';
+import { getOwner } from '@ember/application';
+import { isEmpty } from '@ember/utils';
 
 /**
  * Service that opens and closes modals.

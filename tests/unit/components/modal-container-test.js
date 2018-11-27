@@ -1,10 +1,7 @@
-import Ember from 'ember';
+import Component from '@ember/component';
+import EmberObject from '@ember/object';
+import { A } from '@ember/array';
 import { moduleForComponent, test } from 'ember-qunit';
-
-const {
-	A,
-	Component
-} = Ember;
 
 let component;
 
@@ -27,7 +24,7 @@ moduleForComponent('modal-container', 'Unit | Component | modal-container', {
 });
 
 test('it creates instances of components from model', function(assert) {
-	const object = Ember.Object.create({
+	const object = EmberObject.create({
 		fullname: 'modal-foo'
 	});
 

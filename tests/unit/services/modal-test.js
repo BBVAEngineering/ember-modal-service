@@ -1,12 +1,9 @@
-import Ember from 'ember';
-import { moduleFor, test } from 'ember-qunit';
 import ModalModel from 'ember-modal-service/models/modal';
+import { isArray } from '@ember/array';
+import { isEmpty } from '@ember/utils';
+import { moduleFor, test } from 'ember-qunit';
+import { run } from '@ember/runloop';
 
-const {
-	isArray,
-	isEmpty,
-	run
-} = Ember;
 const RESOLVED = 1;
 const REJECTED = 2;
 let PENDING;
