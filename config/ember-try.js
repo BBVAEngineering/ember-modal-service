@@ -8,6 +8,7 @@ module.exports = function() {
 		getChannelURL('beta'),
 		getChannelURL('canary')
 	]).then((urls) => ({
+		useYarn: true,
 		scenarios: [
 			{
 				name: 'ember-lts-2.16',
