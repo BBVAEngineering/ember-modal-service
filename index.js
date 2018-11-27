@@ -1,6 +1,5 @@
-/* eslint-env node */
 'use strict';
 
 module.exports = {
-	name: 'ember-modal-service'
+	name: require('./package').name
 };

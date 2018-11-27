@@ -33,8 +33,7 @@ before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - npm config set spin false
-  - npm install -g bower phantomjs-prebuilt
-  - bower --version
+  - npm install -g phantomjs-prebuilt
   - phantomjs --version
   - yarn --version
   - google-chrome --version
@@ -45,7 +44,6 @@ before_script:
 
 install:
   - yarn install
-  - bower install
 
 script:
   - npm run lint:js

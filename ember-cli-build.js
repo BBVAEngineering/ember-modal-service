@@ -1,11 +1,12 @@
-/* eslint-env node */
+'use strict';
+
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
-module.exports = function (defaults) {
+module.exports = function(defaults) {
 	const app = new EmberAddon(defaults, {
-		babel: {
-			includePolyfill: true,
-			compileModules: true
+		'ember-cli-babel': {
+			compileModules: true,
+			includePolyfill: true
 		}
 	});
 

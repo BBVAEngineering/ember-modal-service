@@ -1,6 +1,3 @@
-/* eslint-env node */
-'use strict';
-
 module.exports = {
 	framework: 'qunit',
 	test_page: 'tests/index.html?hidepassed',

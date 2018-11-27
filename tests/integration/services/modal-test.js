@@ -51,7 +51,7 @@ function waitForTimeout(timeout) {
 	});
 }
 
-test('it renders, resolves and closes new modal', async (assert) => {
+test('it renders, resolves and closes new modal', async(assert) => {
 	let $element;
 
 	run(() => {
@@ -73,7 +73,7 @@ test('it renders, resolves and closes new modal', async (assert) => {
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, resolves and closes new modal with transitions', async (assert) => {
+test('it renders, resolves and closes new modal with transitions', async(assert) => {
 	assert.expect(4);
 
 	let $element;
@@ -105,7 +105,7 @@ test('it renders, resolves and closes new modal with transitions', async (assert
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal', async (assert) => {
+test('it renders, rejects and closes new modal', async(assert) => {
 	let $element;
 
 	run(() => {
@@ -127,7 +127,7 @@ test('it renders, rejects and closes new modal', async (assert) => {
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal with transitions', async (assert) => {
+test('it renders, rejects and closes new modal with transitions', async(assert) => {
 	assert.expect(4);
 
 	let $element;
@@ -159,7 +159,7 @@ test('it renders, rejects and closes new modal with transitions', async (assert)
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal from service', async (assert) => {
+test('it renders, rejects and closes new modal from service', async(assert) => {
 	let $element;
 
 	run(() => {
@@ -181,7 +181,7 @@ test('it renders, rejects and closes new modal from service', async (assert) => 
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal from service with transitions', async (assert) => {
+test('it renders, rejects and closes new modal from service with transitions', async(assert) => {
 	assert.expect(4);
 
 	let $element;
