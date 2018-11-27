@@ -32,12 +32,26 @@
       "url": "https://github.com/josex2r/"
     }
   ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-push": "npm run lint:js && npm run test"
+    }
+  },
   "scripts": {
     "build": "ember build",
+    "check-coverage": "istanbul check-coverage coverage/coverage-final.json --statements 100 --functions 100 --branches 100 --lines 100",
     "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint .",
+    "posttest": "npm run report-coverage && npm run check-coverage",
+    "report-coverage": "istanbul report --include=coverage/coverage-final.json text",
     "start": "ember serve",
-    "test": "ember test",
+    "test": "COVERAGE=true ember test",
     "test:all": "ember try:each"
   },
   "dependencies": {
@@ -46,10 +60,15 @@
     "ember-task-scheduler": "^1.0.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^7.0.0",
+    "@commitlint/config-conventional": "^7.0.1",
     "@ember/optional-features": "^0.6.3",
     "babel-eslint": "7.2.3",
     "broccoli-asset-rev": "^2.7.0",
+    "commitizen": "^3.0.4",
+    "cz-conventional-changelog": "^2.1.0",
     "ember-cli": "~3.5.1",
+    "ember-cli-code-coverage": "1.0.0-beta.5",
     "ember-cli-dependency-checker": "^3.0.0",
     "ember-cli-eslint": "^4.2.3",
     "ember-cli-htmlbars-inline-precompile": "1.0.3",
@@ -71,8 +90,11 @@
     "eslint-config-bbva": "2.0.0",
     "eslint-plugin-ember": "^5.2.0",
     "eslint-plugin-node": "^7.0.1",
+    "husky": "^1.0.0-rc.13",
+    "istanbul": "^0.4.5",
     "loader.js": "^4.7.0",
-    "qunit-dom": "^0.8.0"
+    "qunit-dom": "^0.8.0",
+    "semantic-release": "^15.12.2"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"

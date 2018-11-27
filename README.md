@@ -2,8 +2,10 @@
 
 [![Build Status](https://travis-ci.org/BBVAEngineering/ember-modal-service.svg?branch=master)](https://travis-ci.org/BBVAEngineering/ember-modal-service)
 [![GitHub version](https://badge.fury.io/gh/BBVAEngineering%2Fember-modal-service.svg)](https://badge.fury.io/gh/BBVAEngineering%2Fember-modal-service)
-[![npm version](https://badge.fury.io/js/ember-modal-service.svg)](https://badge.fury.io/js/ember-modal-service)
+[![NPM version](https://badge.fury.io/js/ember-modal-service.svg)](https://badge.fury.io/js/ember-modal-service)
 [![Dependency Status](https://david-dm.org/BBVAEngineering/ember-modal-service.svg)](https://david-dm.org/BBVAEngineering/ember-modal-service)
+[![codecov](https://codecov.io/gh/BBVAEngineering/ember-modal-service/branch/master/graph/badge.svg)](https://codecov.io/gh/BBVAEngineering/ember-modal-service)
+[![Greenkeeper badge](https://badges.greenkeeper.io/BBVAEngineering/ember-modal-service.svg)](https://greenkeeper.io/)
 [![Ember Observer Score](https://emberobserver.com/badges/ember-modal-service.svg)](https://emberobserver.com/addons/ember-modal-service)
 
 An [ember-cli addon](http://www.ember-cli.com/) to manage modals as promises.
