@@ -1,11 +1,11 @@
 /* eslint-disable no-magic-numbers */
-import Ember from 'ember';
+import { run } from '@ember/runloop';
+import RSVP from 'rsvp';
+import $ from 'jquery';
 import { moduleForComponent, test } from 'ember-qunit';
 import ModalComponent from 'ember-modal-service/components/modal';
 import hbs from 'htmlbars-inline-precompile';
 import waitFor from 'ember-task-scheduler/utils/wait-for';
-
-const { run, RSVP } = Ember;
 
 let service, scheduler;
 
@@ -38,7 +38,7 @@ moduleForComponent('modal-container', 'Integration | Service | modal', {
 });
 
 function find(query) {
-	return Ember.$(query);
+	return $(query);
 }
 
 function waitForScheduler() {
