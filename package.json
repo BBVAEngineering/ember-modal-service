@@ -34,6 +34,7 @@
   },
   "scripts": {
     "build": "ember build",
+    "lint:js": "eslint .",
     "start": "ember server",
     "test": "ember try:each"
   },
@@ -66,7 +67,7 @@
     "loader.js": "4.2.3"
   },
   "engines": {
-    "node": ">= 4.2.6"
+    "node": "6.* || 8.* || >= 10.*"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"

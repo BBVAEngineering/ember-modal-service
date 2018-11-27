@@ -1,10 +1,10 @@
 ---
 language: node_js
-dist: trusty
 node_js:
   - "6"
 
 sudo: false
+dist: trusty
 
 addons:
   chrome: stable
@@ -17,12 +17,12 @@ cache:
 env:
   # we recommend testing LTS's and latest
   #  stable release (bonus points to beta/canary)
-  - EMBER_TRY_SCENARIO=ember-lts-2.4
-  - EMBER_TRY_SCENARIO=ember-lts-2.8
+  - EMBER_TRY_SCENARIO=ember-lts-2.16
+  - EMBER_TRY_SCENARIO=ember-lts-2.18
   - EMBER_TRY_SCENARIO=ember-release
   - EMBER_TRY_SCENARIO=ember-beta
   - EMBER_TRY_SCENARIO=ember-canary
-  - EMBER_TRY_SCENARIO=ember-default
+  - EMBER_TRY_SCENARIO=ember-default-with-jquery
 
 matrix:
   fast_finish: true
@@ -40,15 +40,15 @@ before_install:
   - google-chrome --version
 
 before_script:
-    - sudo chown root /opt/google/chrome/chrome-sandbox
-    - sudo chmod 4755 /opt/google/chrome/chrome-sandbox
+  - sudo chown root /opt/google/chrome/chrome-sandbox
+  - sudo chmod 4755 /opt/google/chrome/chrome-sandbox
 
 install:
   - yarn install
   - bower install
 
 script:
+  - npm run lint:js
   # Usually, it's ok to finish the test scenario without reverting
   #  to the addon's original dependency state, skipping "cleanup".
-  - node_modules/.bin/eslint "**/*.js"
   - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO test --skip-cleanup
