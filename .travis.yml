@@ -27,7 +27,6 @@ matrix:
 before_install:
   # Configuration.
   - npm config set spin false
-  - npm install -g npm@^6
   - npm install -g codecov
   - npm install -g greenkeeper-lockfile@1
   - npm install -g @commitlint/travis-cli
