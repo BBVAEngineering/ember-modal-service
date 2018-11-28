@@ -591,7 +591,7 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@commitlint/cli@^7.0.0":
+"@commitlint/cli@^7.2.1":
   version "7.2.1"
   resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-7.2.1.tgz#dbb9eeb1f5015a129bb0801fbc1115eb1dcd513b"
   integrity sha512-PUHWGoQOx8m6ZSpZPSHb+YISFAvW7jiWvCJOQiViKHZC8CLKu4bjyc/AwP8gBte0RsTGAu1ekiitp5Q0NcLGcA==
@@ -730,6 +730,16 @@
   dependencies:
     find-up "^2.1.0"
 
+"@ember/jquery@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@ember/jquery/-/jquery-0.5.2.tgz#fe312c03ada0022fa092d23f7cd7e2eb0374b53a"
+  integrity sha1-/jEsA62gAi+gktI/fNfi6wN0tTo=
+  dependencies:
+    broccoli-funnel "^2.0.1"
+    ember-cli-babel "^6.6.0"
+    jquery "^3.3.1"
+    resolve "^1.7.1"
+
 "@ember/optional-features@^0.6.3":
   version "0.6.4"
   resolved "https://registry.yarnpkg.com/@ember/optional-features/-/optional-features-0.6.4.tgz#8199f853c1781234fcb1f05090cddd0b822bff69"
@@ -837,10 +847,10 @@
     universal-user-agent "^2.0.1"
     url-template "^2.0.8"
 
-"@octokit/request@2.1.2":
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/@octokit/request/-/request-2.1.2.tgz#a506e06cb3fd73617bd82710047cf3ee7e657835"
-  integrity sha512-RtC+7Np9hWWYfnXyT1qwBR6Y9uMArq2yY475o4sFp4qis5hAgOUEZMWknR+dfDpRRXoFOPSAAIjc900Gs7qI6Q==
+"@octokit/request@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@octokit/request/-/request-2.2.0.tgz#f4b2d1ad7c4c8a0b148193610c912046961f8be5"
+  integrity sha512-4P9EbwKZ4xfyupVMb3KVuHmM+aO2fye3nufjGKz/qDssvdJj9Rlx44O0FdFvUp4kIzToy3AHLTOulEIDAL+dpg==
   dependencies:
     "@octokit/endpoint" "^3.0.0"
     is-plain-object "^2.0.4"
@@ -848,11 +858,11 @@
     universal-user-agent "^2.0.1"
 
 "@octokit/rest@^16.0.1":
-  version "16.0.5"
-  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-16.0.5.tgz#95d10ba057904fc0cd0aa37c85da9e221dd26029"
-  integrity sha512-4v9gvBU80EmU05xq150G6AmL3Qsmyfkmg805o21nMi5F5Uo9e2Onhna6EyLTMwidoZ3PFX5l5/LQ3VmLcMkkJQ==
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-16.1.0.tgz#43bee0f58821b6c6a4c9d63e14919a1fb67a71b5"
+  integrity sha512-/D1XokSycOE+prxxI2r9cxssiLMqcr+BsEUjdruC67puEEjNJjJoRIkuA1b20jOkX5Ue3Rz99Mu9rTnNmjetUA==
   dependencies:
-    "@octokit/request" "2.1.2"
+    "@octokit/request" "2.2.0"
     before-after-hook "^1.2.0"
     btoa-lite "^1.0.0"
     lodash.get "^4.4.2"
@@ -2848,9 +2858,9 @@ can-symlink@^1.0.0:
     tmp "0.0.28"
 
 caniuse-lite@^1.0.30000844, caniuse-lite@^1.0.30000899:
-  version "1.0.30000911"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000911.tgz#5dfb8139ee479722da27000ca92dec47913b9605"
-  integrity sha512-x/E/SNwD80I0bT+fF9Y3Kbwo7Xd1xSafCAmFlpJmaVg3SQoJJOH4Ivb9fi9S0WjfqewQ6Ydt1zEVZpmMVYNeDA==
+  version "1.0.30000912"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000912.tgz#08e650d4090a9c0ab06bfd2b46b7d3ad6dcaea28"
+  integrity sha512-M3zAtV36U+xw5mMROlTXpAHClmPAor6GPKAMD5Yi7glCB5sbMPFtnQ3rGpk4XqPdUrrTIaVYSJZxREZWNy8QJg==
 
 capture-exit@^1.2.0:
   version "1.2.0"
@@ -7004,9 +7014,9 @@ line-stream@0.0.0:
     through "~2.2.0"
 
 linkify-it@^2.0.0:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-2.0.3.tgz#d94a4648f9b1c179d64fa97291268bdb6ce9434f"
-  integrity sha1-2UpGSPmxwXnWT6lykSaL22zpQ08=
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-2.1.0.tgz#c4caf38a6cd7ac2212ef3c7d2bde30a91561f9db"
+  integrity sha512-4REs8/062kV2DSHxNfq5183zrqXMl7WP0WzABH9IeJI+NLm429FgE1PDecltYfnOoFDFlZGh2T8PfZn0r+GTRg==
   dependencies:
     uc.micro "^1.0.1"
 
@@ -9330,7 +9340,7 @@ quick-temp@^0.1.2, quick-temp@^0.1.3, quick-temp@^0.1.5, quick-temp@^0.1.8:
     rimraf "^2.5.4"
     underscore.string "~3.3.4"
 
-qunit-dom@^0.8.0:
+qunit-dom@^0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/qunit-dom/-/qunit-dom-0.8.2.tgz#d1a2e49268dfd9ecab2c14a8e39717942dd6bfde"
   integrity sha512-VVYyhcThvksgttTpF66+pSrBO92WBZ1s/clqa3Cp4syutLk0EqDvF4C4+wzPvZBd0CO333Ns0OIqQ/KpNmv5dg==
@@ -9870,7 +9880,7 @@ resolve@1.5.0:
   dependencies:
     path-parse "^1.0.5"
 
-resolve@^1.1.3, resolve@^1.1.6, resolve@^1.3.2, resolve@^1.3.3, resolve@^1.4.0, resolve@^1.5.0, resolve@^1.6.0, resolve@^1.8.1:
+resolve@^1.1.3, resolve@^1.1.6, resolve@^1.3.2, resolve@^1.3.3, resolve@^1.4.0, resolve@^1.5.0, resolve@^1.6.0, resolve@^1.7.1, resolve@^1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.8.1.tgz#82f1ec19a423ac1fbd080b0bab06ba36e84a7a26"
   integrity sha512-AicPrAC7Qu1JxPCZ9ZgCZlY35QgFnNqc+0LtbRNxnVw4TXvjQ72wnuL9JQcEBgXkI9JM8MsT9kaQoHcpCRJOYA==
