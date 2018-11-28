@@ -60,7 +60,7 @@
     "ember-task-scheduler": "^1.0.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "^7.0.0",
+    "@commitlint/cli": "^7.2.1",
     "@commitlint/config-conventional": "^7.0.1",
     "@ember/optional-features": "^0.6.3",
     "babel-eslint": "7.2.3",
