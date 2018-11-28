@@ -1,5 +1,4 @@
 /* eslint-disable no-magic-numbers */
-import $ from 'jquery';
 import hbs from 'htmlbars-inline-precompile';
 import ModalComponent from 'ember-modal-service/components/modal';
 import RSVP from 'rsvp';
@@ -38,7 +37,7 @@ moduleForComponent('modal-container', 'Integration | Service | modal', {
 });
 
 function find(query) {
-	return $(query);
+	return document.querySelectorAll(query);
 }
 
 function waitForScheduler() {
