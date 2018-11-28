@@ -1,6 +1,5 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 
-const { run } = Ember;
 const eventNames = {
 	transition:       'transitionend',
 	MozTransition:    'transitionend',

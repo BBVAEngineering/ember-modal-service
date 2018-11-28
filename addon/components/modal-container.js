@@ -1,11 +1,7 @@
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from '../templates/components/modal-container';
-
-const {
-	Component,
-	computed: { notEmpty },
-	inject: { service }
-} = Ember;
+import { inject as service } from '@ember/service';
+import { notEmpty } from '@ember/object/computed';
 
 /**
  * Component that acts like a container to wrap modal object on its own component and view.

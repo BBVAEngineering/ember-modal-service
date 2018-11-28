@@ -1,18 +1,14 @@
-import Ember from 'ember';
-
-const {
-	computed,
-	isBlank,
-	String: { dasherize },
-	RSVP: { defer }
-} = Ember;
+import EmberObject, { computed } from '@ember/object';
+import { dasherize } from '@ember/string';
+import { defer } from 'rsvp';
+import { isBlank } from '@ember/utils';
 
 /**
  * Modal object to instantiate modals over controller.
  *
  * @extends Ember.Object
  */
-export default Ember.Object.extend({
+export default EmberObject.extend({
 
 	/**
 	 * Name of the modal.

@@ -1,11 +1,11 @@
 /* eslint-disable no-magic-numbers */
-import Ember from 'ember';
-import { moduleForComponent, test } from 'ember-qunit';
-import ModalComponent from 'ember-modal-service/components/modal';
+import $ from 'jquery';
 import hbs from 'htmlbars-inline-precompile';
+import ModalComponent from 'ember-modal-service/components/modal';
+import RSVP from 'rsvp';
 import waitFor from 'ember-task-scheduler/utils/wait-for';
-
-const { run, RSVP } = Ember;
+import { moduleForComponent, test } from 'ember-qunit';
+import { run } from '@ember/runloop';
 
 let service, scheduler;
 
@@ -38,7 +38,7 @@ moduleForComponent('modal-container', 'Integration | Service | modal', {
 });
 
 function find(query) {
-	return Ember.$(query);
+	return $(query);
 }
 
 function waitForScheduler() {
@@ -51,7 +51,7 @@ function waitForTimeout(timeout) {
 	});
 }
 
-test('it renders, resolves and closes new modal', async (assert) => {
+test('it renders, resolves and closes new modal', async(assert) => {
 	let $element;
 
 	run(() => {
@@ -73,7 +73,7 @@ test('it renders, resolves and closes new modal', async (assert) => {
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, resolves and closes new modal with transitions', async (assert) => {
+test('it renders, resolves and closes new modal with transitions', async(assert) => {
 	assert.expect(4);
 
 	let $element;
@@ -105,7 +105,7 @@ test('it renders, resolves and closes new modal with transitions', async (assert
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal', async (assert) => {
+test('it renders, rejects and closes new modal', async(assert) => {
 	let $element;
 
 	run(() => {
@@ -127,7 +127,7 @@ test('it renders, rejects and closes new modal', async (assert) => {
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal with transitions', async (assert) => {
+test('it renders, rejects and closes new modal with transitions', async(assert) => {
 	assert.expect(4);
 
 	let $element;
@@ -159,7 +159,7 @@ test('it renders, rejects and closes new modal with transitions', async (assert)
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal from service', async (assert) => {
+test('it renders, rejects and closes new modal from service', async(assert) => {
 	let $element;
 
 	run(() => {
@@ -181,7 +181,7 @@ test('it renders, rejects and closes new modal from service', async (assert) => 
 	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });
 
-test('it renders, rejects and closes new modal from service with transitions', async (assert) => {
+test('it renders, rejects and closes new modal from service with transitions', async(assert) => {
 	assert.expect(4);
 
 	let $element;
