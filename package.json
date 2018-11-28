@@ -1,13 +1,13 @@
 {
   "name": "ember-modal-service",
-  "version": "1.2.0",
+  "version": "0.0.0-development",
   "description": "The default blueprint for ember-cli addons.",
   "keywords": [
     "ember-addon"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BBVAEngineering/ember-modal-service.git"
+    "url": "https://github.com/BBVAEngineering/ember-modal-service.git"
   },
   "license": "MIT",
   "author": "BBVAEngineering",
@@ -47,12 +47,14 @@
     "build": "ember build",
     "check-coverage": "istanbul check-coverage coverage/coverage-final.json --statements 85 --functions 85 --branches 85 --lines 85",
     "lint:hbs": "ember-template-lint .",
-    "lint:js": "eslint .",
+    "lint:js": "eslint --max-warnings 0 ./*.js addon app config tests",
     "posttest": "npm run report-coverage && npm run check-coverage",
     "report-coverage": "istanbul report --include=coverage/coverage-final.json text",
     "start": "ember serve",
     "test": "COVERAGE=true ember test",
-    "test:all": "ember try:each"
+    "test:all": "ember try:each",
+    "travis-deploy-once": "travis-deploy-once",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "ember-cli-babel": "^6.16.0",
@@ -95,7 +97,8 @@
     "istanbul": "^0.4.5",
     "loader.js": "^4.7.0",
     "qunit-dom": "^0.8.2",
-    "semantic-release": "^15.12.2"
+    "semantic-release": "^15.12.2",
+    "travis-deploy-once": "^5.0.9"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
