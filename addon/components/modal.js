@@ -167,7 +167,7 @@ export default Component.extend({
 		}
 
 		const scheduler = this.get('scheduler');
-		const element = this.$().get(0);
+		const element = this.element;
 
 		// Close modal.
 		this.set('visible', false);
