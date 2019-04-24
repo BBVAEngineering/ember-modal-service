@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v1.2.2...v1.3.0) (2019-04-24)
+
+
+### Features
+
+* remove the instance of $() and replace with this.element ([aaf557d](https://github.com/BBVAEngineering/ember-modal-service/commit/aaf557d))
+
 ## [1.2.2](https://github.com/BBVAEngineering/ember-modal-service/compare/v1.2.1...v1.2.2) (2019-02-20)
 
 
