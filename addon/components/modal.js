@@ -181,6 +181,16 @@ export default Component.extend({
 	},
 
 	/**
+	 * Public method to remove itself from service.
+	 *
+	 * @method _remove
+	 * @private
+	 */
+	forceClose() {
+		this._remove();
+	},
+
+	/**
 	 * Remove itself from service.
 	 *
 	 * @method _remove
