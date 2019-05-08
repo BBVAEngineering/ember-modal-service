@@ -99,7 +99,7 @@
     "istanbul": "^0.4.5",
     "loader.js": "^4.7.0",
     "qunit-dom": "^0.8.4",
-    "semantic-release": "^15.13.3"
+    "semantic-release": "^15.13.12"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
