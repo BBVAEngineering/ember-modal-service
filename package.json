@@ -62,7 +62,7 @@
     "ember-task-scheduler": "^1.0.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "^7.6.0",
+    "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^7.5.0",
     "@ember/optional-features": "^0.7.0",
     "@semantic-release/changelog": "^3.0.2",
