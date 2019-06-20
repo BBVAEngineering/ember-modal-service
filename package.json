@@ -90,7 +90,7 @@
     "ember-qunit": "^4.4.0",
     "ember-resolver": "^5.1.1",
     "ember-sinon": "^4.0.0",
-    "ember-source": "https://s3.amazonaws.com/builds.emberjs.com/release/shas/41f1657f68735f214efeaa96eac96e8e093b4981.tgz",
+    "ember-source": "~3.10.0",
     "ember-source-channel-url": "^2.0.1",
     "ember-try": "^1.1.0",
     "eslint-config-bbva": "^2.0.3",
