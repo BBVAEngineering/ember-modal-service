@@ -32,14 +32,6 @@ export default Component.extend({
 	modal: service('modal'),
 
 	/**
-	 * HTML class name bindings.
-	 *
-	 * @property classNameBindings
-	 * @type Array
-	 */
-	classNameBindings: ['model.options.hasOverlay:modal-overlay:modal-view'],
-
-	/**
 	 * HTML attributes bindings.
 	 *
 	 * @property attributeBindings
