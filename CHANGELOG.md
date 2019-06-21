@@ -1,3 +1,20 @@
+# [2.0.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v1.3.0...v2.0.0) (2019-06-21)
+
+
+### chore
+
+* 🤖 removed linter from qunit tests ([050e64c](https://github.com/BBVAEngineering/ember-modal-service/commit/050e64c))
+
+
+### Features
+
+* remove css ([8170188](https://github.com/BBVAEngineering/ember-modal-service/commit/8170188))
+
+
+### BREAKING CHANGES
+
+* 🧨 removed classNameBindings
+
 # [1.3.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v1.2.2...v1.3.0) (2019-04-24)
 
 
