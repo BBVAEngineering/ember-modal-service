@@ -142,3 +142,28 @@ test('it waits for any element transition once', (assert) => {
 		done();
 	}, 600);
 });
+
+test('it ignores transition of child element', (assert) => {
+	const done = assert.async();
+	const element = createElement();
+	const childElement = document.createElement('div');
+	const fn = spy();
+
+	element.appendChild(childElement);
+	childElement.style.transition = 'background-color .2s linear 0s';
+
+	onTransitionEnd(element, fn, 'background-color');
+
+	setAnimationStyle(childElement, 'backgroundColor', 'green');
+
+	setTimeout(() => {
+		assert.ok(fn.notCalled, 'fn is not called');
+
+		setAnimationStyle(childElement, 'backgroundColor', 'red');
+	}, 300);
+
+	setTimeout(() => {
+		assert.ok(fn.notCalled, 'fn is still not called');
+		done();
+	}, 600);
+});

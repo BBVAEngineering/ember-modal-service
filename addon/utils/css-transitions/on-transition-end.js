@@ -35,18 +35,22 @@ const transitionEndEventName = findTransitionEventName();
  */
 export default function onTransitionEnd(element, callback, transitionProperty = 'all', once = false) {
 	const fn = (e) => {
-		const { propertyName, type } = e;
+		const { propertyName, type, target } = e;
+
+		if (element !== target) {
+			return;
+		}
 
 		if (transitionProperty !== 'all' && propertyName !== transitionProperty) {
 			return;
 		}
 
 		if (once) {
-			element.removeEventListener(type, fn, true);
+			element.removeEventListener(type, fn);
 		}
 
 		run(null, callback, e);
 	};
 
-	element.addEventListener(transitionEndEventName, fn, true);
+	element.addEventListener(transitionEndEventName, fn);
 }
