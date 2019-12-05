@@ -1,3 +1,11 @@
+# [2.1.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v2.0.0...v2.1.0) (2019-12-05)
+
+
+### Features
+
+* **upgrade:** upgrade ember version and fix tests ([141439d](https://github.com/BBVAEngineering/ember-modal-service/commit/141439d078b044efb0d98fbe4b05db6dc892316e))
+* **util:** use transition-end from npm ([fb6fe66](https://github.com/BBVAEngineering/ember-modal-service/commit/fb6fe66245de3a8b629e6a17f95a6236dbcd0023))
+
 # [2.0.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v1.3.0...v2.0.0) (2019-06-21)
 
 
