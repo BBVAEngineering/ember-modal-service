@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import waitFor from 'ember-task-scheduler/utils/wait-for';
 import { A } from '@ember/array';
 import { moduleForComponent, test } from 'ember-qunit';
-import { onTransitionEnd } from 'ember-modal-service/utils/css-transitions';
+import onTransitionEnd from 'ember-transition-end/utils/on-transition-end';
 import { run } from '@ember/runloop';
 
 const { spy } = sinon;
