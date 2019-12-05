@@ -1,40 +1,17 @@
 /* eslint-disable no-magic-numbers */
+import { setupRenderingTest } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { run } from '@ember/runloop';
+import { isArray } from '@ember/array';
+import { isEmpty } from '@ember/utils';
 import hbs from 'htmlbars-inline-precompile';
-import ModalComponent from 'ember-modal-service/components/modal';
 import RSVP from 'rsvp';
 import waitFor from 'ember-task-scheduler/utils/wait-for';
-import { moduleForComponent, test } from 'ember-qunit';
-import { run } from '@ember/runloop';
+import ModalComponent from 'ember-modal-service/components/modal';
+import { render } from '@ember/test-helpers';
 
 let service, scheduler;
-
-moduleForComponent('modal-container', 'Integration | Service | modal', {
-	integration: true,
-	beforeEach() {
-		// Registry dummy animated modal.
-		this.registry.register('component:modal-foo', ModalComponent.extend({
-			id: 'foo',
-			attributeBindings: ['id'],
-			classNames: ['animated']
-		}));
-
-		// Registry dummy modal.
-		this.registry.register('component:modal-bar', ModalComponent.extend({
-			id: 'bar',
-			attributeBindings: ['id']
-		}));
-
-		// Get instance of service.
-		service = this.container.lookup('service:modal');
-		scheduler = this.container.lookup('service:scheduler');
-
-		// Render controller.
-		this.render(hbs `{{modal-container}}`);
-	},
-	afterEach() {
-		this.registry.unregister('component:modal-foo');
-	}
-});
+const ANIMATION_DELAY = 300;
 
 function find(query) {
 	return document.querySelectorAll(query);
@@ -50,164 +27,207 @@ function waitForTimeout(timeout) {
 	});
 }
 
-test('it renders, resolves and closes new modal', async(assert) => {
-	let $element;
+module('Integration | Service | modal', (hooks) => {
+	setupRenderingTest(hooks);
 
-	run(() => {
-		service.open('bar').then((bar) => {
+	hooks.beforeEach(async function() {
+		// Registry dummy animated modal.
+		this.owner.register('component:modal-foo', ModalComponent.extend({
+			id: 'foo',
+			attributeBindings: ['id'],
+			classNames: ['animated']
+		}));
+
+		// Registry dummy modal.
+		this.owner.register('component:modal-bar', ModalComponent.extend({
+			id: 'bar',
+			attributeBindings: ['id']
+		}));
+
+		// Get instance of service.
+		service = this.owner.lookup('service:modal');
+		scheduler = this.owner.lookup('service:scheduler');
+
+		// Render controller.
+		await render(hbs `{{modal-container}}`);
+	});
+
+	hooks.afterEach(function() {
+		this.owner.unregister('component:modal-foo');
+	});
+
+	test('it has an empty array on init', (assert) => {
+		assert.ok(isArray(service.get('content')));
+		assert.ok(isEmpty(service.get('content')));
+	});
+
+	test('it renders, resolves and closes new modal', async(assert) => {
+		let $element;
+
+		run(async() => {
+			const bar = await service.open('bar');
+
 			assert.equal(bar, 'bar');
 		});
+
+		await waitForScheduler();
+
+		$element = find('#bar[data-modal-show="true"]');
+
+		assert.equal($element.length, 1, 'Modal is displayed');
+
+		run(service.get('content.0.deferred'), 'resolve', 'bar');
+
+		$element = find('#bar');
+
+		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	await waitForScheduler();
+	test('it renders, resolves and closes new modal with transitions', async(assert) => {
+		assert.expect(4);
 
-	$element = find('#bar[data-modal-show="true"]');
+		let $element;
 
-	assert.equal($element.length, 1, 'Modal is displayed');
+		run(async() => {
+			const foo = await service.open('foo');
 
-	run(service.get('content.0.deferred'), 'resolve', 'bar');
-
-	$element = find('#bar');
-
-	assert.equal($element.length, 0, 'Modal is removed from DOM');
-});
-
-test('it renders, resolves and closes new modal with transitions', async(assert) => {
-	assert.expect(4);
-
-	let $element;
-
-	run(() => {
-		service.open('foo').then((foo) => {
 			assert.equal(foo, 'foo');
 		});
+
+		await waitForScheduler();
+
+		$element = find('#foo[data-modal-show="true"]');
+
+		assert.equal($element.length, 1, 'Modal is displayed');
+
+		await waitForTimeout(ANIMATION_DELAY);
+
+		run(service.get('content.0.deferred'), 'resolve', 'foo');
+
+		$element = find('#foo:not([data-modal-show="true"])');
+
+		assert.equal($element.length, 1, 'Modal is hidden');
+
+		await waitForTimeout(ANIMATION_DELAY);
+
+		$element = find('#foo');
+
+		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	await waitForScheduler();
+	test('it renders, rejects and closes new modal', async(assert) => {
+		let $element;
 
-	$element = find('#foo[data-modal-show="true"]');
-
-	assert.equal($element.length, 1, 'Modal is displayed');
-
-	await waitForTimeout(300);
-
-	run(service.get('content.0.deferred'), 'resolve', 'foo');
-
-	$element = find('#foo:not([data-modal-show="true"])');
-
-	assert.equal($element.length, 1, 'Modal is hidden');
-
-	await waitForTimeout(300);
-
-	$element = find('#foo');
-
-	assert.equal($element.length, 0, 'Modal is removed from DOM');
-});
-
-test('it renders, rejects and closes new modal', async(assert) => {
-	let $element;
-
-	run(() => {
-		service.open('bar').then(null, (bar) => {
-			assert.equal(bar, 'bar');
+		run(async() => {
+			try {
+				await service.open('bar');
+			} catch (error) {
+				assert.equal(error, 'bar');
+			}
 		});
+
+		await waitForScheduler();
+
+		$element = find('#bar[data-modal-show="true"]');
+
+		assert.equal($element.length, 1, 'Modal is displayed');
+
+		run(service.get('content.0.deferred'), 'reject', 'bar');
+
+		$element = find('#bar');
+
+		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	await waitForScheduler();
+	test('it renders, rejects and closes new modal with transitions', async(assert) => {
+		assert.expect(4);
 
-	$element = find('#bar[data-modal-show="true"]');
+		let $element;
 
-	assert.equal($element.length, 1, 'Modal is displayed');
-
-	run(service.get('content.0.deferred'), 'reject', 'bar');
-
-	$element = find('#bar');
-
-	assert.equal($element.length, 0, 'Modal is removed from DOM');
-});
-
-test('it renders, rejects and closes new modal with transitions', async(assert) => {
-	assert.expect(4);
-
-	let $element;
-
-	run(() => {
-		service.open('foo').then(null, (foo) => {
-			assert.equal(foo, 'foo');
+		run(async() => {
+			try {
+				await service.open('foo');
+			} catch (error) {
+				assert.equal(error, 'foo');
+			}
 		});
+
+		await waitForScheduler();
+
+		$element = find('#foo[data-modal-show="true"]');
+
+		assert.equal($element.length, 1, 'Modal is displayed');
+
+		await waitForTimeout(ANIMATION_DELAY);
+
+		run(service.get('content.0.deferred'), 'reject', 'foo');
+
+		$element = find('#foo:not([data-modal-show="true"])');
+
+		assert.equal($element.length, 1, 'Modal is hidden');
+
+		await waitForTimeout(ANIMATION_DELAY);
+
+		$element = find('#foo');
+
+		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	await waitForScheduler();
+	test('it renders, rejects and closes new modal from service', async(assert) => {
+		let $element;
 
-	$element = find('#foo[data-modal-show="true"]');
-
-	assert.equal($element.length, 1, 'Modal is displayed');
-
-	await waitForTimeout(300);
-
-	run(service.get('content.0.deferred'), 'reject', 'foo');
-
-	$element = find('#foo:not([data-modal-show="true"])');
-
-	assert.equal($element.length, 1, 'Modal is hidden');
-
-	await waitForTimeout(300);
-
-	$element = find('#foo');
-
-	assert.equal($element.length, 0, 'Modal is removed from DOM');
-});
-
-test('it renders, rejects and closes new modal from service', async(assert) => {
-	let $element;
-
-	run(() => {
-		service.open('bar').then(null, () => {
-			assert.ok(true);
+		run(async() => {
+			try {
+				await service.open('bar');
+			} catch (error) {
+				assert.ok(true);
+			}
 		});
+
+		await waitForScheduler();
+
+		$element = find('#bar[data-modal-show="true"]');
+
+		assert.equal($element.length, 1, 'Modal is displayed');
+
+		run(service, 'close', 'name', 'bar');
+
+		$element = find('#bar');
+
+		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	await waitForScheduler();
+	test('it renders, rejects and closes new modal from service with transitions', async(assert) => {
+		assert.expect(4);
 
-	$element = find('#bar[data-modal-show="true"]');
+		let $element;
 
-	assert.equal($element.length, 1, 'Modal is displayed');
-
-	run(service, 'close', 'name', 'bar');
-
-	$element = find('#bar');
-
-	assert.equal($element.length, 0, 'Modal is removed from DOM');
-});
-
-test('it renders, rejects and closes new modal from service with transitions', async(assert) => {
-	assert.expect(4);
-
-	let $element;
-
-	run(() => {
-		service.open('foo').then(null, () => {
-			assert.ok(true);
+		run(async() => {
+			try {
+				await service.open('foo');
+			} catch (error) {
+				assert.ok(true);
+			}
 		});
+
+		await waitForScheduler();
+
+		$element = find('#foo[data-modal-show="true"]');
+
+		assert.equal($element.length, 1, 'Modal is displayed');
+
+		await waitForTimeout(ANIMATION_DELAY);
+
+		run(service, 'close', 'name', 'foo');
+
+		$element = find('#foo:not([data-modal-show="true"])');
+
+		assert.equal($element.length, 1, 'Modal is hidden');
+
+		await waitForTimeout(ANIMATION_DELAY);
+
+		$element = find('#foo');
+
+		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
-
-	await waitForScheduler();
-
-	$element = find('#foo[data-modal-show="true"]');
-
-	assert.equal($element.length, 1, 'Modal is displayed');
-
-	await waitForTimeout(300);
-
-	run(service, 'close', 'name', 'foo');
-
-	$element = find('#foo:not([data-modal-show="true"])');
-
-	assert.equal($element.length, 1, 'Modal is hidden');
-
-	await waitForTimeout(300);
-
-	$element = find('#foo');
-
-	assert.equal($element.length, 0, 'Modal is removed from DOM');
 });

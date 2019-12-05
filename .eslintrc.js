@@ -36,7 +36,7 @@ module.exports = {
 			],
 			parserOptions: {
 				sourceType: 'script',
-				ecmaVersion: 2015
+				ecmaVersion: 2017
 			},
 			env: {
 				browser: false,
@@ -45,6 +45,7 @@ module.exports = {
 			plugins: ['node'],
 			rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
 				// add your custom rules and overrides for node files here
+				'no-process-env': 0
 			})
 		}
 	]
