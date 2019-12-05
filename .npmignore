@@ -9,8 +9,11 @@
 /.bowerrc
 /.editorconfig
 /.ember-cli
+/.ember-cli.js
+/.env*
 /.eslintignore
 /.eslintrc.js
+/.git/
 /.gitignore
 /.template-lintrc.js
 /.travis.yml
