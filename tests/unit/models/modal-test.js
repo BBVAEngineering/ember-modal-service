@@ -21,12 +21,12 @@ module('Unit | Model | modal', (hooks) => {
 		assert.equal(model.get('fullname'), `modal-${name}`);
 	});
 
-	test('it throws an error if modal has not a name', (assert) => {
+	test('it throws an error if modal has not a name', function(assert) {
 		assert.throws(() => {
 			const factory = this.owner.factoryFor('model:modal');
 
 			factory.create();
-		});
+		}, Error, 'Modal must have a name.');
 	});
 
 	test('it setups the deferred, promise and fullname objects on init', (assert) => {
