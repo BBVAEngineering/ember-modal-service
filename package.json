@@ -104,7 +104,7 @@
     "json": "^9.0.6",
     "loader.js": "^4.7.0",
     "qunit-dom": "^0.9.0",
-    "semantic-release": "^15.13.31",
+    "semantic-release": "^16.0.4",
     "sinon": "^7.5.0"
   },
   "engines": {
