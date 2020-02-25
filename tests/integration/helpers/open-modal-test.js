@@ -80,7 +80,6 @@ module('Integration | Helper | open-modal', (hooks) => {
 	});
 
 	test('it handles the service resolve response with two optional parameters', async function(assert) {
-
 		let openModalCalled = false;
 
 		const mockedService = Ember.Service.extend({
