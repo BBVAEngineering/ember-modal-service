@@ -34,7 +34,7 @@ module('Integration | Helper | open-modal', (hooks) => {
 
 		await element.click();
 
-		assert.ok(service.open.calledWithMatch('foo'));
+		assert.ok(service.open.calledOnceWith('foo'));
 	});
 
 	test('it handles the service reject response', async function(assert) {
@@ -98,7 +98,7 @@ module('Integration | Helper | open-modal', (hooks) => {
 
 		await element.click();
 
-		assert.ok(service.open.called);
+		assert.ok(service.open.calledOnceWith('foo'));
 	});
 
 	cases([
@@ -124,6 +124,6 @@ module('Integration | Helper | open-modal', (hooks) => {
 
 		await element.click();
 
-		assert.ok(service.open.called);
+		assert.ok(service.open.calledOnceWith('foo'));
 	});
 });
