@@ -4,25 +4,29 @@ import { find, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 import cases from 'qunit-parameterize';
-
-const { RSVP } = Ember;
+import sinon from 'sinon';
 
 module('Integration | Helper | open-modal', (hooks) => {
 	setupRenderingTest(hooks);
 
-	test('service modal is called without optional parameters', async function(assert) {
-		let openModalCalled = false;
+	hooks.beforeEach(function() {
+		this.sandbox = sinon.createSandbox();
+	});
 
+	hooks.afterEach(function() {
+		this.sandbox.restore();
+	});
+
+	test('service modal is called without optional parameters', async function(assert) {
 		const mockedService = Ember.Service.extend({
-			open() {
-				openModalCalled = true;
-				return new RSVP.Promise(() => {});
-			}
+			open: this.sandbox.stub().resolves()
 		});
 
 		this.owner.register('service:modal', mockedService);
 
-		assert.notOk(openModalCalled);
+		const service = this.owner.lookup('service:modal');
+
+		assert.ok(service.open.notCalled);
 
 		await render(hbs`<div data-id='foo' onClick={{open-modal 'foo'}}></div>`);
 
@@ -30,22 +34,21 @@ module('Integration | Helper | open-modal', (hooks) => {
 
 		await element.click();
 
-		assert.ok(openModalCalled);
+		assert.ok(service.open.calledWithMatch('foo'));
 	});
 
 	test('it handles the service reject response', async function(assert) {
 		const done = assert.async();
 
 		const mockedService = Ember.Service.extend({
-			open() {
-				return RSVP.reject('Error');
-			}
+			open: this.sandbox.stub().rejects(new Error('Error'))
 		});
 
 		this.owner.register('service:modal', mockedService);
 
 		this.onFail = (error) => {
-			assert.equal(error, 'Error', 'it handles the rejection');
+			assert.ok(error instanceof Error, 'it handles the rejection');
+			assert.equal(error.message, 'Error', 'it handles the rejection');
 			done();
 		};
 
@@ -60,9 +63,7 @@ module('Integration | Helper | open-modal', (hooks) => {
 		const done = assert.async();
 
 		const mockedService = Ember.Service.extend({
-			open() {
-				return RSVP.resolve('Service called');
-			}
+			open: this.sandbox.stub().resolves('Service called')
 		});
 
 		this.owner.register('service:modal', mockedService);
@@ -80,16 +81,13 @@ module('Integration | Helper | open-modal', (hooks) => {
 	});
 
 	test('it handles the service resolve response with two optional parameters', async function(assert) {
-		let openModalCalled = false;
-
 		const mockedService = Ember.Service.extend({
-			open() {
-				openModalCalled = true;
-				return RSVP.resolve('Service called');
-			}
+			open: this.sandbox.stub().resolves()
 		});
 
 		this.owner.register('service:modal', mockedService);
+
+		const service = this.owner.lookup('service:modal');
 
 		this.onDone = () => {};
 		this.onFail = () => {};
@@ -100,7 +98,7 @@ module('Integration | Helper | open-modal', (hooks) => {
 
 		await element.click();
 
-		assert.ok(openModalCalled);
+		assert.ok(service.open.called);
 	});
 
 	cases([
@@ -108,27 +106,24 @@ module('Integration | Helper | open-modal', (hooks) => {
 		{ title:'onDone(Array) onFail(Bool)', onDone: [], onFail: true },
 		{ title:'onDone(null) onFail(Func)', onDone: null, onFail: () => {} }
 	]).test('it works with the optional parameters', async function(params, assert) {
-		let openModalCalled = false;
-
 		const mockedService = Ember.Service.extend({
-			open() {
-				openModalCalled = true;
-				return RSVP.resolve('Service called');
-			}
+			open: this.sandbox.stub().resolves()
 		});
 
 		this.owner.register('service:modal', mockedService);
 
-		this.set('params', params);
+		const service = this.owner.lookup('service:modal');
 
-		assert.notOk(openModalCalled);
+		this.set('params', params);
 
 		await render(hbs`<div data-id='foo' onClick={{open-modal 'foo' params.onDone params.onFail}}></div>`);
 
 		const element = find('[data-id="foo"]');
 
+		assert.ok(service.open.notCalled);
+
 		await element.click();
 
-		assert.ok(openModalCalled);
+		assert.ok(service.open.called);
 	});
 });
