@@ -1,7 +1,7 @@
 {
   "name": "ember-modal-service",
   "version": "2.2.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "An ember-cli addon to manage modals as promises.",
   "keywords": [
     "ember-addon"
   ],
