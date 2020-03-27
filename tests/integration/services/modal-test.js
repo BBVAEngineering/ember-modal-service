@@ -6,7 +6,7 @@ import { isArray } from '@ember/array';
 import { isEmpty } from '@ember/utils';
 import hbs from 'htmlbars-inline-precompile';
 import RSVP from 'rsvp';
-import waitFor from 'ember-task-scheduler/utils/wait-for';
+import waitFor from '../../helpers/wait-for';
 import ModalComponent from 'ember-modal-service/components/modal';
 import { render } from '@ember/test-helpers';
 
