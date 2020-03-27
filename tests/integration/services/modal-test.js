@@ -6,7 +6,7 @@ import { isArray } from '@ember/array';
 import { isEmpty } from '@ember/utils';
 import hbs from 'htmlbars-inline-precompile';
 import RSVP from 'rsvp';
-import waitFor from '../../helpers/wait-for';
+import { waitUntil } from '@ember/test-helpers';
 import ModalComponent from 'ember-modal-service/components/modal';
 import { render } from '@ember/test-helpers';
 
@@ -18,7 +18,7 @@ function find(query) {
 }
 
 function waitForScheduler() {
-	return waitFor(() => !scheduler.hasPendingTasks() && !run.hasScheduledTimers(), 0);
+	return waitUntil(() => !scheduler.hasPendingTasks() && !run.hasScheduledTimers(), { timeout: 2000 });
 }
 
 function waitForTimeout(timeout) {
