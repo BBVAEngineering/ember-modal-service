@@ -3,7 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import EmberObject from '@ember/object';
 import RSVP from 'rsvp';
 import sinon from 'sinon';
-import waitFor from '../../helpers/wait-for';
+import { waitUntil } from '@ember/test-helpers';
 import { A } from '@ember/array';
 import onTransitionEnd from 'ember-transition-end/utils/on-transition-end';
 import { run } from '@ember/runloop';
@@ -32,7 +32,7 @@ function waitForTimeout(timeout) {
 }
 
 function waitForScheduler() {
-	return waitFor(() => !service.hasPendingTasks() && !run.hasScheduledTimers(), 0);
+	return waitUntil(() => !service.hasPendingTasks() && !run.hasScheduledTimers(), { timeout: 2000 });
 }
 
 function isVisible(element) {
