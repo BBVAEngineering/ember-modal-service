@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v2.2.0...v2.3.0) (2020-03-27)
+
+
+### Features
+
+* **deps:** upgrade ember-task-scheduler ([795284f](https://github.com/BBVAEngineering/ember-modal-service/commit/795284f74b84dbd739e6cdc10319e618fb9abc58))
+
 # [2.2.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v2.1.0...v2.2.0) (2020-03-06)
 
 
