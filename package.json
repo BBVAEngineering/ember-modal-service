@@ -61,7 +61,7 @@
   "dependencies": {
     "ember-cli-babel": "^7.11.1",
     "ember-cli-htmlbars": "^4.0.5",
-    "ember-task-scheduler": "^1.0.2",
+    "ember-task-scheduler": "^2.1.0",
     "ember-transition-end": "^1.0.0"
   },
   "devDependencies": {
