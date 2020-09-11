@@ -1,3 +1,20 @@
+<<<<<<< HEAD
+||||||| parent of abe4a35... v3.14.0...v3.21.2
+# EditorConfig helps developers define and maintain consistent
+# coding styles between different editors and IDEs
+# editorconfig.org
+
+root = true
+
+
+=======
+# EditorConfig helps developers define and maintain consistent
+# coding styles between different editors and IDEs
+# editorconfig.org
+
+root = true
+
+>>>>>>> abe4a35... v3.14.0...v3.21.2
 [*]
 end_of_line = lf
 charset = utf-8

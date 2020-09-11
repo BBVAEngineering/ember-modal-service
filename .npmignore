@@ -8,8 +8,14 @@
 # misc
 /.bowerrc
 /.editorconfig
+<<<<<<< HEAD
 /.ember-cli
 /.ember-cli.js
+||||||| parent of abe4a35... v3.14.0...v3.21.2
+/.ember-cli.js
+=======
+/.ember-cli
+>>>>>>> abe4a35... v3.14.0...v3.21.2
 /.env*
 /.eslintignore
 /.eslintrc.js

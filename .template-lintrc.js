@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = {
+<<<<<<< HEAD
 	extends: 'recommended',
 
 	rules: {
@@ -21,4 +22,9 @@ module.exports = {
 		'no-inline-styles': true,
 		'simple-unless': false
 	}
+||||||| parent of abe4a35... v3.14.0...v3.21.2
+  extends: 'recommended'
+=======
+  extends: 'octane'
+>>>>>>> abe4a35... v3.14.0...v3.21.2
 };

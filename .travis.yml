@@ -1,8 +1,25 @@
 ---
 language: node_js
+<<<<<<< HEAD
 node_js: stable
 sudo: false
 dist: trusty
+||||||| parent of abe4a35... v3.14.0...v3.21.2
+node_js:
+  # we recommend testing addons with the same minimum supported node version as Ember CLI
+  # so that your addon works for all apps
+  - "8"
+
+sudo: false
+dist: trusty
+=======
+node_js:
+  # we recommend testing addons with the same minimum supported node version as Ember CLI
+  # so that your addon works for all apps
+  - "10"
+
+dist: xenial
+>>>>>>> abe4a35... v3.14.0...v3.21.2
 
 addons:
   chrome: stable
@@ -16,12 +33,20 @@ env:
     - JOBS=1
 
 jobs:
-  fail_fast: true
+  fast_finish: true
   allow_failures:
     - env: EMBER_TRY_SCENARIO=ember-canary
 
   include:
+<<<<<<< HEAD
+||||||| parent of abe4a35... v3.14.0...v3.21.2
+    # runs linting and tests with current locked deps
+
+=======
+    # runs linting and tests with current locked deps
+>>>>>>> abe4a35... v3.14.0...v3.21.2
     - stage: "Tests"
+<<<<<<< HEAD
       before_install:
         - npm config set spin false
         - npm install -g npm@6
@@ -33,7 +58,29 @@ jobs:
         - if [[ $TRAVIS_BRANCH =~ greenkeeper || $TRAVIS_PULL_REQUEST_BRANCH =~ greenkeeper ]]; then npm install; else npm ci; fi
       before_script:
         - greenkeeper-lockfile-update
+||||||| parent of abe4a35... v3.14.0...v3.21.2
+      name: "Tests"
+      install:
+        - yarn install --non-interactive
       script:
+        - yarn lint:hbs
+        - yarn lint:js
+        - yarn test
+
+    - name: "Floating Dependencies"
+=======
+      name: "Tests"
+      script:
+        - yarn lint
+        - yarn test:ember
+
+    - stage: "Additional Tests"
+      name: "Floating Dependencies"
+      install:
+        - yarn install --no-lockfile --non-interactive
+>>>>>>> abe4a35... v3.14.0...v3.21.2
+      script:
+<<<<<<< HEAD
         - commitlint-travis
         - npm run lint:js
         - npm run lint:hbs
@@ -42,14 +89,33 @@ jobs:
         - greenkeeper-lockfile-upload
       after_success:
         - codecov --file=coverage/lcov.info
+||||||| parent of abe4a35... v3.14.0...v3.21.2
+        - yarn test
+=======
+        - yarn test:ember
+>>>>>>> abe4a35... v3.14.0...v3.21.2
 
+<<<<<<< HEAD
     - stage: "Regression Tests"
       env: EMBER_TRY_SCENARIO=ember-lts-3.4
     - env: EMBER_TRY_SCENARIO=ember-lts-3.8
+||||||| parent of abe4a35... v3.14.0...v3.21.2
+    # we recommend new addons test the current and previous LTS
+    # as well as latest stable release (bonus points to beta/canary)
+    - stage: "Additional Tests"
+      env: EMBER_TRY_SCENARIO=ember-lts-3.4
+    - env: EMBER_TRY_SCENARIO=ember-lts-3.8
+=======
+    # we recommend new addons test the current and previous LTS
+    # as well as latest stable release (bonus points to beta/canary)
+    - env: EMBER_TRY_SCENARIO=ember-lts-3.16
+    - env: EMBER_TRY_SCENARIO=ember-lts-3.20
+>>>>>>> abe4a35... v3.14.0...v3.21.2
     - env: EMBER_TRY_SCENARIO=ember-release
     - env: EMBER_TRY_SCENARIO=ember-beta
     - env: EMBER_TRY_SCENARIO=ember-canary
     - env: EMBER_TRY_SCENARIO=ember-default-with-jquery
+    - env: EMBER_TRY_SCENARIO=ember-classic
 
     - stage: "Release"
       script: skip
@@ -59,11 +125,18 @@ jobs:
         script:
           - npx semantic-release
 
+<<<<<<< HEAD
 before_install:
   - npm config set spin false
   - npm install -g npm@6
   - npm --version
 
+||||||| parent of abe4a35... v3.14.0...v3.21.2
+install:
+  - yarn install --no-lockfile --non-interactive
+
+=======
+>>>>>>> abe4a35... v3.14.0...v3.21.2
 script:
   - node_modules/.bin/ember try:one $EMBER_TRY_SCENARIO --skip-cleanup
 
