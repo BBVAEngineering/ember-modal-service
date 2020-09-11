@@ -1,9 +1,5 @@
-'use strict';
-
 module.exports = {
-<<<<<<< HEAD
-	extends: 'recommended',
-
+	extends: 'octane',
 	rules: {
 		'no-bare-strings': true,
 		'block-indentation': 'tab',
@@ -14,17 +10,15 @@ module.exports = {
 		'deprecated-each-syntax': true,
 		'link-rel-noopener': true,
 		'no-invalid-interactive': true,
-		'img-alt-attributes': true,
+		'require-valid-alt-text': true,
 		'style-concatenation': true,
 		'deprecated-inline-view-helper': true,
 		'no-unused-block-params': true,
 		'inline-link-to': true,
 		'no-inline-styles': true,
 		'simple-unless': false
-	}
-||||||| parent of abe4a35... v3.14.0...v3.21.2
-  extends: 'recommended'
-=======
-  extends: 'octane'
->>>>>>> abe4a35... v3.14.0...v3.21.2
+	},
+	ignore: [
+		'tests/dummy/**'
+	]
 };
