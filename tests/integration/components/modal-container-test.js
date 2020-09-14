@@ -18,11 +18,13 @@ module('Integration | Component | modal-container', (hooks) => {
 		const object = EmberObject.create({
 			fullname: 'modal-foo'
 		});
-		const MyComponent = ModalContainerComponent.extend({
-			modal: {
+
+		class MyComponent extends ModalContainerComponent {
+			modal = {
 				content: [object]
-			}
-		});
+			};
+		}
+
 		const TestComponent = Component.extend({
 			classNames: ['modal-foo']
 		});

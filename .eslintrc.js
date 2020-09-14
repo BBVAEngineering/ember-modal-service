@@ -50,6 +50,9 @@ module.exports = {
 			node: true
 		},
 		plugins: ['node'],
-		extends: ['plugin:node/recommended']
+		extends: ['plugin:node/recommended'],
+		rules: {
+			'no-process-env': 0
+		}
 	}]
 };
