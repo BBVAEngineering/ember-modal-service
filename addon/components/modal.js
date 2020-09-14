@@ -1,12 +1,22 @@
 import Component from '@ember/component';
 import { camelize } from '@ember/string';
-import { action, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import onTransitionEnd from 'ember-transition-end/utils/on-transition-end';
 import { hasTransitions } from 'ember-modal-service/utils/css-transitions';
 import { inject as service } from '@ember/service';
 import { run } from '@ember/runloop';
 
-export default class ModalComponent extends Component {
+export default class ModalComponent extends Component.extend({
+	// Needed to be able to reopen `resolve` and `reject` methods.
+	actions: {
+		resolve() {
+			this.resolve(...arguments);
+		},
+		reject() {
+			this.reject(...arguments);
+		}
+	}
+}) {
 	@service scheduler;
 
 	@service modal;
@@ -108,12 +118,10 @@ export default class ModalComponent extends Component {
 		this.modal.content.removeObject(this.model);
 	}
 
-	@action
 	resolve(data, label = `Component '${this.model.fullname}': fulfillment`) {
 		this.model.deferred.resolve(data, label);
 	}
 
-	@action
 	reject(data, label = `Component '${this.model.fullname}': rejection`) {
 		this.model.deferred.reject(data, label);
 	}
