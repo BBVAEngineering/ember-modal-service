@@ -7,7 +7,7 @@ import { waitUntil } from '@ember/test-helpers';
 import { A } from '@ember/array';
 import onTransitionEnd from 'ember-transition-end/utils/on-transition-end';
 import { run } from '@ember/runloop';
-import { render } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ModalModel from 'ember-modal-service/models/modal';
 import ModalService from 'ember-modal-service/services/modal';
@@ -57,7 +57,13 @@ module('Integration | Component | modal', (hooks) => {
 		content = A();
 		didOpenSpy = spy();
 
+		const layout = hbs`
+			<button data-id="resolve" {{on 'click' (action 'resolve' 'foo')}}>Resolve</button>
+			<button data-id="reject" {{on 'click' (action 'reject' 'foo')}}>Reject</button>
+		`;
+
 		class MyComponent extends ModalComponent {
+			layout = layout;
 			target = null;
 			model = EmberObject.create({
 				fullname: 'modal-foo',
@@ -224,5 +230,33 @@ module('Integration | Component | modal', (hooks) => {
 		});
 
 		instance.reject('foo');
+	});
+
+	test('it resolves promise with action', async(assert) => {
+		await render(hbs `{{my-modal}}`);
+
+		component = document.querySelector('[data-id="modalFoo"]');
+
+		await waitForScheduler();
+
+		await click('[data-id="resolve"]');
+
+		assert.equal(await deferred.promise, 'foo');
+	});
+
+	test('it rejects promise with action', async(assert) => {
+		assert.expect(1);
+
+		await render(hbs `{{my-modal}}`);
+
+		component = document.querySelector('[data-id="modalFoo"]');
+
+		await waitForScheduler();
+
+		deferred.promise.catch((foo) => {
+			assert.equal(foo, 'foo');
+		});
+
+		await click('[data-id="reject"]');
 	});
 });
