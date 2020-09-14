@@ -65,7 +65,11 @@ export default class ModalComponent extends Component {
 		this.set('visible', true);
 
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_safeDidOpen'), 'all', true);
+			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_safeDidOpen'), {
+				transitionProperty: 'all',
+				once: true,
+				onlyTarget: true
+			});
 		} else {
 			this.didOpen();
 		}
@@ -85,7 +89,11 @@ export default class ModalComponent extends Component {
 
 		// Remove modal from array when transition ends.
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_remove'), 'all', true);
+			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_remove'), {
+				transitionProperty: 'all',
+				once: true,
+				onlyTarget: true
+			});
 		} else {
 			this._remove();
 		}
