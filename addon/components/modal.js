@@ -5,6 +5,7 @@ import onTransitionEnd from 'ember-transition-end/utils/on-transition-end';
 import { hasTransitions } from 'ember-modal-service/utils/css-transitions';
 import { inject as service } from '@ember/service';
 import { run } from '@ember/runloop';
+import { tracked } from '@glimmer/tracking';
 
 export default class ModalComponent extends Component.extend({
 	// Needed to be able to reopen `resolve` and `reject` methods.
@@ -25,7 +26,7 @@ export default class ModalComponent extends Component.extend({
 
 	ariaRole = 'dialog';
 
-	visible = false;
+	@tracked visible = false;
 
 	@computed('model.fullname')
 	get 'data-id'() {
@@ -72,7 +73,7 @@ export default class ModalComponent extends Component.extend({
 		const scheduler = this.scheduler;
 		const element = this.element;
 
-		this.set('visible', true);
+		this.visible = true;
 
 		if (hasTransitions(element)) {
 			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_safeDidOpen'), {
@@ -95,7 +96,7 @@ export default class ModalComponent extends Component.extend({
 		const element = this.element;
 
 		// Close modal.
-		this.set('visible', false);
+		this.visible = false;
 
 		// Remove modal from array when transition ends.
 		if (hasTransitions(element)) {

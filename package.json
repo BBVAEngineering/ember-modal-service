@@ -59,6 +59,7 @@
     "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0"
   },
   "dependencies": {
+    "@glimmer/tracking": "^1.0.1",
     "ember-cli-babel": "^7.22.1",
     "ember-cli-htmlbars": "^5.3.1",
     "ember-task-scheduler": "^2.1.0",
@@ -69,7 +70,6 @@
     "@commitlint/config-conventional": "^9.1.2",
     "@ember/optional-features": "^2.0.0",
     "@glimmer/component": "^1.0.1",
-    "@glimmer/tracking": "^1.0.1",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
     "babel-eslint": "^10.1.0",

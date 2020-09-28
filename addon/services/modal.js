@@ -4,13 +4,7 @@ import { getOwner } from '@ember/application';
 import { isEmpty } from '@ember/utils';
 
 export default class ModalService extends Service {
-	content = null;
-
-	constructor() {
-		super(...arguments);
-
-		this.set('content', A());
-	}
+	content = A();
 
 	open(name, options = {}) {
 		const ModalModel = getOwner(this).factoryFor('model:modal');

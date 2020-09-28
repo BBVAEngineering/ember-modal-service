@@ -16,10 +16,8 @@ export default class OpenModalHelper extends Helper {
 			(isNone(actions.onFail) || Boolean(actions.onFail) && typeOf(actions.onFail) === 'function')
 		);
 
-		const { modal } = this;
-
-		return function() {
-			modal.open(modalName, options).then(
+		return () => {
+			this.modal.open(modalName, options).then(
 				actions.onDone,
 				actions.onFail,
 				'open-modal helper'

@@ -48,7 +48,7 @@ All the modals are shown in the modal container.
 
 ```html
 {{! templates/application.hbs }}
-{{modal-container}}
+<ModalContainer/>
 ```
 
 You can close all modals by using the `close` method.

@@ -48,7 +48,7 @@ module('Integration | Service | modal', (hooks) => {
 		scheduler = this.owner.lookup('service:scheduler');
 
 		// Render controller.
-		await render(hbs `{{modal-container}}`);
+		await render(hbs `<ModalContainer/>`);
 	});
 
 	hooks.afterEach(function() {
