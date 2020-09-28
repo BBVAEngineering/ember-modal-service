@@ -1,6 +1,6 @@
 {
   "name": "ember-modal-service",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "An ember-cli addon to manage modals as promises.",
   "keywords": [
     "ember-addon"

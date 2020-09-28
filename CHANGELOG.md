@@ -1,3 +1,16 @@
+# [2.4.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v2.3.0...v2.4.0) (2020-09-28)
+
+
+### Bug Fixes
+
+* **modal:** allow reopen `resolve` and `reject` methods ([9f02276](https://github.com/BBVAEngineering/ember-modal-service/commit/9f02276249c1d9170d603fa7acce1a1a98c438c1))
+
+
+### Features
+
+* migrate to ES6 classes ([b2a0781](https://github.com/BBVAEngineering/ember-modal-service/commit/b2a0781b65f7b739a4e1f1b42903ea5fe9178122))
+* **on-transition-end:** only listen for transitions on target ([a09dbd6](https://github.com/BBVAEngineering/ember-modal-service/commit/a09dbd6eacaa84a85918371184270d75fe6f539b)), closes [#43](https://github.com/BBVAEngineering/ember-modal-service/issues/43)
+
 # [2.3.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v2.2.0...v2.3.0) (2020-03-27)
 
 
