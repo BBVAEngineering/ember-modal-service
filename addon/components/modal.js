@@ -1,234 +1,129 @@
-/* eslint-disable quote-props, no-magic-numbers */
 import Component from '@ember/component';
-import RSVP from 'rsvp';
 import { camelize } from '@ember/string';
 import { computed } from '@ember/object';
 import onTransitionEnd from 'ember-transition-end/utils/on-transition-end';
 import { hasTransitions } from 'ember-modal-service/utils/css-transitions';
 import { inject as service } from '@ember/service';
-import { on } from '@ember/object/evented';
 import { run } from '@ember/runloop';
+import { tracked } from '@glimmer/tracking';
 
-/**
- * Component to wrap modal objects.
- *
- * @extends Ember.Component
- */
-export default Component.extend({
+export default class ModalComponent extends Component.extend({
+	// Needed to be able to reopen `resolve` and `reject` methods.
+	actions: {
+		resolve() {
+			this.resolve(...arguments);
+		},
+		reject() {
+			this.reject(...arguments);
+		}
+	}
+}) {
+	@service scheduler;
 
-	/**
-	 * Modal service inject.
-	 *
-	 * @property modal
-	 * @type Object
-	 */
-	scheduler: service('scheduler'),
+	@service modal;
 
-	/**
-	 * Modal service inject.
-	 *
-	 * @property modal
-	 * @type Object
-	 */
-	modal: service('modal'),
+	attributeBindings = ['data-modal-show', 'data-id'];
 
-	/**
-	 * HTML attributes bindings.
-	 *
-	 * @property attributeBindings
-	 * @type Array
-	 */
-	attributeBindings: ['data-modal-show', 'data-id'],
+	ariaRole = 'dialog';
 
-	/**
-	 * HTML role.
-	 *
-	 * @property ariaRole
-	 * @type String
-	 */
-	ariaRole: 'dialog',
+	@tracked visible = false;
 
-	/**
-	 * Modal is visible/hidden.
-	 *
-	 * @property visible
-	 * @type Boolean
-	 */
-	visible: false,
+	@computed('model.fullname')
+	get 'data-id'() {
+		return camelize(this.model.fullname);
+	}
 
-	/**
-	 * `data-id` attribute of wrapper element
-	 *
-	 * @property data-id
-	 * @type {String}
-	 */
-	'data-id': computed('model.fullname', function() {
-		return camelize(this.get('model.fullname'));
-	}),
+	@computed('visible')
+	get 'data-modal-show'() {
+		return String(this.visible);
+	}
 
-	/**
-	 * Modal is visible/hidden. This property is read from CSS.
-	 *
-	 * @property data-modal-show
-	 * @type Boolean
-	 */
-	'data-modal-show': computed('visible', function() {
-		return String(this.get('visible'));
-	}),
+	init() {
+		super.init(...arguments);
 
-	/**
-	 * On did insert element, set element as visible and set data-id.
-	 *
-	 * @event onDidInsertElement
-	 */
-	onDidInsertElement: on('didInsertElement', function() {
-		const scheduler = this.get('scheduler');
+		// Prevent creating an uncaught promise.
+		this.model.promise.catch(() => {}).finally(
+			this._close.bind(this),
+			`Component '${this.model.fullname}': close modal`
+		);
+	}
 
-		run.next(scheduler.scheduleOnce.bind(scheduler, this, '_open'));
-	}),
+	didInsertElement() {
+		super.didInsertElement(...arguments);
 
-	/**
-	 * Resolve current promise and close modal.
-	 *
-	 * @method resolve
-	 */
-	resolve(data, label = `Component '${this.get('model.fullname')}': fulfillment`) {
-		this.get('model.deferred').resolve(data, label);
-	},
+		run.next(this.scheduler, 'scheduleOnce', this, '_open');
+	}
 
-	/**
-	 * Reject current promise and close modal.
-	 *
-	 * @method reject
-	 */
-	reject(data, label = `Component '${this.get('model.fullname')}': rejection`) {
-		this.get('model.deferred').reject(data, label);
-	},
+	didOpen() {}
 
-	/**
-	 * Action to know when modal is fully opened.
-	 *
-	 * @method didOpen
-	 */
-	didOpen() {},
-
-	/**
-	 * Safe call to didOpen method.
-	 *
-	 * @method _safeDidOpen
-	 */
 	_safeDidOpen() {
 		if (this.isDestroyed) {
 			return;
 		}
 
 		this.didOpen();
-	},
+	}
 
-	/**
-	 * Turn on visibility and send didOpen event.
-	 *
-	 * @method _open
-	 * @private
-	 */
 	_open() {
+		// istanbul ignore if: lifecycle check.
 		if (this.isDestroyed) {
 			return;
 		}
 
-		const scheduler = this.get('scheduler');
+		const scheduler = this.scheduler;
 		const element = this.element;
 
-		this.set('visible', true);
+		this.visible = true;
 
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_safeDidOpen'), 'all', true);
+			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_safeDidOpen'), {
+				transitionProperty: 'all',
+				once: true,
+				onlyTarget: true
+			});
 		} else {
 			this.didOpen();
 		}
-	},
+	}
 
-	/**
-	 * Set modal as not visible and remove modal from array later.
-	 *
-	 * @method _close
-	 * @private
-	 */
 	_close() {
+		// istanbul ignore if: lifecycle check.
 		if (this.isDestroyed) {
 			return;
 		}
 
-		const scheduler = this.get('scheduler');
+		const scheduler = this.scheduler;
 		const element = this.element;
 
 		// Close modal.
-		this.set('visible', false);
+		this.visible = false;
 
 		// Remove modal from array when transition ends.
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_remove'), 'all', true);
+			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_remove'), {
+				transitionProperty: 'all',
+				once: true,
+				onlyTarget: true
+			});
 		} else {
 			this._remove();
 		}
-	},
+	}
 
-	/**
-	 * Remove itself from service.
-	 *
-	 * @method _remove
-	 * @private
-	 */
 	_remove() {
+		// istanbul ignore if: lifecycle check.
 		if (this.isDestroyed) {
 			return;
 		}
 
-		this.get('modal.content').removeObject(this.get('model'));
-	},
-
-	/**
-	 * When the promise has been settled, close the view.
-	 *
-	 * @method hasBeenSettled
-	 * @private
-	 */
-	_hasBeenSettled: on('init', function() {
-		// Prevent triggering Ember.onerror on promise resolution.
-		this.get('model.promise').catch((e) => {
-			if (e instanceof Error) {
-				return RSVP.reject(e, `Component '${this.get('model.fullname')}': bubble error`);
-			}
-
-			// Ignore rejections due to not being real errors here.
-			return e;
-		}, `Component '${this.get('model.fullname')}': catch real errors or ignore`).finally(
-			this._close.bind(this),
-			`Component '${this.get('model.fullname')}': close modal`
-		);
-	}),
-
-	actions: {
-
-		/**
-		 * Action to resolve the underlying modal promise directly from the
-		 * template, using the passed arguments as resolution values
-		 *
-		 * @method resolve
-		 */
-		resolve() {
-			this.resolve(...arguments);
-		},
-
-		/**
-		 * Action to reject the underlying modal promise directly from the
-		 * template, using the passed arguments as rejection values
-		 *
-		 * @method reject
-		 */
-		reject() {
-			this.reject(...arguments);
-		}
-
+		this.modal.content.removeObject(this.model);
 	}
-});
+
+	resolve(data, label = `Component '${this.model.fullname}': fulfillment`) {
+		this.model.deferred.resolve(data, label);
+	}
+
+	reject(data, label = `Component '${this.model.fullname}': rejection`) {
+		this.model.deferred.reject(data, label);
+	}
+}

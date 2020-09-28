@@ -31,25 +31,24 @@ module('Integration | Service | modal', (hooks) => {
 	setupRenderingTest(hooks);
 
 	hooks.beforeEach(async function() {
+		class ModalFoo extends ModalComponent {
+			classNames = ['animated']
+		}
+
 		// Registry dummy animated modal.
-		this.owner.register('component:modal-foo', ModalComponent.extend({
-			id: 'foo',
-			attributeBindings: ['id'],
-			classNames: ['animated']
-		}));
+		this.owner.register('component:modal-foo', ModalFoo);
+
+		class ModalBar extends ModalComponent {}
 
 		// Registry dummy modal.
-		this.owner.register('component:modal-bar', ModalComponent.extend({
-			id: 'bar',
-			attributeBindings: ['id']
-		}));
+		this.owner.register('component:modal-bar', ModalBar);
 
 		// Get instance of service.
 		service = this.owner.lookup('service:modal');
 		scheduler = this.owner.lookup('service:scheduler');
 
 		// Render controller.
-		await render(hbs `{{modal-container}}`);
+		await render(hbs `<ModalContainer/>`);
 	});
 
 	hooks.afterEach(function() {
@@ -72,13 +71,13 @@ module('Integration | Service | modal', (hooks) => {
 
 		await waitForScheduler();
 
-		$element = find('#bar[data-modal-show="true"]');
+		$element = find('[data-id="modalBar"][data-modal-show="true"]');
 
 		assert.equal($element.length, 1, 'Modal is displayed');
 
 		run(service.get('content.0.deferred'), 'resolve', 'bar');
 
-		$element = find('#bar');
+		$element = find('[data-id="modalBar"]');
 
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
@@ -96,7 +95,7 @@ module('Integration | Service | modal', (hooks) => {
 
 		await waitForScheduler();
 
-		$element = find('#foo[data-modal-show="true"]');
+		$element = find('[data-id="modalFoo"][data-modal-show="true"]');
 
 		assert.equal($element.length, 1, 'Modal is displayed');
 
@@ -104,13 +103,13 @@ module('Integration | Service | modal', (hooks) => {
 
 		run(service.get('content.0.deferred'), 'resolve', 'foo');
 
-		$element = find('#foo:not([data-modal-show="true"])');
+		$element = find('[data-id="modalFoo"]:not([data-modal-show="true"])');
 
 		assert.equal($element.length, 1, 'Modal is hidden');
 
 		await waitForTimeout(ANIMATION_DELAY);
 
-		$element = find('#foo');
+		$element = find('[data-id="modalFoo"]');
 
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
@@ -128,13 +127,13 @@ module('Integration | Service | modal', (hooks) => {
 
 		await waitForScheduler();
 
-		$element = find('#bar[data-modal-show="true"]');
+		$element = find('[data-id="modalBar"][data-modal-show="true"]');
 
 		assert.equal($element.length, 1, 'Modal is displayed');
 
 		run(service.get('content.0.deferred'), 'reject', 'bar');
 
-		$element = find('#bar');
+		$element = find('[data-id="modalBar"]');
 
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
@@ -154,7 +153,7 @@ module('Integration | Service | modal', (hooks) => {
 
 		await waitForScheduler();
 
-		$element = find('#foo[data-modal-show="true"]');
+		$element = find('[data-id="modalFoo"][data-modal-show="true"]');
 
 		assert.equal($element.length, 1, 'Modal is displayed');
 
@@ -162,13 +161,13 @@ module('Integration | Service | modal', (hooks) => {
 
 		run(service.get('content.0.deferred'), 'reject', 'foo');
 
-		$element = find('#foo:not([data-modal-show="true"])');
+		$element = find('[data-id="modalFoo"]:not([data-modal-show="true"])');
 
 		assert.equal($element.length, 1, 'Modal is hidden');
 
 		await waitForTimeout(ANIMATION_DELAY);
 
-		$element = find('#foo');
+		$element = find('[data-id="modalFoo"]');
 
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
@@ -186,13 +185,13 @@ module('Integration | Service | modal', (hooks) => {
 
 		await waitForScheduler();
 
-		$element = find('#bar[data-modal-show="true"]');
+		$element = find('[data-id="modalBar"][data-modal-show="true"]');
 
 		assert.equal($element.length, 1, 'Modal is displayed');
 
 		run(service, 'close', 'name', 'bar');
 
-		$element = find('#bar');
+		$element = find('[data-id="modalBar"]');
 
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
@@ -212,7 +211,7 @@ module('Integration | Service | modal', (hooks) => {
 
 		await waitForScheduler();
 
-		$element = find('#foo[data-modal-show="true"]');
+		$element = find('[data-id="modalFoo"][data-modal-show="true"]');
 
 		assert.equal($element.length, 1, 'Modal is displayed');
 
@@ -220,13 +219,13 @@ module('Integration | Service | modal', (hooks) => {
 
 		run(service, 'close', 'name', 'foo');
 
-		$element = find('#foo:not([data-modal-show="true"])');
+		$element = find('[data-id="modalFoo"]:not([data-modal-show="true"])');
 
 		assert.equal($element.length, 1, 'Modal is hidden');
 
 		await waitForTimeout(ANIMATION_DELAY);
 
-		$element = find('#foo');
+		$element = find('[data-id="modalFoo"]');
 
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});

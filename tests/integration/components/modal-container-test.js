@@ -18,11 +18,13 @@ module('Integration | Component | modal-container', (hooks) => {
 		const object = EmberObject.create({
 			fullname: 'modal-foo'
 		});
-		const MyComponent = ModalContainerComponent.extend({
-			modal: {
+
+		class MyComponent extends ModalContainerComponent {
+			modal = {
 				content: [object]
-			}
-		});
+			};
+		}
+
 		const TestComponent = Component.extend({
 			classNames: ['modal-foo']
 		});
@@ -30,7 +32,7 @@ module('Integration | Component | modal-container', (hooks) => {
 		this.owner.register('component:modal-container', MyComponent);
 		this.owner.register('component:modal-foo', TestComponent);
 
-		await render(hbs `{{modal-container}}`);
+		await render(hbs `<ModalContainer/>`);
 
 		assert.equal(document.querySelectorAll('.modal-foo').length, 1);
 	});
