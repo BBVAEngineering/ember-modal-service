@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@glimmer/tracking": "^1.0.1",
-    "ember-cli-babel": "^7.22.1",
+    "ember-cli-babel": "^7.19.0",
     "ember-cli-htmlbars": "^5.3.1",
     "ember-task-scheduler": "^2.1.0",
     "ember-transition-end": "^2.0.0"
@@ -108,6 +108,10 @@
     "qunit-dom": "^1.4.0",
     "semantic-release": "^17.1.1",
     "sinon": "^9.0.3"
+  },
+  "resolutions": {
+    "ember-cli-babel": "~7.19.0",
+    "babel-plugin-ember-modules-api-polyfill": "2.13.0"
   },
   "engines": {
     "node": "10.* || >= 12"
