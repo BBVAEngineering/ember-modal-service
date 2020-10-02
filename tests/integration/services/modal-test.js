@@ -75,7 +75,7 @@ module('Integration | Service | modal', (hooks) => {
 
 		assert.equal($element.length, 1, 'Modal is displayed');
 
-		run(service.get('content.0.deferred'), 'resolve', 'bar');
+		run(service.get('content.0'), 'resolve', 'bar');
 
 		$element = find('[data-id="modalBar"]');
 
@@ -101,7 +101,7 @@ module('Integration | Service | modal', (hooks) => {
 
 		await waitForTimeout(ANIMATION_DELAY);
 
-		run(service.get('content.0.deferred'), 'resolve', 'foo');
+		run(service.get('content.0'), 'resolve', 'foo');
 
 		$element = find('[data-id="modalFoo"]:not([data-modal-show="true"])');
 
@@ -131,7 +131,7 @@ module('Integration | Service | modal', (hooks) => {
 
 		assert.equal($element.length, 1, 'Modal is displayed');
 
-		run(service.get('content.0.deferred'), 'reject', 'bar');
+		run(service.get('content.0'), 'reject', 'bar');
 
 		$element = find('[data-id="modalBar"]');
 
@@ -159,7 +159,7 @@ module('Integration | Service | modal', (hooks) => {
 
 		await waitForTimeout(ANIMATION_DELAY);
 
-		run(service.get('content.0.deferred'), 'reject', 'foo');
+		run(service.get('content.0'), 'reject', 'foo');
 
 		$element = find('[data-id="modalFoo"]:not([data-modal-show="true"])');
 
@@ -228,5 +228,28 @@ module('Integration | Service | modal', (hooks) => {
 		$element = find('[data-id="modalFoo"]');
 
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
+	});
+
+	test('it triggers events when a modal is open/closed', (assert) => {
+		const done = assert.async();
+
+		service.one('open', (modal) => {
+			assert.ok(1, 'modal is open');
+			assert.equal(modal.name, 'foo', 'modal exists as first argument');
+		});
+
+		run(() => {
+			service.open('foo');
+		});
+
+		service.one('close', (modal) => {
+			assert.ok(1, 'modal is closed');
+			assert.equal(modal.name, 'foo', 'key exists as first argument');
+			done();
+		});
+
+		run(() => {
+			service.close('foo');
+		});
 	});
 });

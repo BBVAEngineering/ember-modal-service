@@ -1,6 +1,5 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import EmberObject from '@ember/object';
 import RSVP from 'rsvp';
 import sinon from 'sinon';
 import { waitUntil } from '@ember/test-helpers';
@@ -10,14 +9,13 @@ import { run } from '@ember/runloop';
 import { click, render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ModalModel from 'ember-modal-service/models/modal';
-import ModalService from 'ember-modal-service/services/modal';
 import SchedulerService from 'ember-task-scheduler/services/scheduler';
 import ModalComponent from 'ember-modal-service/components/modal';
 
 const { spy } = sinon;
 const ANIMATION_DELAY = 300;
 
-let component, deferred, service, content, didOpenSpy;
+let component, service, content, didOpenSpy, model;
 
 function waitForTransitionEnd(element) {
 	return new RSVP.Promise((resolve) => {
@@ -49,13 +47,12 @@ module('Integration | Component | modal', (hooks) => {
 	setupRenderingTest(hooks);
 
 	hooks.beforeEach(async function() {
-		this.owner.register('service:modal', ModalService);
 		this.owner.register('service:scheduler', SchedulerService);
 		this.owner.register('model:modal', ModalModel);
 
-		deferred = RSVP.defer();
 		content = A();
 		didOpenSpy = spy();
+		model = ModalModel.create({ name: 'foo' });
 
 		const layout = hbs`
 			<button data-id="resolve" {{on 'click' (action 'resolve' 'foo')}}>Resolve</button>
@@ -65,15 +62,8 @@ module('Integration | Component | modal', (hooks) => {
 		class MyComponent extends ModalComponent {
 			layout = layout;
 			target = null;
-			model = EmberObject.create({
-				fullname: 'modal-foo',
-				deferred,
-				promise: deferred.promise
-			});
+			model = model;
 			didOpen = didOpenSpy;
-			modal = {
-				content
-			};
 		}
 
 		this.owner.register('component:my-modal', MyComponent);
@@ -117,7 +107,7 @@ module('Integration | Component | modal', (hooks) => {
 		assert.ok(isVisible(component));
 
 		run(() => {
-			deferred.resolve();
+			model.resolve();
 		});
 
 		assert.notOk(isVisible(component));
@@ -134,7 +124,7 @@ module('Integration | Component | modal', (hooks) => {
 		assert.ok(isVisible(component));
 
 		run(() => {
-			deferred.reject();
+			model.reject();
 		});
 
 		assert.notOk(isVisible(component));
@@ -190,7 +180,7 @@ module('Integration | Component | modal', (hooks) => {
 		await waitForScheduler();
 
 		run(() => {
-			deferred.resolve();
+			model.resolve();
 		});
 
 		assert.notOk(isVisible(component));
@@ -211,7 +201,7 @@ module('Integration | Component | modal', (hooks) => {
 
 		instance.resolve('foo');
 
-		assert.equal(await deferred.promise, 'foo');
+		assert.equal(await model.promise, 'foo');
 	});
 
 	test('it rejects promise with arguments', async function(assert) {
@@ -225,7 +215,7 @@ module('Integration | Component | modal', (hooks) => {
 
 		await waitForScheduler();
 
-		deferred.promise.catch((foo) => {
+		model.promise.catch((foo) => {
 			assert.equal(foo, 'foo');
 		});
 
@@ -241,7 +231,7 @@ module('Integration | Component | modal', (hooks) => {
 
 		await click('[data-id="resolve"]');
 
-		assert.equal(await deferred.promise, 'foo');
+		assert.equal(await model.promise, 'foo');
 	});
 
 	test('it rejects promise with action', async(assert) => {
@@ -253,7 +243,7 @@ module('Integration | Component | modal', (hooks) => {
 
 		await waitForScheduler();
 
-		deferred.promise.catch((foo) => {
+		model.promise.catch((foo) => {
 			assert.equal(foo, 'foo');
 		});
 

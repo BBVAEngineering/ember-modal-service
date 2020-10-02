@@ -29,9 +29,41 @@ module('Unit | Model | modal', (hooks) => {
 		}, Error, 'Modal must have a name.');
 	});
 
-	test('it setups the deferred, promise and fullname objects on init', (assert) => {
-		assert.ok(model.get('deferred'));
+	test('it setups the promise and fullname objects on init', (assert) => {
 		assert.ok(model.get('promise'));
 		assert.ok(model.get('fullname'));
+	});
+
+	test('it tracks the pending promise state', (assert) => {
+		assert.equal(model.isPending, true, 'isPending');
+		assert.equal(model.isSettled, false, 'isSettled');
+		assert.equal(model.isFulfilled, false, 'isFulfilled');
+		assert.equal(model.isRejected, false, 'isPisRejected');
+	});
+
+	test('it tracks the resolved promise state', async(assert) => {
+		model.resolve();
+
+		await model.promise;
+
+		assert.equal(model.isPending, false, 'isPending');
+		assert.equal(model.isSettled, true, 'isSettled');
+		assert.equal(model.isFulfilled, true, 'isFulfilled');
+		assert.equal(model.isRejected, false, 'isPisRejected');
+	});
+
+	test('it tracks the rejected promise state', async(assert) => {
+		model.reject();
+
+		try {
+			await model.promise;
+		} catch (e) {
+			// Nope
+		}
+
+		assert.equal(model.isPending, false, 'isPending');
+		assert.equal(model.isSettled, true, 'isSettled');
+		assert.equal(model.isFulfilled, false, 'isFulfilled');
+		assert.equal(model.isRejected, true, 'isPisRejected');
 	});
 });
