@@ -116,14 +116,14 @@ export default class ModalComponent extends Component.extend({
 			return;
 		}
 
-		this.modal.content.removeObject(this.model);
+		this.modal.closeByModel(this.model);
 	}
 
 	resolve(data, label = `Component '${this.model.fullname}': fulfillment`) {
-		this.model.deferred.resolve(data, label);
+		this.model.resolve(data, label);
 	}
 
 	reject(data, label = `Component '${this.model.fullname}': rejection`) {
-		this.model.deferred.reject(data, label);
+		this.model.reject(data, label);
 	}
 }

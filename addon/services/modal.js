@@ -9,19 +9,24 @@ export default class ModalService extends Service.extend(Evented) {
 
 	open(name, options = {}) {
 		const ModalModel = getOwner(this).factoryFor('model:modal');
-		const modal = ModalModel.create({ name, options });
+		const model = ModalModel.create({ name, options });
 
 		// If the modal is already opened, reject it
 		if (this.isOpened(name)) {
-			modal.get('deferred').reject(null, `Modal: '${modal.fullname}' is already opened`);
+			model.reject(null, `Modal: '${model.fullname}' is already opened`);
 		} else {
 			// Add new modal.
-			this.content.addObject(modal);
+			this.content.addObject(model);
 		}
 
-		this.trigger('open', modal);
+		this.trigger('open', model);
 
-		return modal.get('promise');
+		return model.get('promise');
+	}
+
+	closeByModel(model) {
+		this.trigger('close', model);
+		this.content.removeObject(model);
 	}
 
 	close(key, value) {
@@ -34,14 +39,8 @@ export default class ModalService extends Service.extend(Evented) {
 		}
 
 		filter.forEach((modal) => {
-			const deferred = modal.get('deferred');
-
-			if (isEmpty(deferred.promise._state)) {
-				deferred.reject(null, `Modal: closing '${modal.fullname}'`);
-			}
+			modal.reject(null, `Modal: closing '${modal.fullname}'`);
 		});
-
-		this.trigger('close', key);
 	}
 
 	isOpened(name) {
