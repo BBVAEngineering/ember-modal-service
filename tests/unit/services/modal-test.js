@@ -99,4 +99,27 @@ module('Unit | Service | modal', (hooks) => {
 		assert.equal(service.get('content').findBy('name', 'foo').get('promise._state'), PENDING);
 		assert.equal(service.get('content').findBy('name', 'bar').get('promise._state'), REJECTED);
 	});
+
+	test('it triggers events when a modal is open/closed', (assert) => {
+		const done = assert.async();
+
+		service.one('open', (modal) => {
+			assert.ok(1, 'modal is open');
+			assert.equal(modal.name, 'foo', 'modal exists as first argument');
+		});
+
+		run(() => {
+			service.open('foo');
+		});
+
+		service.one('close', (key) => {
+			assert.ok(1, 'modal is closed');
+			assert.equal(key, 'foo', 'key exists as first argument');
+			done();
+		});
+
+		run(() => {
+			service.close('foo');
+		});
+	});
 });

@@ -2,8 +2,9 @@ import Service from '@ember/service';
 import { A } from '@ember/array';
 import { getOwner } from '@ember/application';
 import { isEmpty } from '@ember/utils';
+import Evented from '@ember/object/evented';
 
-export default class ModalService extends Service {
+export default class ModalService extends Service.extend(Evented) {
 	content = A();
 
 	open(name, options = {}) {
@@ -17,6 +18,8 @@ export default class ModalService extends Service {
 			// Add new modal.
 			this.content.addObject(modal);
 		}
+
+		this.trigger('open', modal);
 
 		return modal.get('promise');
 	}
@@ -37,6 +40,8 @@ export default class ModalService extends Service {
 				deferred.reject(null, `Modal: closing '${modal.fullname}'`);
 			}
 		});
+
+		this.trigger('close', key);
 	}
 
 	isOpened(name) {
