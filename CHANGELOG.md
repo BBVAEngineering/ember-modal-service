@@ -1,3 +1,12 @@
+# [2.5.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v2.4.0...v2.5.0) (2020-10-05)
+
+
+### Features
+
+* add events when opening/closing a modal ([ca50ad3](https://github.com/BBVAEngineering/ember-modal-service/commit/ca50ad3fcfe1f16959201956bd623837d190638c))
+* **model:** make deferred private ([ba54c09](https://github.com/BBVAEngineering/ember-modal-service/commit/ba54c09d889a49f4c3cef95620dc06d7d9b9ee0a))
+* closeByModel as private method ([7791d42](https://github.com/BBVAEngineering/ember-modal-service/commit/7791d421d0c1a3208e8b1234c732a11dd809c773))
+
 # [2.4.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v2.3.0...v2.4.0) (2020-09-28)
 
 
