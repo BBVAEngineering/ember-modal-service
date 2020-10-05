@@ -24,7 +24,7 @@ export default class ModalService extends Service.extend(Evented) {
 		return model.get('promise');
 	}
 
-	closeByModel(model) {
+	_closeByModel(model) {
 		this.trigger('close', model);
 		this.content.removeObject(model);
 	}

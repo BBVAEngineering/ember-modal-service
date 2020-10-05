@@ -116,7 +116,7 @@ export default class ModalComponent extends Component.extend({
 			return;
 		}
 
-		this.modal.closeByModel(this.model);
+		this.modal._closeByModel(this.model);
 	}
 
 	resolve(data, label = `Component '${this.model.fullname}': fulfillment`) {
