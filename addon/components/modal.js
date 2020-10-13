@@ -100,10 +100,12 @@ export default class ModalComponent extends Component.extend({
 
 		// Remove modal from array when transition ends.
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_remove'), {
-				transitionProperty: 'all',
-				once: true,
-				onlyTarget: true
+			onTransitionEnd(element, () => {
+				scheduler.scheduleOnce(this, '_remove', {
+					transitionProperty: 'all',
+					once: true,
+					onlyTarget: true
+				});
 			});
 		} else {
 			this._remove();
