@@ -23,19 +23,15 @@ module('Unit | Model | modal', (hooks) => {
 	});
 
 	test('it has a fullname with prefix when a prefix is provided', (assert) => {
-		const options = { prefix: "modals/" };
+		const options = { prefix: 'modals/' };
 
 		model = factory.create({ name, options });
 
 		assert.equal(model.get('fullname'), `modals/${name}`);
-	})
+	});
 
-	test('it throws an error if modal has not a name', function(assert) {
-		assert.throws(() => {
-			const factory = this.owner.factoryFor('model:modal');
-
-			factory.create();
-		}, Error, 'Modal must have a name.');
+	test('it throws an error if modal has not a name', (assert) => {
+		assert.throws(() => factory.create(), Error, 'Modal must have a name.');
 	});
 
 	test('it setups the promise and fullname objects on init', (assert) => {

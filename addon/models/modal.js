@@ -29,7 +29,7 @@ export default class ModalModel extends EmberObject.extend(PromiseProxyMixin) {
 			throw new Error('Modal must have a name.');
 		}
 
-		if(prefix) {
+		if (prefix) {
 			return `${prefix}${dasherize(name)}`;
 		}
 
