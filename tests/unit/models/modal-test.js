@@ -5,6 +5,7 @@ import ModalModel from 'ember-modal-service/models/modal';
 const name = 'foo';
 
 let model;
+let factory;
 
 module('Unit | Model | modal', (hooks) => {
 	setupTest(hooks);
@@ -12,7 +13,7 @@ module('Unit | Model | modal', (hooks) => {
 	hooks.beforeEach(function() {
 		this.owner.register('model:modal', ModalModel);
 
-		const factory = this.owner.factoryFor('model:modal');
+		factory = this.owner.factoryFor('model:modal');
 
 		model = factory.create({ name });
 	});
@@ -20,6 +21,14 @@ module('Unit | Model | modal', (hooks) => {
 	test('it has a fullname when has a name', (assert) => {
 		assert.equal(model.get('fullname'), `modal-${name}`);
 	});
+
+	test('it has a fullname with prefix when a prefix is provided', (assert) => {
+		const options = { prefix: "modals/" };
+
+		model = factory.create({ name, options });
+
+		assert.equal(model.get('fullname'), `modals/${name}`);
+	})
 
 	test('it throws an error if modal has not a name', function(assert) {
 		assert.throws(() => {

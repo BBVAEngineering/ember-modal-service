@@ -20,12 +20,17 @@ export default class ModalModel extends EmberObject.extend(PromiseProxyMixin) {
 
 	@oneWay('_deferred.promise') promise;
 
-	@computed('name')
+	@computed('name', 'options.prefix')
 	get fullname() {
 		const name = this.name;
+		const prefix = this.options && this.options.prefix ? this.options.prefix : null;
 
 		if (isBlank(name)) {
 			throw new Error('Modal must have a name.');
+		}
+
+		if(prefix) {
+			return `${prefix}${dasherize(name)}`;
 		}
 
 		return `modal-${dasherize(name)}`;
