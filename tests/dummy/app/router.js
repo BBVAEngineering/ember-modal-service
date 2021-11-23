@@ -6,4 +6,4 @@ class Router extends EmberRouter {
 	rootURL = config.rootURL;
 }
 
-Router.map(() => {});
+Router.map(function () {});

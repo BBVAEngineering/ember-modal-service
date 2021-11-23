@@ -5,54 +5,47 @@ module.exports = {
 		ecmaVersion: 2018,
 		sourceType: 'module',
 		ecmaFeatures: {
-			legacyDecorators: true
-		}
+			legacyDecorators: true,
+		},
 	},
-	plugins: [
-		'ember',
-		'bbva'
-	],
+	plugins: ['ember'],
 	extends: [
 		'eslint:recommended',
 		'plugin:ember/recommended',
-		'eslint-config-bbva'
+		'plugin:prettier/recommended',
 	],
 	env: {
-		browser: true
+		browser: true,
 	},
-	rules: {
-		'ember/no-jquery': 'error'
-	},
-	overrides: [{
-		files: [
-			'.huskyrc.js',
-			'.commitlintrc.js',
-			'.eslintrc.js',
-			'.template-lintrc.js',
-			'ember-cli-build.js',
-			'index.js',
-			'testem.js',
-			'blueprints/*/index.js',
-			'config/**/*.js',
-			'tests/dummy/config/**/*.js'
-		],
-		excludedFiles: [
-			'addon/**',
-			'addon-test-support/**',
-			'app/**',
-			'tests/dummy/app/**'
-		],
-		parserOptions: {
-			sourceType: 'script'
+	rules: {},
+	overrides: [
+		// node files
+		{
+			files: [
+				'./.eslintrc.js',
+				'./.prettierrc.js',
+				'./.template-lintrc.js',
+				'./ember-cli-build.js',
+				'./index.js',
+				'./testem.js',
+				'./blueprints/*/index.js',
+				'./config/**/*.js',
+				'./tests/dummy/config/**/*.js',
+			],
+			parserOptions: {
+				sourceType: 'script',
+			},
+			env: {
+				browser: false,
+				node: true,
+			},
+			plugins: ['node'],
+			extends: ['plugin:node/recommended'],
 		},
-		env: {
-			browser: false,
-			node: true
+		{
+			// Test files:
+			files: ['tests/**/*-test.{js,ts}'],
+			extends: ['plugin:qunit/recommended'],
 		},
-		plugins: ['node'],
-		extends: ['plugin:node/recommended'],
-		rules: {
-			'no-process-env': 0
-		}
-	}]
+	],
 };
