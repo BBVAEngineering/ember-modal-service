@@ -18,59 +18,111 @@ An [ember-cli addon](http://www.ember-cli.com/) to manage modals as promises.
 
 In your application's directory:
 
-    ember install ember-modal-service
+```bash
+ember install ember-modal-service
+```
 
 ## Usage
 
-```javascript
-// Inject the service
-modal: Ember.inject.service(),
+### Register the modal container
 
-...
-
-// To open a modal use the method `open` with the modal name and the options for the modal.
-this.get('modal').open('foo', { bar: 'bar' });
-
-// The returning value of the modal is a promise that is resolved or rejected when the modal is closed.
-this.get('modal').open('foo').then(() => {
-    // modal closed
-});
-```
-
-```javascript
-// In order to register a new modal, you need to register the modal object in the application container.
-// app/components/modal-foo.js
-import ModalComponent from 'ember-modal-service/components/modal';
-export default ModalComponent.extend();
-```
-
-All the modals are shown in the modal container.
+All the modals are shown inside the modal container once opened.
 
 ```html
 {{! templates/application.hbs }}
-<ModalContainer/>
+<ModalContainer />
+```
+
+### Create a modal component
+
+In order to register a new modal, you need to register the modal object in the application container using the preffix `modal-*`.
+
+```javascript
+// app/components/modal-foo.js
+import ModalComponent from 'ember-modal-service/components/modal';
+
+export default class FooModal extends ModalComponent {
+   data = this.model.options.data; 
+}
+```
+
+```html
+{{! app/templates/modal-foo.hbs }}
+
+<div>
+  <p>{{data}}</p>
+</div>
+```
+
+### Opening the modal
+
+```javascript
+import Controller from '@ember/controller';
+import { action } from '@ember/object';
+
+export default class Controller extends Controller {
+  // Inject the service
+  @service modal;
+
+  @action
+  async doSomething() {
+    // To open a modal use the method `open` with the modal name and the options for the modal.
+    try {
+      const result = await this.modal.open('foo', { bar: 'bar' });
+
+      // Modal have been resolved
+    } catch(e) {
+      // Modal have been rejected
+    }
+  }
+```
+
+### Other useful things
+
+If you need to wait until modal is removed from DOM:
+
+```javascript
+import Controller from '@ember/controller';
+import { action } from '@ember/object';
+
+export default class Controller extends Controller {
+  // Inject the service
+  @service modal;
+
+  @action
+  async doSomething() {
+    await this.modal.open('foo', { bar: 'bar' });
+
+    this.modal.one('close', ({ name }) => {
+      if (name === 'foo') {
+       // Do something...
+      }
+    });
+  }
 ```
 
 You can close all modals by using the `close` method.
 
 ```javascript
-this.get('modal').close();
+this.modal.close();
 ```
 
 Or just some of them.
 
 ```javascript
-this.get('modal').close((modal) => {
+this.modal.close((modal) => {
   return modal.name === 'foo';
 });
 
-this.get('modal').close('name', 'foo');
+this.modal.close('name', 'foo');
 ```
 
 Base modal component provides `resolve` & `reject` actions so you can implement basic closing behaviour directly on the template. You can pass any arguments you want the modal to be resolved / rejected with
 
 ```html
-<button {{action "reject" "foo" "bar"}}>Close modal</button>
+<button {{fn this.reject "foo" "bar"}}>Resolve modal with two args</button>
+
+<button {{fn this.reject "foo" "bar"}}>Reject modal with two args</button>
 ```
 
 ## Contribute
