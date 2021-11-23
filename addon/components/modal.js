@@ -126,4 +126,10 @@ export default class ModalComponent extends Component.extend({
 	reject(data, label = `Component '${this.model.fullname}': rejection`) {
 		this.model.reject(data, label);
 	}
+
+	willDestroy() {
+		super.willDestroy(...arguments);
+
+		this.modal.trigger('will-destroy', this.model);
+	}
 }
