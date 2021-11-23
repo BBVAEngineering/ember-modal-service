@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { camelize } from '@ember/string';
-import { computed } from '@ember/object';
+import { action, computed } from '@ember/object';
 import onTransitionEnd from 'ember-transition-end/utils/on-transition-end';
 import { hasTransitions } from 'ember-modal-service/utils/css-transitions';
 import { inject as service } from '@ember/service';
@@ -129,10 +129,12 @@ export default class ModalComponent extends Component.extend({
 		this.modal._closeByModel(this.model);
 	}
 
+	@action
 	resolve(data, label = `Component '${this.model.fullname}': fulfillment`) {
 		this.model.resolve(data, label);
 	}
 
+	@action
 	reject(data, label = `Component '${this.model.fullname}': rejection`) {
 		this.model.reject(data, label);
 	}
