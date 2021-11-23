@@ -25,7 +25,15 @@ export default class ModalService extends Service.extend(Evented) {
 	}
 
 	_closeByModel(model) {
-		this.trigger('close', model);
+		const destroyCallback = (destroyedModal) => {
+			if (destroyedModal === model) {
+				this.trigger('close', model);
+			}
+		};
+
+		// Setup DOM removal listener
+		this.one('will-destroy', destroyCallback);
+		// Remove from DOM
 		this.content.removeObject(model);
 	}
 
