@@ -31,7 +31,7 @@ function waitForTimeout(timeout) {
 
 function waitForScheduler() {
 	return waitUntil(
-		() => !service.hasPendingTasks() && !run.hasScheduledTimers(),
+		async() => !service.hasPendingTasks() && !run.hasScheduledTimers(),
 		{ timeout: 2000 }
 	);
 }
@@ -58,8 +58,9 @@ module('Integration | Component | modal', (hooks) => {
 		model = ModalModel.create({ name: 'foo' });
 
 		const layout = hbs`
-			<button data-id="resolve" {{on 'click' (action 'resolve' 'foo')}}>Resolve</button>
-			<button data-id="reject" {{on 'click' (action 'reject' 'foo')}}>Reject</button>
+			{{! template-lint-disable }}
+			<button data-id="resolve" {{on 'click' (fn this.resolve 'foo')}}>Resolve</button>
+			<button data-id="reject" {{on 'click' (fn this.reject 'foo')}}>Reject</button>
 		`;
 
 		class MyComponent extends ModalComponent {
@@ -159,7 +160,7 @@ module('Integration | Component | modal', (hooks) => {
 
 	test('it does not sends didOpen when it is destroyed', async function (assert) {
 		await render(hbs`
-			{{#unless destroy}}
+			{{#unless this.destroy}}
 				<MyModal class="animated"/>
 			{{/unless}}
 		`);

@@ -18,15 +18,14 @@ module('Integration | Helper | open-modal', (hooks) => {
 	});
 
 	test('service modal is called without optional parameters', async function (assert) {
-		const mockedService = Service.extend({
-			open: this.sandbox.stub().resolves(),
-		});
+		const open = this.sandbox.stub().resolves();
+		const mockedService = class MockedService extends Service {
+			open = open;
+		};
 
 		this.owner.register('service:modal', mockedService);
 
-		const service = this.owner.lookup('service:modal');
-
-		assert.ok(service.open.notCalled);
+		assert.ok(open.notCalled);
 
 		await render(
 			hbs`<div data-id='foo' onClick={{open-modal 'foo'}}></div>`
@@ -36,15 +35,18 @@ module('Integration | Helper | open-modal', (hooks) => {
 
 		await element.click();
 
-		assert.ok(service.open.calledOnceWith('foo'));
+		assert.ok(open.calledOnceWith('foo'));
 	});
 
 	test('it handles the service reject response', async function (assert) {
+		assert.expect(2);
+
 		const done = assert.async();
 
-		const mockedService = Service.extend({
-			open: this.sandbox.stub().rejects(new Error('Error')),
-		});
+		const open = this.sandbox.stub().rejects(new Error('Error'));
+		const mockedService = class MockedService extends Service {
+			open = open;
+		};
 
 		this.owner.register('service:modal', mockedService);
 
@@ -55,7 +57,7 @@ module('Integration | Helper | open-modal', (hooks) => {
 		};
 
 		await render(
-			hbs`<div data-id='foo' onClick={{open-modal 'foo' onFail=onFail}}></div>`
+			hbs`<div data-id='foo' onClick={{open-modal 'foo' onFail=this.onFail}}></div>`
 		);
 
 		const element = find('[data-id="foo"]');
@@ -64,11 +66,13 @@ module('Integration | Helper | open-modal', (hooks) => {
 	});
 
 	test('it handles the service resolve response', async function (assert) {
-		const done = assert.async();
+		assert.expect(1);
 
-		const mockedService = Service.extend({
-			open: this.sandbox.stub().resolves('Service called'),
-		});
+		const done = assert.async();
+		const open = this.sandbox.stub().resolves('Service called');
+		const mockedService = class MockedService extends Service {
+			open = open;
+		};
 
 		this.owner.register('service:modal', mockedService);
 
@@ -78,7 +82,7 @@ module('Integration | Helper | open-modal', (hooks) => {
 		};
 
 		await render(
-			hbs`<div data-id='foo' onClick={{open-modal 'foo' onDone=onDone}}></div>`
+			hbs`<div data-id='foo' onClick={{open-modal 'foo' onDone=this.onDone}}></div>`
 		);
 
 		const element = find('[data-id="foo"]');
@@ -87,26 +91,25 @@ module('Integration | Helper | open-modal', (hooks) => {
 	});
 
 	test('it handles the service resolve response with two optional parameters', async function (assert) {
-		const mockedService = Service.extend({
-			open: this.sandbox.stub().resolves(),
-		});
+		const open = this.sandbox.stub().resolves();
+		const mockedService = class MockedService extends Service {
+			open = open;
+		};
 
 		this.owner.register('service:modal', mockedService);
-
-		const service = this.owner.lookup('service:modal');
 
 		this.onDone = () => {};
 		this.onFail = () => {};
 
 		await render(
-			hbs`<div data-id='foo' onClick={{open-modal 'foo' onDone=onDone onFail=onFail}}></div>`
+			hbs`<div data-id='foo' onClick={{open-modal 'foo' onDone=this.onDone onFail=this.onFail}}></div>`
 		);
 
 		const element = find('[data-id="foo"]');
 
 		await element.click();
 
-		assert.ok(service.open.calledOnceWith('foo'));
+		assert.ok(open.calledOnceWith('foo'));
 	});
 
 	cases([
@@ -120,27 +123,25 @@ module('Integration | Helper | open-modal', (hooks) => {
 	]).test(
 		'it works with the optional parameters',
 		async function (params, assert) {
-			const mockedService = Service.extend({
-				open: this.sandbox.stub().resolves(),
-			});
+			const open = this.sandbox.stub().resolves();
+			const mockedService = class MockedService extends Service {
+				open = open;
+			};
 
 			this.owner.register('service:modal', mockedService);
-
-			const service = this.owner.lookup('service:modal');
-
-			this.set('params', params);
+			this.params = params;
 
 			await render(
-				hbs`<div data-id='foo' onClick={{open-modal 'foo' params.onDone params.onFail}}></div>`
+				hbs`<div data-id='foo' onClick={{open-modal 'foo' this.params.onDone this.params.onFail}}></div>`
 			);
 
 			const element = find('[data-id="foo"]');
 
-			assert.ok(service.open.notCalled);
+			assert.ok(open.notCalled);
 
 			await element.click();
 
-			assert.ok(service.open.calledOnceWith('foo'));
+			assert.ok(open.calledOnceWith('foo'));
 		}
 	);
 });

@@ -64,6 +64,8 @@ module('Integration | Service | modal', (hooks) => {
 	});
 
 	test('it renders, resolves and closes new modal', async function (assert) {
+		assert.expect(3);
+
 		let $element;
 
 		run(async () => {
@@ -118,6 +120,8 @@ module('Integration | Service | modal', (hooks) => {
 	});
 
 	test('it renders, rejects and closes new modal', async function (assert) {
+		assert.expect(3);
+
 		let $element;
 
 		run(async () => {
@@ -176,6 +180,7 @@ module('Integration | Service | modal', (hooks) => {
 	});
 
 	test('it renders, rejects and closes new modal from service', async function (assert) {
+		assert.expect(3);
 		let $element;
 
 		run(async () => {
@@ -234,6 +239,8 @@ module('Integration | Service | modal', (hooks) => {
 	});
 
 	test('it triggers events when a modal is open/closed', function (assert) {
+		assert.expect(4);
+
 		const done = assert.async();
 
 		service.one('open', (modal) => {
