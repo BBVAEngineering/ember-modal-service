@@ -17,19 +17,19 @@ let service;
 module('Unit | Service | modal', (hooks) => {
 	setupTest(hooks);
 
-	hooks.beforeEach(function() {
+	hooks.beforeEach(function () {
 		this.owner.register('service:modal', ModalService);
 		this.owner.register('model:modal', ModalModel);
 
 		service = this.owner.lookup('service:modal');
 	});
 
-	test('it has an empty array on init', (assert) => {
+	test('it has an empty array on init', function (assert) {
 		assert.ok(isArray(service.get('content')));
 		assert.ok(isEmpty(service.get('content')));
 	});
 
-	test('it creates a new modal with a promise', (assert) => {
+	test('it creates a new modal with a promise', function (assert) {
 		run(() => {
 			service.open('foo');
 			service.open('bar', { bar: 'bar' });
@@ -44,7 +44,7 @@ module('Unit | Service | modal', (hooks) => {
 		assert.ok(content.objectAt(1).get('promise'));
 	});
 
-	test('it creates only a new modal of same type', (assert) => {
+	test('it creates only a new modal of same type', function (assert) {
 		run(() => {
 			service.open('foo');
 			service.open('foo');
@@ -58,11 +58,18 @@ module('Unit | Service | modal', (hooks) => {
 
 		service.close();
 
-		assert.equal(service.get('content').objectAt(0).get('promise._state'), REJECTED);
+		assert.equal(
+			service.get('content').objectAt(0).get('promise._state'),
+			REJECTED
+		);
 	});
 
-	test('it clears all pending modals', (assert) => {
-		const modals = [ModalModel.create({ name: '0' }), ModalModel.create({ name: '1' }), ModalModel.create({ name: '2' })];
+	test('it clears all pending modals', function (assert) {
+		const modals = [
+			ModalModel.create({ name: '0' }),
+			ModalModel.create({ name: '1' }),
+			ModalModel.create({ name: '2' }),
+		];
 
 		service.get('content').addObjects(modals);
 
@@ -70,32 +77,59 @@ module('Unit | Service | modal', (hooks) => {
 
 		service.close();
 
-		assert.equal(service.get('content').objectAt(0).get('promise._state'), RESOLVED);
-		assert.equal(service.get('content').objectAt(1).get('promise._state'), REJECTED);
-		assert.equal(service.get('content').objectAt(2).get('promise._state'), REJECTED);
+		assert.equal(
+			service.get('content').objectAt(0).get('promise._state'),
+			RESOLVED
+		);
+		assert.equal(
+			service.get('content').objectAt(1).get('promise._state'),
+			REJECTED
+		);
+		assert.equal(
+			service.get('content').objectAt(2).get('promise._state'),
+			REJECTED
+		);
 	});
 
-	test('it clears modals by callback when callback is passed', (assert) => {
-		const callback = (modal) => (modal.name === 'bar');
+	test('it clears modals by callback when callback is passed', function (assert) {
+		const callback = (modal) => modal.name === 'bar';
 
-		const modals = [ModalModel.create({ name: 'foo' }), ModalModel.create({ name: 'bar' })];
+		const modals = [
+			ModalModel.create({ name: 'foo' }),
+			ModalModel.create({ name: 'bar' }),
+		];
 
 		service.get('content').addObjects(modals);
 
 		service.close(callback);
 
-		assert.equal(service.get('content').findBy('name', 'foo').get('promise._state'), PENDING);
-		assert.equal(service.get('content').findBy('name', 'bar').get('promise._state'), REJECTED);
+		assert.equal(
+			service.get('content').findBy('name', 'foo').get('promise._state'),
+			PENDING
+		);
+		assert.equal(
+			service.get('content').findBy('name', 'bar').get('promise._state'),
+			REJECTED
+		);
 	});
 
-	test('it clears modals by key-value when key-value is passed', (assert) => {
-		const modals = [ModalModel.create({ name: 'foo' }), ModalModel.create({ name: 'bar' })];
+	test('it clears modals by key-value when key-value is passed', function (assert) {
+		const modals = [
+			ModalModel.create({ name: 'foo' }),
+			ModalModel.create({ name: 'bar' }),
+		];
 
 		service.get('content').addObjects(modals);
 
 		service.close('name', 'bar');
 
-		assert.equal(service.get('content').findBy('name', 'foo').get('promise._state'), PENDING);
-		assert.equal(service.get('content').findBy('name', 'bar').get('promise._state'), REJECTED);
+		assert.equal(
+			service.get('content').findBy('name', 'foo').get('promise._state'),
+			PENDING
+		);
+		assert.equal(
+			service.get('content').findBy('name', 'bar').get('promise._state'),
+			REJECTED
+		);
 	});
 });

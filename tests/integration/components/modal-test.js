@@ -30,7 +30,10 @@ function waitForTimeout(timeout) {
 }
 
 function waitForScheduler() {
-	return waitUntil(() => !service.hasPendingTasks() && !run.hasScheduledTimers(), { timeout: 2000 });
+	return waitUntil(
+		() => !service.hasPendingTasks() && !run.hasScheduledTimers(),
+		{ timeout: 2000 }
+	);
 }
 
 function isVisible(element) {
@@ -46,7 +49,7 @@ function getComponent(owner, element) {
 module('Integration | Component | modal', (hooks) => {
 	setupRenderingTest(hooks);
 
-	hooks.beforeEach(async function() {
+	hooks.beforeEach(async function () {
 		this.owner.register('service:scheduler', SchedulerService);
 		this.owner.register('model:modal', ModalModel);
 
@@ -71,8 +74,8 @@ module('Integration | Component | modal', (hooks) => {
 		service = this.owner.lookup('service:scheduler');
 	});
 
-	test('it defines the appropriate `data-id` on the component wrapper', async(assert) => {
-		await render(hbs `<MyModal/>`);
+	test('it defines the appropriate `data-id` on the component wrapper', async function (assert) {
+		await render(hbs`<MyModal/>`);
 
 		component = document.querySelector('[data-id="modalFoo"]');
 
@@ -81,8 +84,8 @@ module('Integration | Component | modal', (hooks) => {
 		assert.ok(component);
 	});
 
-	test('it binds visible class from component', async function(assert) {
-		await render(hbs `<MyModal @visible={{this.visible}}/>`);
+	test('it binds visible class from component', async function (assert) {
+		await render(hbs`<MyModal @visible={{this.visible}}/>`);
 
 		component = document.querySelector('[data-id="modalFoo"]');
 
@@ -97,8 +100,8 @@ module('Integration | Component | modal', (hooks) => {
 		assert.ok(isVisible(component));
 	});
 
-	test('it hides and removes modal when promise is resolved', async(assert) => {
-		await render(hbs `<MyModal/>`);
+	test('it hides and removes modal when promise is resolved', async function (assert) {
+		await render(hbs`<MyModal/>`);
 
 		component = document.querySelector('[data-id="modalFoo"]');
 
@@ -114,8 +117,8 @@ module('Integration | Component | modal', (hooks) => {
 		assert.equal(content.length, 0);
 	});
 
-	test('it hides and removes modal when promise is rejected', async(assert) => {
-		await render(hbs `<MyModal/>`);
+	test('it hides and removes modal when promise is rejected', async function (assert) {
+		await render(hbs`<MyModal/>`);
 
 		component = document.querySelector('[data-id="modalFoo"]');
 
@@ -131,8 +134,8 @@ module('Integration | Component | modal', (hooks) => {
 		assert.equal(content.length, 0);
 	});
 
-	test('it sends didOpen when it is rendered', async(assert) => {
-		await render(hbs `<MyModal/>`);
+	test('it sends didOpen when it is rendered', async function (assert) {
+		await render(hbs`<MyModal/>`);
 
 		component = document.querySelector('[data-id="modalFoo"]');
 		await waitForScheduler();
@@ -140,8 +143,8 @@ module('Integration | Component | modal', (hooks) => {
 		assert.ok(didOpenSpy.calledOnce);
 	});
 
-	test('it sends didOpen when it is rendered and has transitions', async(assert) => {
-		await render(hbs `<MyModal class="animated"/>`);
+	test('it sends didOpen when it is rendered and has transitions', async function (assert) {
+		await render(hbs`<MyModal class="animated"/>`);
 
 		component = document.querySelector('[data-id="modalFoo"]');
 
@@ -154,8 +157,8 @@ module('Integration | Component | modal', (hooks) => {
 		assert.ok(didOpenSpy.calledOnce);
 	});
 
-	test('it does not sends didOpen when it is destroyed', async function(assert) {
-		await render(hbs `
+	test('it does not sends didOpen when it is destroyed', async function (assert) {
+		await render(hbs`
 			{{#unless destroy}}
 				<MyModal class="animated"/>
 			{{/unless}}
@@ -172,8 +175,8 @@ module('Integration | Component | modal', (hooks) => {
 		assert.ok(didOpenSpy.notCalled);
 	});
 
-	test('it waits for transitions before being removed', async(assert) => {
-		await render(hbs `<MyModal class="animated"/>`);
+	test('it waits for transitions before being removed', async function (assert) {
+		await render(hbs`<MyModal class="animated"/>`);
 
 		component = document.querySelector('[data-id="modalFoo"]');
 
@@ -190,8 +193,8 @@ module('Integration | Component | modal', (hooks) => {
 		assert.equal(content.length, 0);
 	});
 
-	test('it resolves promise with arguments', async function(assert) {
-		await render(hbs `<MyModal/>`);
+	test('it resolves promise with arguments', async function (assert) {
+		await render(hbs`<MyModal/>`);
 
 		component = document.querySelector('[data-id="modalFoo"]');
 
@@ -204,10 +207,10 @@ module('Integration | Component | modal', (hooks) => {
 		assert.equal(await model.promise, 'foo');
 	});
 
-	test('it rejects promise with arguments', async function(assert) {
+	test('it rejects promise with arguments', async function (assert) {
 		assert.expect(1);
 
-		await render(hbs `<MyModal/>`);
+		await render(hbs`<MyModal/>`);
 
 		component = document.querySelector('[data-id="modalFoo"]');
 
@@ -222,8 +225,8 @@ module('Integration | Component | modal', (hooks) => {
 		instance.reject('foo');
 	});
 
-	test('it resolves promise with action', async(assert) => {
-		await render(hbs `<MyModal/>`);
+	test('it resolves promise with action', async function (assert) {
+		await render(hbs`<MyModal/>`);
 
 		component = document.querySelector('[data-id="modalFoo"]');
 
@@ -234,10 +237,10 @@ module('Integration | Component | modal', (hooks) => {
 		assert.equal(await model.promise, 'foo');
 	});
 
-	test('it rejects promise with action', async(assert) => {
+	test('it rejects promise with action', async function (assert) {
 		assert.expect(1);
 
-		await render(hbs `<MyModal/>`);
+		await render(hbs`<MyModal/>`);
 
 		component = document.querySelector('[data-id="modalFoo"]');
 

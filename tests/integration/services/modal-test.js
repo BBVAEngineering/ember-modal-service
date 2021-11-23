@@ -18,7 +18,10 @@ function find(query) {
 }
 
 function waitForScheduler() {
-	return waitUntil(() => !scheduler.hasPendingTasks() && !run.hasScheduledTimers(), { timeout: 2000 });
+	return waitUntil(
+		() => !scheduler.hasPendingTasks() && !run.hasScheduledTimers(),
+		{ timeout: 2000 }
+	);
 }
 
 function waitForTimeout(timeout) {
@@ -30,9 +33,9 @@ function waitForTimeout(timeout) {
 module('Integration | Service | modal', (hooks) => {
 	setupRenderingTest(hooks);
 
-	hooks.beforeEach(async function() {
+	hooks.beforeEach(async function () {
 		class ModalFoo extends ModalComponent {
-			classNames = ['animated']
+			classNames = ['animated'];
 		}
 
 		// Registry dummy animated modal.
@@ -48,22 +51,22 @@ module('Integration | Service | modal', (hooks) => {
 		scheduler = this.owner.lookup('service:scheduler');
 
 		// Render controller.
-		await render(hbs `<ModalContainer/>`);
+		await render(hbs`<ModalContainer/>`);
 	});
 
-	hooks.afterEach(function() {
+	hooks.afterEach(function () {
 		this.owner.unregister('component:modal-foo');
 	});
 
-	test('it has an empty array on init', (assert) => {
+	test('it has an empty array on init', function (assert) {
 		assert.ok(isArray(service.get('content')));
 		assert.ok(isEmpty(service.get('content')));
 	});
 
-	test('it renders, resolves and closes new modal', async(assert) => {
+	test('it renders, resolves and closes new modal', async function (assert) {
 		let $element;
 
-		run(async() => {
+		run(async () => {
 			const bar = await service.open('bar');
 
 			assert.equal(bar, 'bar');
@@ -82,12 +85,12 @@ module('Integration | Service | modal', (hooks) => {
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	test('it renders, resolves and closes new modal with transitions', async(assert) => {
+	test('it renders, resolves and closes new modal with transitions', async function (assert) {
 		assert.expect(4);
 
 		let $element;
 
-		run(async() => {
+		run(async () => {
 			const foo = await service.open('foo');
 
 			assert.equal(foo, 'foo');
@@ -114,10 +117,10 @@ module('Integration | Service | modal', (hooks) => {
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	test('it renders, rejects and closes new modal', async(assert) => {
+	test('it renders, rejects and closes new modal', async function (assert) {
 		let $element;
 
-		run(async() => {
+		run(async () => {
 			try {
 				await service.open('bar');
 			} catch (error) {
@@ -138,12 +141,12 @@ module('Integration | Service | modal', (hooks) => {
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	test('it renders, rejects and closes new modal with transitions', async(assert) => {
+	test('it renders, rejects and closes new modal with transitions', async function (assert) {
 		assert.expect(4);
 
 		let $element;
 
-		run(async() => {
+		run(async () => {
 			try {
 				await service.open('foo');
 			} catch (error) {
@@ -172,10 +175,10 @@ module('Integration | Service | modal', (hooks) => {
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	test('it renders, rejects and closes new modal from service', async(assert) => {
+	test('it renders, rejects and closes new modal from service', async function (assert) {
 		let $element;
 
-		run(async() => {
+		run(async () => {
 			try {
 				await service.open('bar');
 			} catch (error) {
@@ -196,12 +199,12 @@ module('Integration | Service | modal', (hooks) => {
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	test('it renders, rejects and closes new modal from service with transitions', async(assert) => {
+	test('it renders, rejects and closes new modal from service with transitions', async function (assert) {
 		assert.expect(4);
 
 		let $element;
 
-		run(async() => {
+		run(async () => {
 			try {
 				await service.open('foo');
 			} catch (error) {
@@ -230,7 +233,7 @@ module('Integration | Service | modal', (hooks) => {
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	test('it triggers events when a modal is open/closed', (assert) => {
+	test('it triggers events when a modal is open/closed', function (assert) {
 		const done = assert.async();
 
 		service.one('open', (modal) => {

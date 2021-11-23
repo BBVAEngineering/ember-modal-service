@@ -1,9 +1,9 @@
 module.exports = {
 	env: {
-		embertest: true
+		embertest: true,
 	},
 	rules: {
 		'max-statements': 0,
-		'no-magic-numbers': 0
-	}
+		'no-magic-numbers': 0,
+	},
 };

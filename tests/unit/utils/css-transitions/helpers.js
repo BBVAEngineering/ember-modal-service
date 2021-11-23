@@ -26,4 +26,3 @@ export function setAnimationStyle(element, property, value) {
 		element.style[property] = value;
 	}, 25);
 }
-

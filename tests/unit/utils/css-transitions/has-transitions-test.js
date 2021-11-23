@@ -7,7 +7,7 @@ module('Unit | Util | css-transitions | has-transitions', (hooks) => {
 		clearScenario();
 	});
 
-	test('it returns true when element has any transition', (assert) => {
+	test('it returns true when element has any transition', function (assert) {
 		const element = createElement();
 
 		element.style.transition = 'all .5s linear 0s';
@@ -15,7 +15,7 @@ module('Unit | Util | css-transitions | has-transitions', (hooks) => {
 		assert.ok(hasTransitions(element), 'element has transitions');
 	});
 
-	test('it returns true when element has a transition', (assert) => {
+	test('it returns true when element has a transition', function (assert) {
 		const element = createElement();
 
 		element.style.transition = 'opacity .5s linear 0s';
@@ -23,24 +23,26 @@ module('Unit | Util | css-transitions | has-transitions', (hooks) => {
 		assert.ok(hasTransitions(element), 'element has transitions');
 	});
 
-	test('it returns true when element has several transitions', (assert) => {
+	test('it returns true when element has several transitions', function (assert) {
 		const element = createElement();
 
-		element.style.transition = 'opacity .5s linear 0s, background-color 1s linear 0s';
+		element.style.transition =
+			'opacity .5s linear 0s, background-color 1s linear 0s';
 
 		assert.ok(hasTransitions(element), 'element has transitions');
 	});
 
-	test('it returns false when element has no transitions', (assert) => {
+	test('it returns false when element has no transitions', function (assert) {
 		const element = createElement();
 
 		assert.notOk(hasTransitions(element), 'element has no transitions');
 	});
 
-	test('it returns false when element has no durations', (assert) => {
+	test('it returns false when element has no durations', function (assert) {
 		const element = createElement();
 
-		element.style.transition = 'transform 0s linear 0s, -webkit-transform 0s linear 0s';
+		element.style.transition =
+			'transform 0s linear 0s, -webkit-transform 0s linear 0s';
 
 		assert.notOk(hasTransitions(element), 'element has no transitions');
 	});

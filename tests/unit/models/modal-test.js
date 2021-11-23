@@ -9,7 +9,7 @@ let model;
 module('Unit | Model | modal', (hooks) => {
 	setupTest(hooks);
 
-	hooks.beforeEach(function() {
+	hooks.beforeEach(function () {
 		this.owner.register('model:modal', ModalModel);
 
 		const factory = this.owner.factoryFor('model:modal');
@@ -17,42 +17,46 @@ module('Unit | Model | modal', (hooks) => {
 		model = factory.create({ name });
 	});
 
-	test('it has a fullname when has a name', (assert) => {
+	test('it has a fullname when has a name', function (assert) {
 		assert.equal(model.get('fullname'), `modal-${name}`);
 	});
 
-	test('it throws an error if modal has not a name', function(assert) {
-		assert.throws(() => {
-			const factory = this.owner.factoryFor('model:modal');
+	test('it throws an error if modal has not a name', function (assert) {
+		assert.throws(
+			() => {
+				const factory = this.owner.factoryFor('model:modal');
 
-			factory.create();
-		}, Error, 'Modal must have a name.');
+				factory.create();
+			},
+			Error,
+			'Modal must have a name.'
+		);
 	});
 
-	test('it setups the promise and fullname objects on init', (assert) => {
+	test('it setups the promise and fullname objects on init', function (assert) {
 		assert.ok(model.get('promise'));
 		assert.ok(model.get('fullname'));
 	});
 
-	test('it tracks the pending promise state', (assert) => {
-		assert.equal(model.isPending, true, 'isPending');
-		assert.equal(model.isSettled, false, 'isSettled');
-		assert.equal(model.isFulfilled, false, 'isFulfilled');
-		assert.equal(model.isRejected, false, 'isPisRejected');
+	test('it tracks the pending promise state', function (assert) {
+		assert.true(model.isPending, 'isPending');
+		assert.false(model.isSettled, 'isSettled');
+		assert.false(model.isFulfilled, 'isFulfilled');
+		assert.false(model.isRejected, 'isPisRejected');
 	});
 
-	test('it tracks the resolved promise state', async(assert) => {
+	test('it tracks the resolved promise state', async function (assert) {
 		model.resolve();
 
 		await model.promise;
 
-		assert.equal(model.isPending, false, 'isPending');
-		assert.equal(model.isSettled, true, 'isSettled');
-		assert.equal(model.isFulfilled, true, 'isFulfilled');
-		assert.equal(model.isRejected, false, 'isPisRejected');
+		assert.false(model.isPending, 'isPending');
+		assert.true(model.isSettled, 'isSettled');
+		assert.true(model.isFulfilled, 'isFulfilled');
+		assert.false(model.isRejected, 'isPisRejected');
 	});
 
-	test('it tracks the rejected promise state', async(assert) => {
+	test('it tracks the rejected promise state', async function (assert) {
 		model.reject();
 
 		try {
@@ -61,9 +65,9 @@ module('Unit | Model | modal', (hooks) => {
 			// Nope
 		}
 
-		assert.equal(model.isPending, false, 'isPending');
-		assert.equal(model.isSettled, true, 'isSettled');
-		assert.equal(model.isFulfilled, false, 'isFulfilled');
-		assert.equal(model.isRejected, true, 'isPisRejected');
+		assert.false(model.isPending, 'isPending');
+		assert.true(model.isSettled, 'isSettled');
+		assert.false(model.isFulfilled, 'isFulfilled');
+		assert.true(model.isRejected, 'isPisRejected');
 	});
 });

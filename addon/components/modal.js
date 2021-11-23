@@ -15,8 +15,8 @@ export default class ModalComponent extends Component.extend({
 		},
 		reject() {
 			this.reject(...arguments);
-		}
-	}
+		},
+	},
 }) {
 	@service scheduler;
 
@@ -42,10 +42,12 @@ export default class ModalComponent extends Component.extend({
 		super.init(...arguments);
 
 		// Prevent creating an uncaught promise.
-		this.model.promise.catch(() => {}).finally(
-			this._close.bind(this),
-			`Component '${this.model.fullname}': close modal`
-		);
+		this.model.promise
+			.catch(() => {})
+			.finally(
+				this._close.bind(this),
+				`Component '${this.model.fullname}': close modal`
+			);
 	}
 
 	didInsertElement() {
@@ -76,11 +78,15 @@ export default class ModalComponent extends Component.extend({
 		this.visible = true;
 
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_safeDidOpen'), {
-				transitionProperty: 'all',
-				once: true,
-				onlyTarget: true
-			});
+			onTransitionEnd(
+				element,
+				scheduler.scheduleOnce.bind(scheduler, this, '_safeDidOpen'),
+				{
+					transitionProperty: 'all',
+					once: true,
+					onlyTarget: true,
+				}
+			);
 		} else {
 			this.didOpen();
 		}
@@ -100,11 +106,15 @@ export default class ModalComponent extends Component.extend({
 
 		// Remove modal from array when transition ends.
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_remove'), {
-				transitionProperty: 'all',
-				once: true,
-				onlyTarget: true
-			});
+			onTransitionEnd(
+				element,
+				scheduler.scheduleOnce.bind(scheduler, this, '_remove'),
+				{
+					transitionProperty: 'all',
+					once: true,
+					onlyTarget: true,
+				}
+			);
 		} else {
 			this._remove();
 		}

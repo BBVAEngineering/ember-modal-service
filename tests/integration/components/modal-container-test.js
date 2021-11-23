@@ -10,29 +10,29 @@ import Component from '@ember/component';
 module('Integration | Component | modal-container', (hooks) => {
 	setupRenderingTest(hooks);
 
-	hooks.beforeEach(function() {
+	hooks.beforeEach(function () {
 		this.owner.register('service:modal', ModalService);
 	});
 
-	test('it creates instances of components from model', async function(assert) {
+	test('it creates instances of components from model', async function (assert) {
 		const object = EmberObject.create({
-			fullname: 'modal-foo'
+			fullname: 'modal-foo',
 		});
 
 		class MyComponent extends ModalContainerComponent {
 			modal = {
-				content: [object]
+				content: [object],
 			};
 		}
 
 		const TestComponent = Component.extend({
-			classNames: ['modal-foo']
+			classNames: ['modal-foo'],
 		});
 
 		this.owner.register('component:modal-container', MyComponent);
 		this.owner.register('component:modal-foo', TestComponent);
 
-		await render(hbs `<ModalContainer/>`);
+		await render(hbs`<ModalContainer/>`);
 
 		assert.equal(document.querySelectorAll('.modal-foo').length, 1);
 	});
