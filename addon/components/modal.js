@@ -1,25 +1,16 @@
 import Component from '@ember/component';
 import { camelize } from '@ember/string';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import onTransitionEnd from 'ember-transition-end/utils/on-transition-end';
 import { hasTransitions } from 'ember-modal-service/utils/css-transitions';
 import { inject as service } from '@ember/service';
 import { run } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
 
-export default class ModalComponent extends Component.extend({
-	// Needed to be able to reopen `resolve` and `reject` methods.
-	actions: {
-		resolve() {
-			this.resolve(...arguments);
-		},
-		reject() {
-			this.reject(...arguments);
-		},
-	},
-}) {
+// Migrate to Glimmer when possible
+// https://github.com/emberjs/rfcs/issues/497
+export default class ModalComponent extends Component {
 	@service scheduler;
-
 	@service modal;
 
 	attributeBindings = ['data-modal-show', 'data-id'];
@@ -28,12 +19,10 @@ export default class ModalComponent extends Component.extend({
 
 	@tracked visible = false;
 
-	@computed('model.fullname')
 	get 'data-id'() {
 		return camelize(this.model.fullname);
 	}
 
-	@computed('visible')
 	get 'data-modal-show'() {
 		return String(this.visible);
 	}
@@ -129,19 +118,19 @@ export default class ModalComponent extends Component.extend({
 		this.modal._closeByModel(this.model);
 	}
 
-	@action
-	resolve(data, label = `Component '${this.model.fullname}': fulfillment`) {
-		this.model.resolve(data, label);
-	}
-
-	@action
-	reject(data, label = `Component '${this.model.fullname}': rejection`) {
-		this.model.reject(data, label);
-	}
-
 	willDestroy() {
 		super.willDestroy(...arguments);
 
 		this.modal.trigger('will-destroy', this.model);
+	}
+
+	@action
+	resolve(data) {
+		this.model.resolve(data);
+	}
+
+	@action
+	reject(err) {
+		this.model.reject(err);
 	}
 }

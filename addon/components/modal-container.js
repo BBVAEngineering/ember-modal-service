@@ -1,7 +1,6 @@
 import Component from '@ember/component';
-import layout from '../templates/components/modal-container';
 import { inject as service } from '@ember/service';
-import { notEmpty } from '@ember/object/computed';
+import layout from '../templates/components/modal-container';
 
 export default class ModalContainerComponent extends Component {
 	layout = layout;
@@ -10,5 +9,7 @@ export default class ModalContainerComponent extends Component {
 
 	classNameBindings = ['fullHeight'];
 
-	@notEmpty('modal.content') fullHeight;
+	get fullHeight() {
+		return !!this.modal.content.length;
+	}
 }

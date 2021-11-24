@@ -26,7 +26,7 @@ module('Unit | Model | modal', (hooks) => {
 			() => {
 				const factory = this.owner.factoryFor('model:modal');
 
-				factory.create();
+				factory.create().fullname;
 			},
 			Error,
 			'Modal must have a name.'

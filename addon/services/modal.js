@@ -13,7 +13,7 @@ export default class ModalService extends Service.extend(Evented) {
 
 		// If the modal is already opened, reject it
 		if (this.isOpened(name)) {
-			model.reject(null, `Modal: '${model.fullname}' is already opened`);
+			model.reject(null);
 		} else {
 			// Add new modal.
 			this.content.addObject(model);
@@ -45,7 +45,7 @@ export default class ModalService extends Service.extend(Evented) {
 		}
 
 		filter.forEach((modal) => {
-			modal.reject(null, `Modal: closing '${modal.fullname}'`);
+			modal.reject(null);
 		});
 	}
 

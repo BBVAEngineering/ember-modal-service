@@ -1,5 +1,4 @@
-import { oneWay } from '@ember/object/computed';
-import EmberObject, { computed } from '@ember/object';
+import EmberObject from '@ember/object';
 import { dasherize } from '@ember/string';
 import { defer } from 'rsvp';
 import { isBlank } from '@ember/utils';
@@ -7,8 +6,8 @@ import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import { tracked } from '@glimmer/tracking';
 
 export default class ModalModel extends EmberObject.extend(PromiseProxyMixin) {
-	name = null;
-	options = null;
+	@tracked name;
+	@tracked options;
 
 	// Do not use "PromiseProxyMixin", "@oneWay" does not tracks the state.
 	@tracked isPending = true;
@@ -16,11 +15,12 @@ export default class ModalModel extends EmberObject.extend(PromiseProxyMixin) {
 	@tracked isFulfilled = false;
 	@tracked isRejected = false;
 
-	@tracked _deferred;
+	@tracked _deferred = defer();
 
-	@oneWay('_deferred.promise') promise;
+	get promise() {
+		return this._deferred.promise;
+	}
 
-	@computed('name')
 	get fullname() {
 		const name = this.name;
 
@@ -29,12 +29,6 @@ export default class ModalModel extends EmberObject.extend(PromiseProxyMixin) {
 		}
 
 		return `modal-${dasherize(name)}`;
-	}
-
-	init() {
-		super.init(...arguments);
-
-		this._deferred = defer(`Modal: open '${this.fullname}'`);
 	}
 
 	resolve() {

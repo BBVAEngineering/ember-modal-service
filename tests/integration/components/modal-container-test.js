@@ -25,9 +25,9 @@ module('Integration | Component | modal-container', (hooks) => {
 			};
 		}
 
-		const TestComponent = Component.extend({
-			classNames: ['modal-foo'],
-		});
+		const TestComponent = class extends Component {
+			classNames = ['modal-foo'];
+		};
 
 		this.owner.register('component:modal-container', MyComponent);
 		this.owner.register('component:modal-foo', TestComponent);

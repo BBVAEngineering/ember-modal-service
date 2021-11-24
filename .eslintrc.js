@@ -17,12 +17,20 @@ module.exports = {
 	env: {
 		browser: true,
 	},
-	rules: {},
+	rules: {
+		'@glimmer/component': 0,
+		'ember/no-classic-components': 0,
+		'ember/classic-decorator-hooks': 0,
+		'ember/require-tagless-components': 0,
+		'ember/no-component-lifecycle-hooks': 0,
+	},
 	overrides: [
 		// node files
 		{
 			files: [
+				'./.commitlintrc.js',
 				'./.eslintrc.js',
+				'./.huskyrc.js',
 				'./.prettierrc.js',
 				'./.template-lintrc.js',
 				'./ember-cli-build.js',
@@ -31,6 +39,7 @@ module.exports = {
 				'./blueprints/*/index.js',
 				'./config/**/*.js',
 				'./tests/dummy/config/**/*.js',
+				'./tests/.eslintrc.js',
 			],
 			parserOptions: {
 				sourceType: 'script',
