@@ -18,12 +18,6 @@
 /.prettierignore
 /.prettierrc.js
 /.template-lintrc.js
-/.commitlintrc.js
-/.huskyrc.js
-/.nycrc.json
-/.releaserc
-/greenkeeper.json
-/jsconfig.json
 /.travis.yml
 /.watchmanconfig
 /bower.json

@@ -12,12 +12,7 @@ insert_final_newline = true
 indent_style = space
 indent_size = 2
 
-[*.{html,css,hbs,js}]
-indent_style = tab
-indent_size = tab
-tab_width = 4
-
-[*.{hbs,yml,yaml}]
+[*.hbs]
 insert_final_newline = false
 
 [*.{diff,md}]

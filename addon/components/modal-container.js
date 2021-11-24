@@ -3,13 +3,13 @@ import { inject as service } from '@ember/service';
 import layout from '../templates/components/modal-container';
 
 export default class ModalContainerComponent extends Component {
-	layout = layout;
+  layout = layout;
 
-	@service modal;
+  @service modal;
 
-	classNameBindings = ['fullHeight'];
+  classNameBindings = ['fullHeight'];
 
-	get fullHeight() {
-		return !!this.modal.content.length;
-	}
+  get fullHeight() {
+    return !!this.modal.content.length;
+  }
 }

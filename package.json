@@ -48,18 +48,23 @@
     "check-coverage": "istanbul check-coverage coverage/coverage-final.json --statements 100 --branches 100 --functions 100 --lines 100",
     "commit": "git-cz",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
-    "lint:fix": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*:fix",
+    "lint:fix": "npm-run-all --continue-on-error lint:*:fix",
     "lint:hbs": "ember-template-lint .",
     "lint:hbs:fix": "ember-template-lint . --fix",
-    "lint:js": "eslint . --cache",
+    "lint:js": "eslint . --cache --max-warnings 0",
     "posttest": "npm run report-coverage && npm run check-coverage && npm run validate-coverage",
     "report-coverage": "istanbul report --include=coverage/coverage-final.json text",
     "lint:js:fix": "eslint . --fix",
     "start": "ember serve",
-    "test": "npm-run-all lint test:*",
+    "test": "npm-run-all lint test:ember",
     "test:ember": "COVERAGE=true ember test",
     "semantic-release": "semantic-release",
-    "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0"
+    "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
+    "lint:style": "prettier --check .",
+    "lint:style:fix": "prettier --write .",
+    "prepare": "husky install",
+    "test:ember-compatibility": "ember try:each",
+    "test:release": "semantic-release --branches=$(git rev-parse --abbrev-ref HEAD) --dry-run"
   },
   "dependencies": {
     "@glimmer/tracking": "^1.0.4",
@@ -137,5 +142,9 @@
   "bugs": {
     "url": "https://github.com/BBVAEngineering/ember-modal-service/issues"
   },
-  "homepage": "https://github.com/BBVAEngineering/ember-modal-service#readme"
+  "homepage": "https://github.com/BBVAEngineering/ember-modal-service#readme",
+  "lint-staged": {
+    "*.{js,ts}": "eslint --fix",
+    "*.{md,json,yaml,yml}": "prettier -w"
+  }
 }

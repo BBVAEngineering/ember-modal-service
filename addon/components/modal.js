@@ -10,127 +10,127 @@ import { tracked } from '@glimmer/tracking';
 // Migrate to Glimmer when possible
 // https://github.com/emberjs/rfcs/issues/497
 export default class ModalComponent extends Component {
-	@service scheduler;
-	@service modal;
+  @service scheduler;
+  @service modal;
 
-	attributeBindings = ['data-modal-show', 'data-id'];
+  attributeBindings = ['data-modal-show', 'data-id'];
 
-	ariaRole = 'dialog';
+  ariaRole = 'dialog';
 
-	@tracked visible = false;
+  @tracked visible = false;
 
-	get 'data-id'() {
-		return camelize(this.model.fullname);
-	}
+  get 'data-id'() {
+    return camelize(this.model.fullname);
+  }
 
-	get 'data-modal-show'() {
-		return String(this.visible);
-	}
+  get 'data-modal-show'() {
+    return String(this.visible);
+  }
 
-	init() {
-		super.init(...arguments);
+  init() {
+    super.init(...arguments);
 
-		// Prevent creating an uncaught promise.
-		this.model.promise
-			.catch(() => {})
-			.finally(
-				this._close.bind(this),
-				`Component '${this.model.fullname}': close modal`
-			);
-	}
+    // Prevent creating an uncaught promise.
+    this.model.promise
+      .catch(() => {})
+      .finally(
+        this._close.bind(this),
+        `Component '${this.model.fullname}': close modal`
+      );
+  }
 
-	didInsertElement() {
-		super.didInsertElement(...arguments);
+  didInsertElement() {
+    super.didInsertElement(...arguments);
 
-		run.next(this.scheduler, 'scheduleOnce', this, '_open');
-	}
+    run.next(this.scheduler, 'scheduleOnce', this, '_open');
+  }
 
-	didOpen() {}
+  didOpen() {}
 
-	_safeDidOpen() {
-		if (this.isDestroyed) {
-			return;
-		}
+  _safeDidOpen() {
+    if (this.isDestroyed) {
+      return;
+    }
 
-		this.didOpen();
-	}
+    this.didOpen();
+  }
 
-	_open() {
-		// istanbul ignore if: lifecycle check.
-		if (this.isDestroyed) {
-			return;
-		}
+  _open() {
+    // istanbul ignore if: lifecycle check.
+    if (this.isDestroyed) {
+      return;
+    }
 
-		const scheduler = this.scheduler;
-		const element = this.element;
+    const scheduler = this.scheduler;
+    const element = this.element;
 
-		this.visible = true;
+    this.visible = true;
 
-		if (hasTransitions(element)) {
-			onTransitionEnd(
-				element,
-				scheduler.scheduleOnce.bind(scheduler, this, '_safeDidOpen'),
-				{
-					transitionProperty: 'all',
-					once: true,
-					onlyTarget: true,
-				}
-			);
-		} else {
-			this.didOpen();
-		}
-	}
+    if (hasTransitions(element)) {
+      onTransitionEnd(
+        element,
+        scheduler.scheduleOnce.bind(scheduler, this, '_safeDidOpen'),
+        {
+          transitionProperty: 'all',
+          once: true,
+          onlyTarget: true,
+        }
+      );
+    } else {
+      this.didOpen();
+    }
+  }
 
-	_close() {
-		// istanbul ignore if: lifecycle check.
-		if (this.isDestroyed) {
-			return;
-		}
+  _close() {
+    // istanbul ignore if: lifecycle check.
+    if (this.isDestroyed) {
+      return;
+    }
 
-		const scheduler = this.scheduler;
-		const element = this.element;
+    const scheduler = this.scheduler;
+    const element = this.element;
 
-		// Close modal.
-		this.visible = false;
+    // Close modal.
+    this.visible = false;
 
-		// Remove modal from array when transition ends.
-		if (hasTransitions(element)) {
-			onTransitionEnd(
-				element,
-				scheduler.scheduleOnce.bind(scheduler, this, '_remove'),
-				{
-					transitionProperty: 'all',
-					once: true,
-					onlyTarget: true,
-				}
-			);
-		} else {
-			this._remove();
-		}
-	}
+    // Remove modal from array when transition ends.
+    if (hasTransitions(element)) {
+      onTransitionEnd(
+        element,
+        scheduler.scheduleOnce.bind(scheduler, this, '_remove'),
+        {
+          transitionProperty: 'all',
+          once: true,
+          onlyTarget: true,
+        }
+      );
+    } else {
+      this._remove();
+    }
+  }
 
-	_remove() {
-		// istanbul ignore if: lifecycle check.
-		if (this.isDestroyed) {
-			return;
-		}
+  _remove() {
+    // istanbul ignore if: lifecycle check.
+    if (this.isDestroyed) {
+      return;
+    }
 
-		this.modal._closeByModel(this.model);
-	}
+    this.modal._closeByModel(this.model);
+  }
 
-	willDestroy() {
-		super.willDestroy(...arguments);
+  willDestroy() {
+    super.willDestroy(...arguments);
 
-		this.modal.trigger('will-destroy', this.model);
-	}
+    this.modal.trigger('will-destroy', this.model);
+  }
 
-	@action
-	resolve(data) {
-		this.model.resolve(data);
-	}
+  @action
+  resolve(data) {
+    this.model.resolve(data);
+  }
 
-	@action
-	reject(err) {
-		this.model.reject(err);
-	}
+  @action
+  reject(err) {
+    this.model.reject(err);
+  }
 }
