@@ -71,7 +71,8 @@
     "ember-cli-babel": "^7.19.0",
     "ember-cli-htmlbars": "^5.7.1",
     "ember-task-scheduler": "^2.1.0",
-    "ember-transition-end": "^2.0.0"
+    "ember-transition-end": "^2.0.0",
+    "lint-staged": "^12.1.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
@@ -114,7 +115,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-qunit": "^6.2.0",
-    "husky": "^4.3.0",
+    "husky": "^7.0.4",
     "istanbul": "^0.4.5",
     "json": "^10.0.0",
     "loader.js": "^4.7.0",
@@ -130,7 +131,7 @@
     "babel-plugin-ember-modules-api-polyfill": "2.13.0"
   },
   "engines": {
-    "node": "12.* || 14.* || >= 16"
+    "node": ">= 12.20 || 14.* || >= 16"
   },
   "ember": {
     "edition": "octane"
