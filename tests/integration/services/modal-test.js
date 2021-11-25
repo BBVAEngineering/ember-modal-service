@@ -248,9 +248,7 @@ module('Integration | Service | modal', (hooks) => {
       assert.equal(modal.name, 'foo', 'modal exists as first argument');
     });
 
-    run(() => {
-      service.open('foo');
-    });
+    service.open('foo');
 
     service.one('close', (modal) => {
       assert.ok(1, 'modal is closed');
@@ -258,8 +256,6 @@ module('Integration | Service | modal', (hooks) => {
       done();
     });
 
-    run(() => {
-      service.close('foo');
-    });
+    service.close('foo');
   });
 });

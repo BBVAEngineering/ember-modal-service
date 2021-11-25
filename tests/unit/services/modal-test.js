@@ -2,7 +2,6 @@
 
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { run } from '@ember/runloop';
 import { isArray } from '@ember/array';
 import { isEmpty } from '@ember/utils';
 import ModalModel from 'ember-modal-service/models/modal';
@@ -30,10 +29,8 @@ module('Unit | Service | modal', (hooks) => {
   });
 
   test('it creates a new modal with a promise', function (assert) {
-    run(() => {
-      service.open('foo');
-      service.open('bar', { bar: 'bar' });
-    });
+    service.open('foo');
+    service.open('bar', { bar: 'bar' });
 
     const content = service.get('content');
 
@@ -45,11 +42,9 @@ module('Unit | Service | modal', (hooks) => {
   });
 
   test('it creates only a new modal of same type', function (assert) {
-    run(() => {
-      service.open('foo');
-      service.open('foo');
-      service.open('foo');
-    });
+    service.open('foo');
+    service.open('foo');
+    service.open('foo');
 
     const content = service.get('content');
 
