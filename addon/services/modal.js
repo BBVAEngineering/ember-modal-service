@@ -21,7 +21,9 @@ export default class ModalService extends Service.extend(Evented) {
 
 		this.trigger('open', model);
 
-		return model.get('promise');
+		return new Promise((resolve) => {
+			this.one('close', () => resolve(model.promise));
+		});
 	}
 
 	_closeByModel(model) {

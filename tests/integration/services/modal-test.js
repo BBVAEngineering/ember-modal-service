@@ -230,26 +230,44 @@ module('Integration | Service | modal', (hooks) => {
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	test('it triggers events when a modal is open/closed', (assert) => {
-		const done = assert.async();
+	test('it triggers events when a modal is open/closed', async(assert) => {
+		assert.expect(6);
+
+		let $element;
 
 		service.one('open', (modal) => {
 			assert.ok(1, 'modal is open');
-			assert.equal(modal.name, 'foo', 'modal exists as first argument');
+			assert.equal(
+				modal.name,
+				'foo',
+				'modal exists as first argument'
+			);
 		});
 
-		run(() => {
-			service.open('foo');
+		run(async() => {
+			const foo = await service.open('foo');
+
+			assert.equal(foo, 'foo');
 		});
 
-		service.one('close', (modal) => {
-			assert.ok(1, 'modal is closed');
-			assert.equal(modal.name, 'foo', 'key exists as first argument');
-			done();
-		});
+		await waitForScheduler();
 
-		run(() => {
-			service.close('foo');
-		});
+		$element = find('[data-id="modalFoo"][data-modal-show="true"]');
+
+		assert.equal($element.length, 1, 'Modal is displayed');
+
+		await waitForTimeout(ANIMATION_DELAY);
+
+		run(service.get('content.0'), 'resolve', 'foo');
+
+		$element = find('[data-id="modalFoo"]:not([data-modal-show="true"])');
+
+		assert.equal($element.length, 1, 'Modal is hidden');
+
+		await waitForTimeout(ANIMATION_DELAY);
+
+		$element = find('[data-id="modalFoo"]');
+
+		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 });
