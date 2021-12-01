@@ -24,6 +24,9 @@ module('Acceptance | modal-component', (hooks) => {
     await this.waitForRender();
 
     assert.dom('[data-id="modalCustomModal"]').exists();
+
+    // Resolve modal to remove pending waiters
+    await click(`[data-id="resolve"]`);
   });
 
   test('it is accessible', async function (assert) {
@@ -32,6 +35,9 @@ module('Acceptance | modal-component', (hooks) => {
     await this.waitForRender();
 
     assert.dom('[data-id="modalCustomModal"]').hasAttribute('role', 'dialog');
+
+    // Resolve modal to remove pending waiters
+    await click(`[data-id="resolve"]`);
   });
 
   test('it renders hidden and then toggles visibility', async function (assert) {
