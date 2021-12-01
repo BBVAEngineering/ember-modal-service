@@ -4,6 +4,7 @@ import { defer } from 'rsvp';
 import { isBlank } from '@ember/utils';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import { tracked } from '@glimmer/tracking';
+import { ensureSafeComponent } from '@embroider/util';
 
 export default class ModalModel extends EmberObject.extend(PromiseProxyMixin) {
   @tracked name;
@@ -29,6 +30,10 @@ export default class ModalModel extends EmberObject.extend(PromiseProxyMixin) {
     }
 
     return `modal-${dasherize(name)}`;
+  }
+
+  get componentName() {
+    return ensureSafeComponent(this.fullname, this);
   }
 
   resolve() {

@@ -1,11 +1,11 @@
-.animated {
+[data-id='modalCustomModal'] {
   transition: opacity 0.2s;
 }
 
-.animated[data-modal-show='false'] {
+[data-id='modalCustomModal'][data-modal-show='false'] {
   opacity: 0;
 }
 
-.animated[data-modal-show='true'] {
+[data-id='modalCustomModal'][data-modal-show='true'] {
   opacity: 1;
 }

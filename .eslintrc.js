@@ -17,13 +17,6 @@ module.exports = {
   env: {
     browser: true,
   },
-  rules: {
-    '@glimmer/component': 0,
-    'ember/no-classic-components': 0,
-    'ember/classic-decorator-hooks': 0,
-    'ember/require-tagless-components': 0,
-    'ember/no-component-lifecycle-hooks': 0,
-  },
   overrides: [
     // node files
     {
