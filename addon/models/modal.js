@@ -5,6 +5,7 @@ import { isBlank } from '@ember/utils';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import { tracked } from '@glimmer/tracking';
 import { ensureSafeComponent } from '@embroider/util';
+import { getOwner } from '@ember/application';
 
 export default class ModalModel extends EmberObject.extend(PromiseProxyMixin) {
   @tracked name;
@@ -33,7 +34,11 @@ export default class ModalModel extends EmberObject.extend(PromiseProxyMixin) {
   }
 
   get componentName() {
-    return ensureSafeComponent(this.fullname, this);
+    const componentFactory = getOwner(this).factoryFor(
+      `component:${this.fullname}`
+    );
+
+    return ensureSafeComponent(componentFactory.class, this);
   }
 
   resolve() {
