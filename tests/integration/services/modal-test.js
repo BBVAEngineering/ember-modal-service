@@ -9,6 +9,7 @@ import RSVP from 'rsvp';
 import { waitUntil } from '@ember/test-helpers';
 import ModalComponent from 'ember-modal-service/components/modal';
 import { render } from '@ember/test-helpers';
+import cases from 'qunit-parameterize';
 
 let service, scheduler;
 const ANIMATION_DELAY = 300;
@@ -230,10 +231,10 @@ module('Integration | Service | modal', (hooks) => {
 		assert.equal($element.length, 0, 'Modal is removed from DOM');
 	});
 
-	test('it triggers events when a modal is open/closed', async(assert) => {
-		assert.expect(6);
+	test('it triggers event when a modal is open', async(assert) => {
+		assert.expect(2);
 
-		let $element;
+		const done = assert.async();
 
 		service.one('open', (modal) => {
 			assert.ok(1, 'modal is open');
@@ -242,32 +243,35 @@ module('Integration | Service | modal', (hooks) => {
 				'foo',
 				'modal exists as first argument'
 			);
+
+			done();
 		});
 
 		run(async() => {
-			const foo = await service.open('foo');
+			await service.open('foo');
+		});
+	});
 
-			assert.equal(foo, 'foo');
+	cases([
+		{ title: 'resolve' },
+		{ title: 'reject' }
+	]).test('it fulfills promise modal is removed from DOM ', async({ title }, assert) => {
+		assert.expect(1);
+
+		run(async() => {
+			try {
+				await service.open('foo');
+			} catch {
+				// Noop
+			}
 		});
 
-		await waitForScheduler();
+		await waitForTimeout(ANIMATION_DELAY);
 
-		$element = find('[data-id="modalFoo"][data-modal-show="true"]');
-
-		assert.equal($element.length, 1, 'Modal is displayed');
+		run(service.get('content.0'), title, 'foo');
 
 		await waitForTimeout(ANIMATION_DELAY);
 
-		run(service.get('content.0'), 'resolve', 'foo');
-
-		$element = find('[data-id="modalFoo"]:not([data-modal-show="true"])');
-
-		assert.equal($element.length, 1, 'Modal is hidden');
-
-		await waitForTimeout(ANIMATION_DELAY);
-
-		$element = find('[data-id="modalFoo"]');
-
-		assert.equal($element.length, 0, 'Modal is removed from DOM');
+		assert.dom('[data-id="modalFoo"]').doesNotExist();
 	});
 });
