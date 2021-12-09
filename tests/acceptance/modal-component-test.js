@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { click, find, render, waitFor, waitUntil } from '@ember/test-helpers';
+import { click, render, waitFor } from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import cases from 'qunit-parameterize';
@@ -7,7 +7,9 @@ import cases from 'qunit-parameterize';
 module('Acceptance | modal-component', (hooks) => {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(async function () {
+  hooks.beforeEach(async function (assert) {
+    assert.timeout(5000);
+
     const modal = this.owner.lookup('service:modal');
 
     this.open = () => modal.open('custom-modal');
@@ -73,11 +75,16 @@ module('Acceptance | modal-component', (hooks) => {
   cases([{ title: 'resolve' }, { title: 'reject' }]).test(
     'it removes modal from DOM when promise is fulfilled ',
     async function ({ title: method }, assert) {
-      this.open();
+      const promise = this.open();
 
       await this.waitForVisible();
       await click(`[data-id="${method}"]`);
-      await waitUntil(() => !find('[data-id="modalCustomModal"]'));
+
+      try {
+        await promise;
+      } catch {
+        // Nope...
+      }
 
       assert.dom('[data-id="modalCustomModal"]').doesNotExist();
     }
@@ -86,8 +93,6 @@ module('Acceptance | modal-component', (hooks) => {
   cases([{ title: 'resolve' }, { title: 'reject' }]).test(
     'it fulfills with a value ',
     async function ({ title: method }, assert) {
-      assert.expect(1);
-
       const promise = this.open();
 
       await this.waitForVisible();
@@ -145,11 +150,16 @@ module('Acceptance | modal-component', (hooks) => {
     cases([{ title: 'resolve' }, { title: 'reject' }]).test(
       'it removes modal from DOM when promise is fulfilled ',
       async function ({ title: method }, assert) {
-        this.open();
+        const promise = this.open();
 
         await this.waitForVisible();
         await click(`[data-id="${method}"]`);
-        await waitUntil(() => !find('[data-id="modalCustomModal"]'));
+
+        try {
+          await promise;
+        } catch {
+          // Nope...
+        }
 
         assert.dom('[data-id="modalCustomModal"]').doesNotExist();
       }

@@ -35,9 +35,6 @@ export default class ModalComponent extends Component {
   constructor() {
     super(...arguments);
 
-    // Prevent creating an uncaught promise.
-    this.model.promise.catch(() => {}).finally(() => this._close());
-
     next(this.scheduler, 'schedule', this, '_open');
   }
 
@@ -94,16 +91,18 @@ export default class ModalComponent extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    this.modal.trigger('will-destroy', this.model);
+    this._fullfillmentFn && this._fullfillmentFn();
   }
 
   @action
   resolve(data) {
-    this.model.resolve(data);
+    this._fullfillmentFn = () => this.model.resolve(data);
+    this._close();
   }
 
   @action
   reject(error) {
-    this.model.reject(error);
+    this._fullfillmentFn = () => this.model.reject(error);
+    this._close();
   }
 }
