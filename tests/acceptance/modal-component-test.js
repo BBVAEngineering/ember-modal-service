@@ -78,7 +78,7 @@ module('Acceptance | modal-component', (hooks) => {
       const promise = this.open();
 
       await this.waitForVisible();
-      await click(`[data-id="${method}"]`);
+      click(`[data-id="${method}"]`);
 
       try {
         await promise;
@@ -96,7 +96,7 @@ module('Acceptance | modal-component', (hooks) => {
       const promise = this.open();
 
       await this.waitForVisible();
-      await click(`[data-id="${method}"]`);
+      click(`[data-id="${method}"]`);
 
       try {
         const value = await promise;
@@ -113,7 +113,7 @@ module('Acceptance | modal-component', (hooks) => {
 
     await this.waitForVisible();
     await new Promise((res) => setTimeout(res, 500)); // wait transition callback
-    await click(`[data-id="resolve"]`);
+    click(`[data-id="resolve"]`);
 
     const didOpenSpy = await promise;
 
@@ -140,7 +140,7 @@ module('Acceptance | modal-component', (hooks) => {
 
       await this.waitForVisible();
       await new Promise((res) => setTimeout(res, 500)); // wait transition callback
-      await click(`[data-id="resolve"]`);
+      click(`[data-id="resolve"]`);
 
       const didOpenSpy = await promise;
 
@@ -153,7 +153,7 @@ module('Acceptance | modal-component', (hooks) => {
         const promise = this.open();
 
         await this.waitForVisible();
-        await click(`[data-id="${method}"]`);
+        click(`[data-id="${method}"]`);
 
         try {
           await promise;
