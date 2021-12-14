@@ -4,6 +4,10 @@ import onTransitionEnd from 'ember-transition-end/utils/on-transition-end';
 import { hasTransitions } from 'ember-modal-service/utils/css-transitions';
 import { inject as service } from '@ember/service';
 import { next } from '@ember/runloop';
+import { buildWaiter } from '@ember/test-waiters';
+
+const openWaiter = buildWaiter('ember-modal-service:open-waiter');
+const closeWaiter = buildWaiter('ember-modal-service:close-waiter');
 
 const isNotDestroyed = (target, key, descriptor) => {
   const targetMethod = descriptor.value;
@@ -21,7 +25,6 @@ const isNotDestroyed = (target, key, descriptor) => {
 };
 
 export default class ModalComponent extends Component {
-  @service scheduler;
   @service modal;
 
   get element() {
@@ -35,7 +38,7 @@ export default class ModalComponent extends Component {
   constructor() {
     super(...arguments);
 
-    next(this.scheduler, 'schedule', this, '_open');
+    next(this, '_open');
   }
 
   @isNotDestroyed
@@ -48,17 +51,19 @@ export default class ModalComponent extends Component {
     this.args.changeVisibility(true);
 
     if (hasTransitions(this.element)) {
-      onTransitionEnd(
-        this.element,
-        this.scheduler.scheduleOnce.bind(this.scheduler, this, '_safeDidOpen'),
-        {
-          transitionProperty: 'all',
-          once: true,
-          onlyTarget: true,
-        }
-      );
+      const token = openWaiter.beginAsync();
+      const callback = () => {
+        openWaiter.endAsync(token);
+        this._safeDidOpen();
+      };
+
+      onTransitionEnd(this.element, callback, {
+        transitionProperty: 'all',
+        once: true,
+        onlyTarget: true,
+      });
     } else {
-      this.scheduler.scheduleOnce(this, 'didOpen');
+      this._safeDidOpen();
     }
   }
 
@@ -69,17 +74,19 @@ export default class ModalComponent extends Component {
 
     // Remove modal from array when transition ends.
     if (hasTransitions(this.element)) {
-      onTransitionEnd(
-        this.element,
-        this.scheduler.scheduleOnce.bind(this.scheduler, this, '_remove'),
-        {
-          transitionProperty: 'all',
-          once: true,
-          onlyTarget: true,
-        }
-      );
+      const token = closeWaiter.beginAsync();
+      const callback = () => {
+        closeWaiter.endAsync(token);
+        this._remove();
+      };
+
+      onTransitionEnd(this.element, callback, {
+        transitionProperty: 'all',
+        once: true,
+        onlyTarget: true,
+      });
     } else {
-      this.scheduler.scheduleOnce(this, '_remove');
+      this._remove();
     }
   }
 

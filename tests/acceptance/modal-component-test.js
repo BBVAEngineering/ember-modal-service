@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { click, render, waitFor } from '@ember/test-helpers';
+import { click, render, settled, waitFor } from '@ember/test-helpers';
 import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import cases from 'qunit-parameterize';
@@ -14,8 +14,10 @@ module('Acceptance | modal-component', (hooks) => {
 
     this.open = () => modal.open('custom-modal');
     this.waitForRender = () => waitFor('[data-id="modalCustomModal"]');
-    this.waitForVisible = () =>
-      waitFor('[data-id="modalCustomModal"][data-modal-show="true"]');
+    this.waitForVisible = async () => {
+      await settled();
+      await waitFor('[data-id="modalCustomModal"][data-modal-show="true"]');
+    };
 
     await render(hbs`<ModalContainer />`);
   });
@@ -27,8 +29,7 @@ module('Acceptance | modal-component', (hooks) => {
 
     assert.dom('[data-id="modalCustomModal"]').exists();
 
-    // Resolve modal to remove pending waiters
-    await click(`[data-id="resolve"]`);
+    await settled();
   });
 
   test('it is accessible', async function (assert) {
@@ -59,16 +60,19 @@ module('Acceptance | modal-component', (hooks) => {
   });
 
   cases([{ title: 'resolve' }, { title: 'reject' }]).test(
-    'it changes visibility when promise is fulfilled ',
+    'it changes visibility when modal is closing ',
     async function ({ title: method }, assert) {
       this.open();
 
       await this.waitForVisible();
-      await click(`[data-id="${method}"]`);
+      click(`[data-id="${method}"]`);
+      await waitFor('[data-id="modalCustomModal"][data-modal-show="false"]');
 
       assert
         .dom('[data-id="modalCustomModal"]')
         .hasAttribute('data-modal-show', 'false');
+
+      await settled();
     }
   );
 

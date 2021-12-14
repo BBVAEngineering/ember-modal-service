@@ -67,7 +67,6 @@
     "@glimmer/tracking": "^1.0.4",
     "ember-cli-babel": "^7.26.6",
     "ember-cli-htmlbars": "^5.7.1",
-    "ember-task-scheduler": "^3.0.0",
     "ember-transition-end": "^2.0.0"
   },
   "devDependencies": {
