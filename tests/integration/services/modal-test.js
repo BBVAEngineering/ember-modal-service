@@ -6,9 +6,14 @@ import { isArray } from '@ember/array';
 import { isEmpty } from '@ember/utils';
 import hbs from 'htmlbars-inline-precompile';
 import RSVP from 'rsvp';
-import { waitUntil } from '@ember/test-helpers';
 import ModalComponent from 'ember-modal-service/components/modal';
-import { render } from '@ember/test-helpers';
+import {
+	click,
+	render,
+	settled,
+	waitFor,
+	waitUntil,
+} from '@ember/test-helpers';
 import cases from 'qunit-parameterize';
 
 let service, scheduler;
@@ -26,6 +31,11 @@ function waitForTimeout(timeout) {
 	return new RSVP.Promise((resolve) => {
 		setTimeout(resolve, timeout);
 	});
+}
+
+async function waitForVisible() {
+	await settled();
+	await waitFor('[data-id="modalCustomModal"][data-modal-show="true"]');
 }
 
 module('Integration | Service | modal', (hooks) => {
@@ -140,7 +150,7 @@ module('Integration | Service | modal', (hooks) => {
 	});
 
 	test('it renders, rejects and closes new modal with transitions', async(assert) => {
-		assert.expect(4);
+		assert.expect(3);
 
 		let $element;
 
@@ -148,7 +158,7 @@ module('Integration | Service | modal', (hooks) => {
 			try {
 				await service.open('foo');
 			} catch (error) {
-				assert.equal(error, 'foo');
+				// Noop
 			}
 		});
 
@@ -198,7 +208,7 @@ module('Integration | Service | modal', (hooks) => {
 	});
 
 	test('it renders, rejects and closes new modal from service with transitions', async(assert) => {
-		assert.expect(4);
+		assert.expect(3);
 
 		let $element;
 
@@ -206,7 +216,7 @@ module('Integration | Service | modal', (hooks) => {
 			try {
 				await service.open('foo');
 			} catch (error) {
-				assert.ok(true);
+				// Noop
 			}
 		});
 
@@ -252,26 +262,41 @@ module('Integration | Service | modal', (hooks) => {
 		});
 	});
 
-	cases([
-		{ title: 'resolve' },
-		{ title: 'reject' }
-	]).test('it fulfills promise modal is removed from DOM ', async({ title }, assert) => {
-		assert.expect(1);
+	cases([{ title: 'resolve' }, { title: 'reject' }]).test(
+		'it changes visibility when modal is closing ',
+		async({ title: method }, assert) => {
+			const promise = service.open('custom-modal');
 
-		run(async() => {
+			await waitForVisible();
+
+			click(`[data-id="${method}"]`);
+
 			try {
-				await service.open('foo');
+				await promise;
 			} catch {
-				// Noop
+				// Nope...
 			}
-		});
 
-		await waitForTimeout(ANIMATION_DELAY);
+			assert.dom('[data-id="modalCustomModal"]').doesNotExist();
+		}
+	);
 
-		run(service.get('content.0'), title, 'foo');
+	cases([{ title: 'resolve' }, { title: 'reject' }]).test(
+		'it removes modal from DOM when promise is fulfilled ',
+		async({ title: method }, assert) => {
+			const promise = service.open('custom-modal');
 
-		await waitForTimeout(ANIMATION_DELAY);
+			await waitForVisible();
 
-		assert.dom('[data-id="modalFoo"]').doesNotExist();
-	});
+			await click(`[data-id="${method}"]`);
+
+			try {
+				await promise;
+			} catch {
+				// Nope...
+			}
+
+			assert.dom('[data-id="modalCustomModal"]').doesNotExist();
+		}
+	);
 });

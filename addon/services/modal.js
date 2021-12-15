@@ -22,7 +22,13 @@ export default class ModalService extends Service.extend(Evented) {
 		this.trigger('open', model);
 
 		return new Promise((resolve) => {
-			this.one('close', () => resolve(model.promise));
+			this.one('close', () => {
+				if (model.promise._state === 1) {
+					resolve(model.promise);
+				} else {
+					resolve();
+				}
+			});
 		});
 	}
 
