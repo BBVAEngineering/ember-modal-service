@@ -10,6 +10,20 @@ import { buildWaiter } from '@ember/test-waiters';
 
 const openWaiter = buildWaiter('ember-modal-service:open-waiter');
 const closeWaiter = buildWaiter('ember-modal-service:close-waiter');
+const isNotDestroyed = (target, key, descriptor) => {
+	const targetMethod = descriptor.value;
+
+	descriptor.value = function(...args) {
+	// istanbul ignore if: lifecycle check.
+		if (this.isDestroyed) {
+			return null;
+		}
+
+		return targetMethod.apply(this, args);
+	};
+
+	return descriptor;
+};
 
 export default class ModalComponent extends Component {
 	@service modal;
@@ -30,22 +44,19 @@ export default class ModalComponent extends Component {
 		return String(this.visible);
 	}
 
-	init() {
-		super.init(...arguments);
+	didInsertElement() {
+		super.didInsertElement(...arguments);
 
 		next(this, '_open');
 	}
 
+	@isNotDestroyed
 	_safeDidOpen() {
 		this.didOpen && this.didOpen();
 	}
 
+	@isNotDestroyed
 	_open() {
-		// istanbul ignore if: lifecycle check.
-		if (this.isDestroyed) {
-			return;
-		}
-
 		const element = this.element;
 
 		this.visible = true;
@@ -67,12 +78,8 @@ export default class ModalComponent extends Component {
 		}
 	}
 
+	@isNotDestroyed
 	_close() {
-		// istanbul ignore if: lifecycle check.
-		if (this.isDestroyed || this.isDestroying) {
-			return;
-		}
-
 		const element = this.element;
 
 		// Close modal.
@@ -96,12 +103,8 @@ export default class ModalComponent extends Component {
 		}
 	}
 
+	@isNotDestroyed
 	_remove() {
-		// istanbul ignore if: lifecycle check.
-		if (this.isDestroyed) {
-			return;
-		}
-
 		this.modal._closeByModel(this.model);
 	}
 
