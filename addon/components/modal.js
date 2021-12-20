@@ -37,11 +37,7 @@ export default class ModalComponent extends Component {
 	}
 
 	_safeDidOpen() {
-		if (this.isDestroyed) {
-			return;
-		}
-
-		this.didOpen();
+		this.didOpen && this.didOpen();
 	}
 
 	_open() {
