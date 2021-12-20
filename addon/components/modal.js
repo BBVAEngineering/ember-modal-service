@@ -15,7 +15,7 @@ const isNotDestroyed = (target, key, descriptor) => {
 
 	descriptor.value = function(...args) {
 	// istanbul ignore if: lifecycle check.
-		if (this.isDestroyed) {
+		if (this.isDestroyed || this.isDestroying) {
 			return null;
 		}
 
