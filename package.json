@@ -59,11 +59,11 @@
     "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0"
   },
   "dependencies": {
+    "@ember/test-waiters": "^3.0.0",
     "@glimmer/tracking": "^1.0.1",
     "ember-cli-babel": "^7.19.0",
     "ember-cli-htmlbars": "^5.3.1",
-    "ember-transition-end": "^2.0.0",
-    "@ember/test-waiters": "^3.0.0"
+    "ember-transition-end": "^2.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
