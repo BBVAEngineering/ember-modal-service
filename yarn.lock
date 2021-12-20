@@ -1080,6 +1080,16 @@
     ember-cli-htmlbars-inline-precompile "^2.1.0"
     ember-test-waiters "^1.1.1"
 
+"@ember/test-waiters@^3.0.0":
+  version "3.0.0"
+  resolved "https://descinet.bbva.es/artifactory/api/npm/npm/@ember/test-waiters/-/test-waiters-3.0.0.tgz#b66a35cd5b78ec3c296a6f5f5fb3852780a5d3c8"
+  integrity sha1-tmo1zVt47Dwpam9fX7OFJ4Cl08g=
+  dependencies:
+    calculate-cache-key-for-tree "^2.0.0"
+    ember-cli-babel "^7.26.6"
+    ember-cli-version-checker "^5.1.2"
+    semver "^7.3.5"
+
 "@embroider/core@0.4.3", "@embroider/core@^0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@embroider/core/-/core-0.4.3.tgz#117973b9761d68aee14d820bbaefeb05d5984ba8"
@@ -4946,7 +4956,7 @@ ember-cli-babel-plugin-helpers@^1.0.0, ember-cli-babel-plugin-helpers@^1.1.0:
   resolved "https://registry.yarnpkg.com/ember-cli-babel-plugin-helpers/-/ember-cli-babel-plugin-helpers-1.1.0.tgz#de3baedd093163b6c2461f95964888c1676325ac"
   integrity sha512-Zr4my8Xn+CzO0gIuFNXji0eTRml5AxZUTDQz/wsNJ5AJAtyFWCY4QtKdoELNNbiCVGt1lq5yLiwTm4scGKu6xA==
 
-ember-cli-babel@^6.0.0-beta.4, ember-cli-babel@^6.6.0, ember-cli-babel@^6.8.1, ember-cli-babel@^7.11.0, ember-cli-babel@^7.12.0, ember-cli-babel@^7.19.0, ember-cli-babel@^7.20.5, ember-cli-babel@^7.22.1, ember-cli-babel@^7.5.0, ember-cli-babel@^7.7.3, ember-cli-babel@~7.19.0:
+ember-cli-babel@^6.0.0-beta.4, ember-cli-babel@^6.6.0, ember-cli-babel@^6.8.1, ember-cli-babel@^7.11.0, ember-cli-babel@^7.12.0, ember-cli-babel@^7.19.0, ember-cli-babel@^7.20.5, ember-cli-babel@^7.22.1, ember-cli-babel@^7.26.6, ember-cli-babel@^7.7.3, ember-cli-babel@~7.19.0:
   version "7.19.0"
   resolved "https://descinet.bbva.es/artifactory/api/npm/npm/ember-cli-babel/-/ember-cli-babel-7.19.0.tgz#e6eddea18a867231fcf90a80689e92b98be9a63b"
   integrity sha1-5u3eoYqGcjH8+QqAaJ6SuYvppjs=
@@ -5178,6 +5188,15 @@ ember-cli-version-checker@^5.1.1:
     semver "^7.3.2"
     silent-error "^1.1.1"
 
+ember-cli-version-checker@^5.1.2:
+  version "5.1.2"
+  resolved "https://descinet.bbva.es/artifactory/api/npm/npm/ember-cli-version-checker/-/ember-cli-version-checker-5.1.2.tgz#649c7b6404902e3b3d69c396e054cea964911ab0"
+  integrity sha1-ZJx7ZASQLjs9acOW4FTOqWSRGrA=
+  dependencies:
+    resolve-package-path "^3.1.0"
+    semver "^7.3.4"
+    silent-error "^1.1.1"
+
 ember-cli@~3.21.2:
   version "3.21.2"
   resolved "https://registry.npmjs.org/ember-cli/-/ember-cli-3.21.2.tgz#af99af5eba9882a326d8528fda31f219300d5591"
@@ -5401,13 +5420,6 @@ ember-source@^3.21.1:
     resolve "^1.17.0"
     semver "^6.1.1"
     silent-error "^1.1.1"
-
-ember-task-scheduler@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/ember-task-scheduler/-/ember-task-scheduler-2.1.0.tgz#864ad26e30787ba21bcad7461e2a565c8b842553"
-  integrity sha512-aBNTgPCWknSB0cS+LLs8W5QcW2F/XPki0K7f5QlGedLVlBfvxVSm0WtEhWhwYldBxxHG2hSrX7cxhSSVAXaSAw==
-  dependencies:
-    ember-cli-babel "^7.5.0"
 
 ember-template-lint@^2.12.0:
   version "2.12.0"
@@ -11665,6 +11677,14 @@ resolve-package-path@^2.0.0:
     path-root "^0.1.1"
     resolve "^1.13.1"
 
+resolve-package-path@^3.1.0:
+  version "3.1.0"
+  resolved "https://descinet.bbva.es/artifactory/api/npm/npm/resolve-package-path/-/resolve-package-path-3.1.0.tgz#35faaa5d54a9c7dd481eb7c4b2a44410c9c763d8"
+  integrity sha1-NfqqXVSpx91IHrfEsqREEMnHY9g=
+  dependencies:
+    path-root "^0.1.1"
+    resolve "^1.17.0"
+
 resolve-path@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/resolve-path/-/resolve-path-1.4.0.tgz#c4bda9f5efb2fce65247873ab36bb4d834fe16f7"
@@ -11960,6 +11980,13 @@ semver@^6.0.0, semver@^6.1.0, semver@^6.1.1, semver@^6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
   integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
+
+semver@^7.3.4, semver@^7.3.5:
+  version "7.3.5"
+  resolved "https://descinet.bbva.es/artifactory/api/npm/npm/semver/-/semver-7.3.5.tgz#0b621c879348d8998e4b0e4be94b3f12e6018ef7"
+  integrity sha1-C2Ich5NI2JmOSw5L6Us/EuYBjvc=
+  dependencies:
+    lru-cache "^6.0.0"
 
 send@0.17.1:
   version "0.17.1"

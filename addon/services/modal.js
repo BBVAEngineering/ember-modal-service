@@ -21,18 +21,16 @@ export default class ModalService extends Service.extend(Evented) {
 
 		this.trigger('open', model);
 
-		return new Promise((resolve) => {
-			this.one('close', () => resolve(model.promise.catch(() => {})));
-		});
+		model.promise
+			.catch(() => {})
+			.finally(() => {
+				this.trigger('close', model);
+			});
+
+		return model.promise;
 	}
 
 	_closeByModel(model) {
-		const destroyCallback = (destroyedModal) => {
-			destroyedModal === model && this.trigger('close', model);
-		};
-
-		// Setup DOM removal listener
-		this.one('will-destroy', destroyCallback);
 		// Remove from DOM
 		this.content.removeObject(model);
 	}

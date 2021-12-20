@@ -1,2 +1,2 @@
-<button type="button" data-id="resolve" {{on 'click' (action this.resolve this 'foo')}}>Resolve</button>
-<button type="button" data-id="reject" {{on 'click' (action this.reject 'reject')}}>Reject</button>
+<button type="button" data-id="resolve" {{on 'click' (fn this.resolve this.didOpen)}}>Resolve</button>
+<button type="button" data-id="reject" {{on 'click' (fn this.reject 'reject')}}>Reject</button>

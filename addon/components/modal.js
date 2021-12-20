@@ -1,25 +1,17 @@
 import Component from '@ember/component';
 import { camelize } from '@ember/string';
-import { computed } from '@ember/object';
+import { computed, action } from '@ember/object';
 import onTransitionEnd from 'ember-transition-end/utils/on-transition-end';
 import { hasTransitions } from 'ember-modal-service/utils/css-transitions';
 import { inject as service } from '@ember/service';
-import { run } from '@ember/runloop';
+import { next } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
+import { buildWaiter } from '@ember/test-waiters';
 
-export default class ModalComponent extends Component.extend({
-	// Needed to be able to reopen `resolve` and `reject` methods.
-	actions: {
-		resolve() {
-			this.resolve(...arguments);
-		},
-		reject() {
-			this.reject(...arguments);
-		}
-	}
-}) {
-	@service scheduler;
+const openWaiter = buildWaiter('ember-modal-service:open-waiter');
+const closeWaiter = buildWaiter('ember-modal-service:close-waiter');
 
+export default class ModalComponent extends Component {
 	@service modal;
 
 	attributeBindings = ['data-modal-show', 'data-id'];
@@ -41,20 +33,8 @@ export default class ModalComponent extends Component.extend({
 	init() {
 		super.init(...arguments);
 
-		// Prevent creating an uncaught promise.
-		this.model.promise.catch(() => {}).finally(
-			this._close.bind(this),
-			`Component '${this.model.fullname}': close modal`
-		);
+		next(this, '_open');
 	}
-
-	didInsertElement() {
-		super.didInsertElement(...arguments);
-
-		run.next(this.scheduler, 'scheduleOnce', this, '_open');
-	}
-
-	didOpen() {}
 
 	_safeDidOpen() {
 		if (this.isDestroyed) {
@@ -70,29 +50,33 @@ export default class ModalComponent extends Component.extend({
 			return;
 		}
 
-		const scheduler = this.scheduler;
 		const element = this.element;
 
 		this.visible = true;
 
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_safeDidOpen'), {
+			const token = openWaiter.beginAsync();
+			const callback = () => {
+				openWaiter.endAsync(token);
+				this._safeDidOpen();
+			};
+
+			onTransitionEnd(this.element, callback, {
 				transitionProperty: 'all',
 				once: true,
-				onlyTarget: true
+				onlyTarget: true,
 			});
 		} else {
-			this.didOpen();
+			this._safeDidOpen();
 		}
 	}
 
 	_close() {
 		// istanbul ignore if: lifecycle check.
-		if (this.isDestroyed) {
+		if (this.isDestroyed || this.isDestroying) {
 			return;
 		}
 
-		const scheduler = this.scheduler;
 		const element = this.element;
 
 		// Close modal.
@@ -100,10 +84,16 @@ export default class ModalComponent extends Component.extend({
 
 		// Remove modal from array when transition ends.
 		if (hasTransitions(element)) {
-			onTransitionEnd(element, scheduler.scheduleOnce.bind(scheduler, this, '_remove'), {
+			const token = closeWaiter.beginAsync();
+			const callback = () => {
+				closeWaiter.endAsync(token);
+				this._remove();
+			};
+
+			onTransitionEnd(this.element, callback, {
 				transitionProperty: 'all',
 				once: true,
-				onlyTarget: true
+				onlyTarget: true,
 			});
 		} else {
 			this._remove();
@@ -119,17 +109,23 @@ export default class ModalComponent extends Component.extend({
 		this.modal._closeByModel(this.model);
 	}
 
-	resolve(data, label = `Component '${this.model.fullname}': fulfillment`) {
-		this.model.resolve(data, label);
+	@action
+	resolve(data) {
+		this._fullfillmentFn = () => this.model.resolve(data);
+
+		this._close();
 	}
 
-	reject(data, label = `Component '${this.model.fullname}': rejection`) {
-		this.model.reject(data, label);
+	@action
+	reject(error) {
+		this._fullfillmentFn = () => this.model.reject(error);
+
+		this._close();
 	}
 
 	willDestroy() {
 		super.willDestroy(...arguments);
 
-		this.modal.trigger('will-destroy', this.model);
+		this._fullfillmentFn && this._fullfillmentFn();
 	}
 }
