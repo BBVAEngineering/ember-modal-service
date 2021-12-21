@@ -1,3 +1,20 @@
+# [2.7.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v2.6.0...v2.7.0) (2021-12-21)
+
+
+### Bug Fixes
+
+* apply suggestions into PR ([5c73504](https://github.com/BBVAEngineering/ember-modal-service/commit/5c7350478b7f2d27fa16d14b83a4326e26b6908c))
+* delete unnecesary private variable ([ad8ed8e](https://github.com/BBVAEngineering/ember-modal-service/commit/ad8ed8e93101271e9ac8b25ff782ecfa9025bf8b))
+* resolve modal with function ([a1d135f](https://github.com/BBVAEngineering/ember-modal-service/commit/a1d135f7616b9b4e0f988b39b57adaa39bcdc54e))
+* update condition isDestroying ([ceeff26](https://github.com/BBVAEngineering/ember-modal-service/commit/ceeff26665d7b7a5739d0990d86ed2a4d949fc9a))
+* update safeDidOpen func ([216a4da](https://github.com/BBVAEngineering/ember-modal-service/commit/216a4da93d1f8d27d711c15825787e7aa214e603))
+
+
+### Features
+
+* resolve modal when is destroyed ([998b8ca](https://github.com/BBVAEngineering/ember-modal-service/commit/998b8ca85b11f6ff83205f88f3c763467c36e988))
+* resolve suggestion into PR ([0f66af4](https://github.com/BBVAEngineering/ember-modal-service/commit/0f66af481172eb3190d332153cd9b8458bafb237))
+
 # [2.6.0](https://github.com/BBVAEngineering/ember-modal-service/compare/v2.5.0...v2.6.0) (2021-11-24)
 
 
