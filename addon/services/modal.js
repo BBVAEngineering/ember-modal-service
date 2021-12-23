@@ -21,13 +21,19 @@ export default class ModalService extends Service.extend(Evented) {
 
     this.trigger('open', model);
 
-    model.promise
-      .catch(() => {})
-      .finally(() => {
-        this.trigger('close', model);
-      });
+    this._attachToModalClose(model);
 
     return model.promise;
+  }
+
+  async _attachToModalClose(model) {
+    try {
+      await model.promise;
+    } catch {
+      // Nope...
+    } finally {
+      this.trigger('close', model);
+    }
   }
 
   _closeByModel(model) {

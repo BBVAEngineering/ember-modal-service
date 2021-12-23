@@ -15,6 +15,10 @@ export default class ModalWrapperComponent extends Component {
     return String(this.visible);
   }
 
+  get componentName() {
+    return this.args.model.fullname;
+  }
+
   @action
   onDidInsert(element) {
     this.element = element;

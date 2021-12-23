@@ -38,14 +38,19 @@ export default class ModalComponent extends Component {
   constructor() {
     super(...arguments);
 
-    // [Service closes modal] Prevent creating an uncaught promise.
-    this.model.promise.catch(() => {
+    this._attachToServiceClose();
+
+    next(this, '_open');
+  }
+
+  async _attachToServiceClose() {
+    try {
+      await this.model.promise;
+    } catch {
       if (!this._fullfillmentFn) {
         this._close();
       }
-    });
-
-    next(this, '_open');
+    }
   }
 
   @isNotDestroyed

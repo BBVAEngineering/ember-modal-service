@@ -28,6 +28,9 @@
 /tests/
 /yarn-error.log
 /yarn.lock
+/.releaserc
+/jsconfig.json
+/greenkeeper.json
 .gitkeep
 
 # ember-try
