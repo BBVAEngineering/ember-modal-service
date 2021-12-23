@@ -82,28 +82,6 @@ export default class Controller extends Controller {
 
 ### Other useful things
 
-If you need to wait until modal is removed from DOM:
-
-```javascript
-import Controller from '@ember/controller';
-import { action } from '@ember/object';
-
-export default class Controller extends Controller {
-  // Inject the service
-  @service modal;
-
-  @action
-  async doSomething() {
-    await this.modal.open('foo', { bar: 'bar' });
-
-    this.modal.one('close', ({ name }) => {
-      if (name === 'foo') {
-       // Do something...
-      }
-    });
-  }
-```
-
 You can close all modals by using the `close` method.
 
 ```javascript
