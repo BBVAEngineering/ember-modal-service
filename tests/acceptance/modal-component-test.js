@@ -10,9 +10,8 @@ module('Acceptance | modal-component', (hooks) => {
   hooks.beforeEach(async function (assert) {
     assert.timeout(5000);
 
-    const modal = this.owner.lookup('service:modal');
-
-    this.open = () => modal.open('custom-modal');
+    this.modal = this.owner.lookup('service:modal');
+    this.open = () => this.modal.open('custom-modal');
     this.waitForRender = () => waitFor('[data-id="modalCustomModal"]');
     this.waitForVisible = async () => {
       await settled();
@@ -122,6 +121,23 @@ module('Acceptance | modal-component', (hooks) => {
     const didOpenSpy = await promise;
 
     assert.ok(didOpenSpy.calledOnce);
+  });
+
+  test("it removes modal from DOM when it's closed by the service ", async function (assert) {
+    const promise = this.open();
+
+    await this.waitForVisible();
+    this.modal.close('name', 'custom-modal');
+
+    try {
+      await promise;
+    } catch {
+      // Nope...
+    }
+
+    await settled();
+
+    assert.dom('[data-id="modalCustomModal"]').doesNotExist();
   });
 
   module('animations disabled', (moduleHooks) => {
