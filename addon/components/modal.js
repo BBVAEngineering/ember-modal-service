@@ -47,6 +47,11 @@ export default class ModalComponent extends Component {
 	didInsertElement() {
 		super.didInsertElement(...arguments);
 
+		// [Service closes modal] Prevent creating an uncaught promise.
+		this.model.promise.catch(() => {
+			this._close();
+		});
+
 		next(this, '_open');
 	}
 
