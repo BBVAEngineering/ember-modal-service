@@ -14,6 +14,10 @@ An [ember-cli addon](http://www.ember-cli.com/) to manage modals as promises.
 
 [![NPM](https://nodei.co/npm/ember-modal-service.png?downloads=true&downloadRank=true)](https://nodei.co/npm/ember-modal-service/)
 
+- Ember.js v3.20 or above
+- Ember CLI v3.20 or above
+- Node.js v12 or above
+
 ## Install in ember-cli application
 
 In your application's directory:
@@ -29,8 +33,7 @@ ember install ember-modal-service
 All the modals are shown inside the modal container once opened.
 
 ```html
-{{! templates/application.hbs }}
-<ModalContainer />
+{{! templates/application.hbs }} <ModalContainer />
 ```
 
 ### Create a modal component
@@ -42,7 +45,7 @@ In order to register a new modal, you need to register the modal object in the a
 import ModalComponent from 'ember-modal-service/components/modal';
 
 export default class FooModal extends ModalComponent {
-   data = this.model.options.data; 
+  data = this.model.options.data;
 }
 ```
 
@@ -110,7 +113,6 @@ If you want to contribute to this addon, please read the [CONTRIBUTING.md](CONTR
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/BBVAEngineering/ember-modal-service/tags).
-
 
 ## Authors
 

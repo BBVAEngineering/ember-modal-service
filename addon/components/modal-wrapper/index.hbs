@@ -1,0 +1,5 @@
+<div role="dialog" data-id={{this.dataId}} data-modal-show={{this.dataModalShow}} {{did-insert this.onDidInsert}}>
+  {{#let (ensure-safe-component (component this.componentName)) as |Modal|}}
+    <Modal @model={{@model}} @changeVisibility={{this.changeVisibility}} @element={{this.element}} />
+  {{/let}}
+</div>

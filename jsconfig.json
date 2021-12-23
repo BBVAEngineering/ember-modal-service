@@ -1,11 +1,6 @@
 {
   "compilerOptions": {
-      "experimentalDecorators": true
+    "experimentalDecorators": true
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "coverage",
-    "recordings"
-  ]
+  "exclude": ["node_modules", "dist", "coverage", "recordings"]
 }

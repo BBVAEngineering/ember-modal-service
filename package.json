@@ -37,39 +37,45 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-push": "npm run lint && npm run test"
-    }
-  },
   "scripts": {
     "build": "ember build --environment=production",
     "check-coverage": "istanbul check-coverage coverage/coverage-final.json --statements 100 --branches 100 --functions 100 --lines 100",
     "commit": "git-cz",
-    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
+    "lint:fix": "npm-run-all --continue-on-error lint:*:fix",
     "lint:hbs": "ember-template-lint .",
-    "lint:js": "eslint --max-warnings 0 ./*.js addon app config tests",
+    "lint:hbs:fix": "ember-template-lint . --fix",
+    "lint:js": "eslint . --cache --max-warnings 0",
     "posttest": "npm run report-coverage && npm run check-coverage && npm run validate-coverage",
     "report-coverage": "istanbul report --include=coverage/coverage-final.json text",
+    "lint:js:fix": "eslint . --fix",
     "start": "ember serve",
-    "test": "npm-run-all lint:* test:*",
+    "test": "npm-run-all lint test:ember",
     "test:ember": "COVERAGE=true ember test",
     "semantic-release": "semantic-release",
-    "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0"
+    "validate-coverage": "test \"$(cat coverage/coverage-summary.json | json total.lines.total)\" -gt 0",
+    "lint:style": "prettier --check .",
+    "lint:style:fix": "prettier --write .",
+    "prepare": "husky install",
+    "test:ember-compatibility": "ember try:each",
+    "test:release": "semantic-release --branches=$(git rev-parse --abbrev-ref HEAD) --dry-run"
   },
   "dependencies": {
+    "@ember/render-modifiers": "^2.0.0",
     "@ember/test-waiters": "^3.0.0",
-    "@glimmer/tracking": "^1.0.1",
-    "ember-cli-babel": "^7.19.0",
-    "ember-cli-htmlbars": "^5.3.1",
+    "@embroider/util": "^0.47.2",
+    "@glimmer/tracking": "^1.0.4",
+    "ember-cli-babel": "^7.26.6",
+    "ember-cli-htmlbars": "^5.7.1",
     "ember-transition-end": "^2.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
     "@commitlint/config-conventional": "^9.1.2",
     "@ember/optional-features": "^2.0.0",
-    "@glimmer/component": "^1.0.1",
+    "@ember/test-helpers": "^2.4.2",
+    "@embroider/test-setup": "^0.43.5",
+    "@glimmer/component": "^1.0.4",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
     "babel-eslint": "^10.1.0",
@@ -77,44 +83,48 @@
     "broccoli-test-helper": "^2.0.0",
     "commitizen": "^4.2.1",
     "cz-conventional-changelog": "^3.3.0",
-    "ember-auto-import": "^1.6.0",
-    "ember-cli": "~3.21.2",
+    "ember-auto-import": "^2.2.4",
+    "ember-cli": "~3.28.4",
     "ember-cli-code-coverage": "^1.0.0-beta.9",
     "ember-cli-dependency-checker": "^3.2.0",
-    "ember-cli-inject-live-reload": "^2.0.2",
-    "ember-cli-qunit-parameterize": "^1.0.1",
+    "ember-cli-inject-live-reload": "^2.1.0",
+    "ember-cli-qunit-parameterize": "^2.0.0",
     "ember-cli-sri": "^2.1.1",
     "ember-disable-prototype-extensions": "^1.1.3",
     "ember-export-application-global": "^2.0.1",
-    "ember-load-initializers": "^2.1.1",
+    "ember-load-initializers": "^2.1.2",
     "ember-maybe-import-regenerator": "^0.1.6",
-    "ember-qunit": "^4.6.0",
+    "ember-page-title": "^6.2.2",
+    "ember-qunit": "^5.1.4",
     "ember-resolver": "^8.0.2",
-    "ember-source": "^3.21.1",
+    "ember-source": "^3.28.0",
     "ember-source-channel-url": "^3.0.0",
-    "ember-template-lint": "^2.12.0",
+    "ember-template-lint": "^3.6.0",
     "ember-test-helpers": "^0.6.3",
     "ember-try": "^1.4.0",
-    "eslint": "^7.8.1",
+    "eslint": "^7.32.0",
     "eslint-config-bbva": "^3.2.2",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-bbva": "^1.3.3",
-    "eslint-plugin-ember": "^9.0.0",
+    "eslint-plugin-ember": "^10.5.4",
     "eslint-plugin-node": "^11.1.0",
-    "husky": "^4.3.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-qunit": "^6.2.0",
+    "husky": "^7.0.4",
     "istanbul": "^0.4.5",
     "json": "^10.0.0",
+    "lint-staged": "^12.1.2",
     "loader.js": "^4.7.0",
     "npm-run-all": "^4.1.5",
-    "qunit-dom": "^1.4.0",
+    "prettier": "^2.3.2",
+    "qunit": "^2.16.0",
+    "qunit-dom": "^1.6.0",
     "semantic-release": "^17.1.1",
-    "sinon": "^9.0.3"
-  },
-  "resolutions": {
-    "ember-cli-babel": "~7.19.0",
-    "babel-plugin-ember-modules-api-polyfill": "2.13.0"
+    "sinon": "^9.0.3",
+    "webpack": "^5.64.4"
   },
   "engines": {
-    "node": "10.* || >= 12"
+    "node": ">= 12.20 || 14.* || >= 16"
   },
   "ember": {
     "edition": "octane"
@@ -126,5 +136,9 @@
   "bugs": {
     "url": "https://github.com/BBVAEngineering/ember-modal-service/issues"
   },
-  "homepage": "https://github.com/BBVAEngineering/ember-modal-service#readme"
+  "homepage": "https://github.com/BBVAEngineering/ember-modal-service#readme",
+  "lint-staged": {
+    "*.{js,ts}": "eslint --fix",
+    "*.{md,json,yaml,yml}": "prettier -w"
+  }
 }

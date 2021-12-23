@@ -1,11 +1,11 @@
 [data-id='modalCustomModal'] {
-	transition: opacity 0.2s;
-  }
-  
-  [data-id='modalCustomModal'][data-modal-show='false'] {
-	opacity: 0;
-  }
-  
-  [data-id='modalCustomModal'][data-modal-show='true'] {
-	opacity: 1;
-  }
+  transition: opacity 0.2s;
+}
+
+[data-id='modalCustomModal'][data-modal-show='false'] {
+  opacity: 0;
+}
+
+[data-id='modalCustomModal'][data-modal-show='true'] {
+  opacity: 1;
+}

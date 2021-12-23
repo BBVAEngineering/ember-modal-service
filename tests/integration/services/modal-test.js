@@ -5,14 +5,14 @@ import { isArray } from '@ember/array';
 import { isEmpty } from '@ember/utils';
 
 module('Integration | Service | modal', (hooks) => {
-	setupRenderingTest(hooks);
+  setupRenderingTest(hooks);
 
-	hooks.beforeEach(async function() {
-		this.service = this.owner.lookup('service:modal');
-	});
+  hooks.beforeEach(async function () {
+    this.service = this.owner.lookup('service:modal');
+  });
 
-	test('it has an empty array on init', function(assert) {
-		assert.ok(isArray(this.service.content));
-		assert.ok(isEmpty(this.service.content));
-	});
+  test('it has an empty array on init', function (assert) {
+    assert.ok(isArray(this.service.content));
+    assert.ok(isEmpty(this.service.content));
+  });
 });

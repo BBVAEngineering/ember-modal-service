@@ -1,0 +1,5 @@
+<div class={{if this.fullHeight "fullHeight"}}>
+  {{#each this.modal.content as |model|}}
+    <ModalWrapper @model={{model}} />
+  {{/each}}
+</div>

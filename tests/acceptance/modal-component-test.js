@@ -5,193 +5,184 @@ import hbs from 'htmlbars-inline-precompile';
 import cases from 'qunit-parameterize';
 
 module('Acceptance | modal-component', (hooks) => {
-	setupRenderingTest(hooks);
+  setupRenderingTest(hooks);
 
-	hooks.beforeEach(async function(assert) {
-		assert.timeout(5000);
+  hooks.beforeEach(async function (assert) {
+    assert.timeout(5000);
 
-		this.modal = this.owner.lookup('service:modal');
-		this.open = () => this.modal.open('custom-modal');
-		this.waitForRender = () => waitFor('[data-id="modalCustomModal"]');
-		this.waitForVisible = async() => {
-			await settled();
-			await waitFor(
-				'[data-id="modalCustomModal"][data-modal-show="true"]'
-			);
-		};
+    this.modal = this.owner.lookup('service:modal');
+    this.open = () => this.modal.open('custom-modal');
+    this.waitForRender = () => waitFor('[data-id="modalCustomModal"]');
+    this.waitForVisible = async () => {
+      await settled();
+      await waitFor('[data-id="modalCustomModal"][data-modal-show="true"]');
+    };
 
-		await render(hbs`<ModalContainer />`);
-	});
+    await render(hbs`<ModalContainer />`);
+  });
 
-	test('it defines the appropriate `data-id` on the component wrapper', async function(assert) {
-		this.open();
+  test('it defines the appropriate `data-id` on the component wrapper', async function (assert) {
+    this.open();
 
-		await this.waitForRender();
+    await this.waitForRender();
 
-		assert.dom('[data-id="modalCustomModal"]').exists();
+    assert.dom('[data-id="modalCustomModal"]').exists();
 
-		await settled();
-	});
+    await settled();
+  });
 
-	test('it is accessible', async function(assert) {
-		this.open();
+  test('it is accessible', async function (assert) {
+    this.open();
 
-		await this.waitForRender();
+    await this.waitForRender();
 
-		assert
-			.dom('[data-id="modalCustomModal"]')
-			.hasAttribute('role', 'dialog');
+    assert.dom('[data-id="modalCustomModal"]').hasAttribute('role', 'dialog');
 
-		// Resolve modal to remove pending waiters
-		await click('[data-id="resolve"]');
-	});
+    // Resolve modal to remove pending waiters
+    await click(`[data-id="resolve"]`);
+  });
 
-	test('it renders hidden and then toggles visibility', async function(assert) {
-		this.open();
+  test('it renders hidden and then toggles visibility', async function (assert) {
+    this.open();
 
-		await this.waitForRender();
+    await this.waitForRender();
 
-		assert
-			.dom('[data-id="modalCustomModal"]')
-			.hasAttribute('data-modal-show', 'false');
+    assert
+      .dom('[data-id="modalCustomModal"]')
+      .hasAttribute('data-modal-show', 'false');
 
-		await this.waitForVisible();
+    await this.waitForVisible();
 
-		assert
-			.dom('[data-id="modalCustomModal"]')
-			.hasAttribute('data-modal-show', 'true');
-	});
+    assert
+      .dom('[data-id="modalCustomModal"]')
+      .hasAttribute('data-modal-show', 'true');
+  });
 
-	cases([{ title: 'resolve' }, { title: 'reject' }]).test(
-		'it changes visibility when modal is closing ',
-		async function({ title: method }, assert) {
-			this.open();
+  cases([{ title: 'resolve' }, { title: 'reject' }]).test(
+    'it changes visibility when modal is closing ',
+    async function ({ title: method }, assert) {
+      this.open();
 
-			await this.waitForVisible();
-			click(`[data-id="${method}"]`);
-			await waitFor(
-				'[data-id="modalCustomModal"][data-modal-show="false"]'
-			);
+      await this.waitForVisible();
+      click(`[data-id="${method}"]`);
+      await waitFor('[data-id="modalCustomModal"][data-modal-show="false"]');
 
-			assert
-				.dom('[data-id="modalCustomModal"]')
-				.hasAttribute('data-modal-show', 'false');
+      assert
+        .dom('[data-id="modalCustomModal"]')
+        .hasAttribute('data-modal-show', 'false');
 
-			await settled();
-		}
-	);
+      await settled();
+    }
+  );
 
-	cases([{ title: 'resolve' }, { title: 'reject' }]).test(
-		'it removes modal from DOM when promise is fulfilled ',
-		async function({ title: method }, assert) {
-			const promise = this.open();
+  cases([{ title: 'resolve' }, { title: 'reject' }]).test(
+    'it removes modal from DOM when promise is fulfilled ',
+    async function ({ title: method }, assert) {
+      const promise = this.open();
 
-			await this.waitForVisible();
-			click(`[data-id="${method}"]`);
+      await this.waitForVisible();
+      click(`[data-id="${method}"]`);
 
-			try {
-				await promise;
-			} catch {
-				// Nope...
-			}
+      try {
+        await promise;
+      } catch {
+        // Nope...
+      }
 
-			assert.dom('[data-id="modalCustomModal"]').doesNotExist();
-		}
-	);
+      assert.dom('[data-id="modalCustomModal"]').doesNotExist();
+    }
+  );
 
-	test(
-		'it removes modal from DOM when it\'s closed by the service ',
-		async function(assert) {
-			const promise = this.open();
+  cases([{ title: 'resolve' }, { title: 'reject' }]).test(
+    'it fulfills with a value ',
+    async function ({ title: method }, assert) {
+      const promise = this.open();
 
-			await this.waitForVisible();
-			this.modal.close('name', 'custom-modal');
+      await this.waitForVisible();
+      click(`[data-id="${method}"]`);
 
-			try {
-				await promise;
-			} catch {
-				// Nope...
-			}
+      try {
+        const value = await promise;
 
-			await settled();
+        assert.equal(typeof value, 'function');
+      } catch (e) {
+        assert.equal(e, 'reject');
+      }
+    }
+  );
 
-			assert.dom('[data-id="modalCustomModal"]').doesNotExist();
-		}
-	);
+  test('it calls "didOpen" when modal is visible', async function (assert) {
+    const promise = this.open();
 
-	cases([{ title: 'resolve' }, { title: 'reject' }]).test(
-		'it fulfills with a value ',
-		async function({ title: method }, assert) {
-			const promise = this.open();
+    await this.waitForVisible();
+    await new Promise((res) => setTimeout(res, 500)); // wait transition callback
+    click(`[data-id="resolve"]`);
 
-			await this.waitForVisible();
-			click(`[data-id="${method}"]`);
+    const didOpenSpy = await promise;
 
-			try {
-				const value = await promise;
+    assert.ok(didOpenSpy.calledOnce);
+  });
 
-				assert.equal(typeof value, 'function');
-			} catch (e) {
-				assert.equal(e, 'reject');
-			}
-		}
-	);
+  test("it removes modal from DOM when it's closed by the service ", async function (assert) {
+    const promise = this.open();
 
-	test('it calls "didOpen" when modal is visible', async function(assert) {
-		const promise = this.open();
+    await this.waitForVisible();
+    this.modal.close('name', 'custom-modal');
 
-		await this.waitForVisible();
-		await new Promise((res) => setTimeout(res, 500)); // wait transition callback
-		click('[data-id="resolve"]');
+    try {
+      await promise;
+    } catch {
+      // Nope...
+    }
 
-		const didOpenSpy = await promise;
+    await settled();
 
-		assert.ok(didOpenSpy.calledOnce);
-	});
+    assert.dom('[data-id="modalCustomModal"]').doesNotExist();
+  });
 
-	module('animations disabled', (moduleHooks) => {
-		moduleHooks.beforeEach(function() {
-			this.styles = document.createElement('style');
-			this.styles.innerHTML = `
+  module('animations disabled', (moduleHooks) => {
+    moduleHooks.beforeEach(function () {
+      this.styles = document.createElement('style');
+      this.styles.innerHTML = `
         [data-id="modalCustomModal"] {
-            transition: none !important;
+          transition: none !important;
         }
-        `;
-			document.body.appendChild(this.styles);
-		});
+      `;
+      document.body.appendChild(this.styles);
+    });
 
-		moduleHooks.afterEach(function() {
-			document.body.removeChild(this.styles);
-		});
+    moduleHooks.afterEach(function () {
+      document.body.removeChild(this.styles);
+    });
 
-		test('it calls "didOpen" when modal is visible', async function(assert) {
-			const promise = this.open();
+    test('it calls "didOpen" when modal is visible', async function (assert) {
+      const promise = this.open();
 
-			await this.waitForVisible();
-			await new Promise((res) => setTimeout(res, 500)); // wait transition callback
-			click('[data-id="resolve"]');
+      await this.waitForVisible();
+      await new Promise((res) => setTimeout(res, 500)); // wait transition callback
+      click(`[data-id="resolve"]`);
 
-			const didOpenSpy = await promise;
+      const didOpenSpy = await promise;
 
-			assert.ok(didOpenSpy.calledOnce);
-		});
+      assert.ok(didOpenSpy.calledOnce);
+    });
 
-		cases([{ title: 'resolve' }, { title: 'reject' }]).test(
-			'it removes modal from DOM when promise is fulfilled ',
-			async function({ title: method }, assert) {
-				const promise = this.open();
+    cases([{ title: 'resolve' }, { title: 'reject' }]).test(
+      'it removes modal from DOM when promise is fulfilled ',
+      async function ({ title: method }, assert) {
+        const promise = this.open();
 
-				await this.waitForVisible();
-				click(`[data-id="${method}"]`);
+        await this.waitForVisible();
+        click(`[data-id="${method}"]`);
 
-				try {
-					await promise;
-				} catch {
-					// Nope...
-				}
+        try {
+          await promise;
+        } catch {
+          // Nope...
+        }
 
-				assert.dom('[data-id="modalCustomModal"]').doesNotExist();
-			}
-		);
-	});
+        assert.dom('[data-id="modalCustomModal"]').doesNotExist();
+      }
+    );
+  });
 });
